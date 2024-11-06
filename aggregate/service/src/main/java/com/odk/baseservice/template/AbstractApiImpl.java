@@ -1,5 +1,6 @@
 package com.odk.baseservice.template;
 
+import com.alibaba.fastjson.JSON;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
@@ -8,9 +9,8 @@ import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseutil.constext.ServiceContextHolder;
 import com.odk.baseutil.enums.BizScene;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -21,10 +21,8 @@ import java.util.Objects;
  * @version: 1.0
  * @author: oubin on 2024/11/4
  */
+@Slf4j
 public class AbstractApiImpl extends AbstractApi {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractApiImpl.class);
-//    private static Logger LOGGER = LoggerFactory.getLogger("SERVICE-DIGEST-APPENDER");
 
     /**
      * summary log
@@ -33,19 +31,23 @@ public class AbstractApiImpl extends AbstractApi {
 
     private static final String NULL_REPLACE = "-";
 
+    private static final String REQUEST = "REQUEST";
+    private static final String RESPONSE = "RESPONSE";
+
     /**
-     *
      * 通用服务处理模板
      * 1.规定入参出参需要满足的条件；
      * 2.规定对象在service层和controller层的不同父类；
+     *
      * @param bizScene
      * @param object
      * @param callBack
-     * @return
      * @param <T>
+     * @return
      */
     protected <T, R> ServiceResponse<R> queryProcess(BizScene bizScene, Object object, QueryApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
+        log.info(buildRequestDigestLog(bizScene, object, ServiceContextHolder.getUserId()));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -59,6 +61,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
             response = callBack.assembleResult(apiResponse);
+            log.info(buildResponseDigestLog(bizScene, response, ServiceContextHolder.getUserId()));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -67,7 +70,7 @@ public class AbstractApiImpl extends AbstractApi {
             long executeTime = System.currentTimeMillis() - startTime;
             callBack.afterProcess(response);
             if (null != response) {
-                LOGGER.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
+                log.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
             }
             clearContext();
         }
@@ -78,16 +81,17 @@ public class AbstractApiImpl extends AbstractApi {
      * 通用服务处理模板
      * 1.规定入参出参需要满足的条件；
      * 2.规定对象在service层和controller层的不同父类；
+     *
      * @param bizScene
      * @param request
-     * @param resultClazz
      * @param callBack
-     * @return
      * @param <T>
      * @param <R>
+     * @return
      */
-    protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, BaseRequest request, Class<R> resultClazz, ApiCallBack<T, R> callBack) {
+    protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, BaseRequest request, ApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
+        log.info(buildRequestDigestLog(bizScene, request, ServiceContextHolder.getUserId()));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -103,6 +107,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
             response = callBack.assembleResult(apiResponse);
+            log.info(buildResponseDigestLog(bizScene, response, ServiceContextHolder.getUserId()));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -111,7 +116,7 @@ public class AbstractApiImpl extends AbstractApi {
             long executeTime = System.currentTimeMillis() - startTime;
             callBack.afterProcess(response);
             if (null != response) {
-                LOGGER.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
+                log.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
             }
             clearContext();
         }
@@ -139,7 +144,7 @@ public class AbstractApiImpl extends AbstractApi {
          * @param request
          * @return
          */
-        protected Object convert(Object request){
+        protected Object convert(Object request) {
             return request;
         }
 
@@ -163,7 +168,7 @@ public class AbstractApiImpl extends AbstractApi {
             try {
                 serviceResponse.setData(convertResult(apiResult));
             } catch (Exception e) {
-                LOGGER.error("构造返回值发生异常，意异常信息：", e);
+                log.error("构造返回值发生异常，意异常信息：", e);
             }
             return serviceResponse;
         }
@@ -232,7 +237,7 @@ public class AbstractApiImpl extends AbstractApi {
             try {
                 serviceResponse.setData(convertResult(apiResult));
             } catch (Exception e) {
-                LOGGER.error("构造返回值发生异常，意异常信息：", e);
+                log.error("构造返回值发生异常，意异常信息：", e);
             }
             return serviceResponse;
         }
@@ -278,7 +283,7 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private ServiceResponse handleBizException(BizException bizEx) {
-        LOGGER.error("biz exception occurred，error code: {}，error message: {}", bizEx.getErrorCode(), bizEx.getMessage());
+        log.error("biz exception occurred，error code: {}，error message: {}", bizEx.getErrorCode(), bizEx.getMessage());
         return generateBaseResult(bizEx);
     }
 
@@ -308,7 +313,7 @@ public class AbstractApiImpl extends AbstractApi {
                     Objects.requireNonNull(errorCode).getErrorCode(),
                     errorMsg == null ? errorCode.getErrorContext() : errorMsg);
         } catch (Throwable t) {
-            LOGGER.error("new system exception occurred, error message: {}", t.getMessage());
+            log.error("new system exception occurred, error message: {}", t.getMessage());
             return null;
         }
     }
@@ -320,8 +325,22 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private ServiceResponse handleSystemException(Throwable e) {
-        LOGGER.error("unknown exception occurred, error message: ", e);
+        log.error("unknown exception occurred, error message: ", e);
         return generateBaseResult(e);
+    }
+
+    private String buildRequestDigestLog(BizScene bizScene, Object request, String loginId) {
+        return "[" + bizScene.getCode() + SEP +
+                StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
+                REQUEST + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(request), NULL_REPLACE) + "]";
+
+    }
+
+    private String buildResponseDigestLog(BizScene bizScene, Object request, String loginId) {
+        return "[" + bizScene.getCode() + SEP +
+                StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
+                RESPONSE + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(request), NULL_REPLACE) + "]";
+
     }
 
     /**
@@ -334,15 +353,11 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private String buildDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime, String loginId) {
-        try {
-            return "[" + bizScene.getCode() + SEP +
-                    StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
-                    isSuccess + SEP +
-                    StringUtils.defaultIfBlank(resultCode, NULL_REPLACE) + "]" +
-                    "(" + executeTime + "ms)";
-        } catch (Throwable e) {
-            LOGGER.error("exception occur when constructing log information.");
-            return "";
-        }
+        return "[" + bizScene.getCode() + SEP +
+                StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
+                isSuccess + SEP +
+                StringUtils.defaultIfBlank(resultCode, NULL_REPLACE) + "]" +
+                "(" + executeTime + "ms)";
+
     }
 }

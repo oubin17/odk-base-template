@@ -36,7 +36,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
-        return super.bizProcess(BizScene.USER_LOGIN, userLoginRequest, UserLoginResponse.class, new AbstractApiImpl.ApiCallBack<UserLoginResponse, UserLoginResponse>() {
+        return super.bizProcess(BizScene.USER_LOGIN, userLoginRequest, new AbstractApiImpl.ApiCallBack<UserLoginResponse, UserLoginResponse>() {
 
             @Override
             protected void checkParams(BaseRequest request) {

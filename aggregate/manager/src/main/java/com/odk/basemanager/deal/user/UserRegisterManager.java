@@ -14,8 +14,8 @@ import com.odk.basedomain.repository.UserAccessTokenRepository;
 import com.odk.basedomain.repository.UserBaseRepository;
 import com.odk.basedomain.repository.UserIdentificationRepository;
 import com.odk.basemanager.dto.UserRegisterDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -33,10 +33,9 @@ import java.util.UUID;
  * @version: 1.0
  * @author: oubin on 2024/11/5
  */
+@Slf4j
 @Service
 public class UserRegisterManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserRegisterManager.class);
 
     private UserBaseRepository userBaseRepository;
 
@@ -48,7 +47,7 @@ public class UserRegisterManager {
 
     public String registerUser(UserRegisterDTO userRegisterDTO) {
         UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValue(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId());
-        AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED);
+        AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, "用户已经存在，类型：" + userRegisterDTO.getLoginType() + "，登录ID：" + userRegisterDTO.getLoginId());
         String userId = UUID.randomUUID().toString();
 
         try {
@@ -60,14 +59,14 @@ public class UserRegisterManager {
                     addIdentification(userId, userRegisterDTO);
                 }
             });
-        }catch (DataIntegrityViolationException exception) {
-            logger.error("注册发生唯一键冲突：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), exception);
+        } catch (DataIntegrityViolationException exception) {
+            log.error("注册发生唯一键冲突：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), exception);
             throw new BizException(BizErrorCode.LOGIN_ID_DUPLICATE);
         } catch (DuplicateKeyException duplicateKeyException) {
-            logger.error("注册发生主键冲突：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), duplicateKeyException);
+            log.error("注册发生主键冲突：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), duplicateKeyException);
             throw new BizException(BizErrorCode.LOGIN_ID_DUPLICATE);
         } catch (Exception e) {
-            logger.error("注册发生未知异常，注册信息：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), e);
+            log.error("注册发生未知异常，注册信息：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), e);
             throw new BizException(BizErrorCode.SYSTEM_ERROR);
         }
 

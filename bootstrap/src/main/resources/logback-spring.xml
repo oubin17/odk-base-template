@@ -10,11 +10,14 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
     <!-- 定义日志文件名称 -->
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
 
+    <!-- 自定义控制台打印格式 -->
+    <property name="FILE_LOG_PATTERN" value="%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%blue(traceId: %X{traceId})] [%highlight(%thread)] ${PID:- } %logger{36} %-5level - %msg%n"/>
+
     <!-- 控制台配置 -->
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <!--   日志输出格式： %d表示日期时间 %thread表示线程名 %-5level：级别从左显示5个字符宽度 %logger{50} 表示logger名字最长50个字符，否则按照句点分割  %msg：日志消息 %n是换行符-->
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </layout>
     </appender>
 
@@ -47,8 +50,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         </rollingPolicy>
         <!-- 日志输出格式： -->
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [ %thread ] [ %-5level ] [ %logger{50} : %line ] - %msg%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </layout>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -68,8 +70,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [ %thread ] [ %-5level ] [ %logger{50} : %line ] - %msg%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </layout>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -89,11 +90,41 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [ %thread ] [ %-5level ] [ %logger{50} : %line ] - %msg%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </layout>
     </appender>
 
+    <!-- SQL日志 -->
+    <appender name="SQL-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}/sql-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}/sql-digest.log.%d{yyyy-MM-dd}_%i</fileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </layout>
+    </appender>
+
+
+
+    <!--    出入参打印日志-->
+    <appender name="TOPIC-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}/topic-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}/topic-digest.log.%d{yyyy-MM-dd}_%i</fileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </layout>
+    </appender>
 
     <!--
   logger主要用于存放日志对象，也可以定义日志类型、级别
@@ -104,17 +135,38 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
   表示当前logger的appender-ref和rootLogger的appender-ref都有效
     -->
     <!-- Spring framework logger -->
-    <logger name="org.springframework" level="debug" additivity="false"></logger>
+    <logger name="org.springframework" level="debug" additivity="false">
+
+    </logger>
+
+    <!-- 指定打印到某个文件夹 -->
+    <logger name="com.odk.baseservice.template" level="INFO" additivity="true">
+        <appender-ref ref="SERVICE-DIGEST-APPENDER"/>
+    </logger>
+
+    <!-- 为Hibernate SQL日志单独设置logger，使用SQL_FILE appender -->
+    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-DIGEST-APPENDER" />
+    </logger>
+
+    <logger name="org.hibernate.type.descriptor.sql" level="TRACE" additivity="false">
+        <appender-ref ref="SQL-DIGEST-APPENDER" />
+    </logger>
+
+
+    <!-- 指定日志主题 -->
+    <logger name="topic-log" level="INFO" additivity="true">
+        <appender-ref ref="TOPIC-DIGEST-APPENDER"/>
+    </logger>
 
     <!--
     root与logger是父子关系，没有特别定义则默认为root，任何一个类只会和一个logger对应，
     要么是定义的logger，要么是root，判断的关键在于找到这个logger，然后判断这个logger的appender和level。
     -->
     <root level="info">
-        <appender-ref ref="stdout"/>
+        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEFAULT-APPENDER"/>
         <appender-ref ref="ERROR-APPENDER"/>
-        <appender-ref ref="SERVICE-DIGEST-APPENDER"/>
     </root>
 
     <!-- 调研如何制定appender [ application Logger]  core service DRM-->

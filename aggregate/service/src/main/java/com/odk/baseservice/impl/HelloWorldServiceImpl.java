@@ -24,7 +24,7 @@ public class HelloWorldServiceImpl extends AbstractApiImpl implements HelloWorld
 
     @Override
     public ServiceResponse<HelloWorldResponse> helloWorld(HelloWorldRequest helloWorldRequest) {
-        return super.bizProcess(BizScene.HELLO_WORLD, helloWorldRequest, HelloWorldResponse.class, new ApiCallBack<String, HelloWorldResponse>() {
+        return super.bizProcess(BizScene.HELLO_WORLD, helloWorldRequest, new ApiCallBack<String, HelloWorldResponse>() {
             @Override
             protected void checkParams(BaseRequest request) {
                 super.checkParams(request);
