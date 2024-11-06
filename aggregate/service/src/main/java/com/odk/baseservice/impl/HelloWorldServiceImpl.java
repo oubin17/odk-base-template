@@ -47,13 +47,10 @@ public class HelloWorldServiceImpl extends AbstractApiImpl implements HelloWorld
             }
 
             @Override
-            protected ServiceResponse<HelloWorldResponse> assembleResult(String apiResult, Class<HelloWorldResponse> resultClazz) throws Throwable {
-                ServiceResponse<HelloWorldResponse> helloWorldResponseServiceResponse = super.assembleResult(apiResult, resultClazz);
+            protected HelloWorldResponse convertResult(String apiResult) {
                 HelloWorldResponse response = new HelloWorldResponse();
                 response.setResult(apiResult);
-                helloWorldResponseServiceResponse.setData(response);
-                return helloWorldResponseServiceResponse;
-
+                return response;
             }
         });
     }

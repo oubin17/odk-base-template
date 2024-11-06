@@ -34,6 +34,47 @@ public class AbstractApiImpl extends AbstractApi {
     private static final String NULL_REPLACE = "-";
 
     /**
+     *
+     * 通用服务处理模板
+     * 1.规定入参出参需要满足的条件；
+     * 2.规定对象在service层和controller层的不同父类；
+     * @param bizScene
+     * @param object
+     * @param callBack
+     * @return
+     * @param <T>
+     */
+    protected <T, R> ServiceResponse<R> queryProcess(BizScene bizScene, Object object, QueryApiCallBack<T, R> callBack) {
+        long startTime = System.currentTimeMillis();
+        ServiceResponse<R> response = null;
+        try {
+            //1. 初始化上下文
+            initContext(bizScene);
+            //2.简单参数校验
+            //3.参数校验
+            callBack.checkParams(object);
+            //5.对象转换：request -> dto
+            Object args = callBack.convert(object);
+            //5.对象转换：request -> dto
+            T apiResponse = callBack.doProcess(args);
+            //6.出参转换：dto -> response
+            response = callBack.assembleResult(apiResponse);
+        } catch (BizException exception) {
+            response = handleBizException(exception);
+        } catch (Throwable t) {
+            response = handleSystemException(t);
+        } finally {
+            long executeTime = System.currentTimeMillis() - startTime;
+            callBack.afterProcess(response);
+            if (null != response) {
+                LOGGER.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
+            }
+            clearContext();
+        }
+        return response;
+    }
+
+    /**
      * 通用服务处理模板
      * 1.规定入参出参需要满足的条件；
      * 2.规定对象在service层和controller层的不同父类；
@@ -61,7 +102,7 @@ public class AbstractApiImpl extends AbstractApi {
             Object args = callBack.convert(request);
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
-            response = callBack.assembleResult(apiResponse, resultClazz);
+            response = callBack.assembleResult(apiResponse);
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -77,6 +118,72 @@ public class AbstractApiImpl extends AbstractApi {
         return response;
     }
 
+    /**
+     * 查询统一处理模板
+     *
+     * @param <T>
+     */
+    public abstract static class QueryApiCallBack<T, R> {
+
+        /**
+         * 基本参数校验
+         *
+         * @param request
+         */
+        protected void checkParams(Object request) {
+        }
+
+        /**
+         * 参数转换：VO -> DTO
+         *
+         * @param request
+         * @return
+         */
+        protected Object convert(Object request){
+            return request;
+        }
+
+        /**
+         * 核心业务处理
+         *
+         * @param args
+         * @return
+         */
+        protected abstract T doProcess(Object args);
+
+        /**
+         * 将服务层返回的对象转成controller层返回的对象:DTO -> VO
+         *
+         * @param apiResult
+         * @return
+         * @throws Throwable
+         */
+        protected ServiceResponse<R> assembleResult(T apiResult) throws Throwable {
+            ServiceResponse<R> serviceResponse = ServiceResponse.valueOfSuccess();
+            try {
+                serviceResponse.setData(convertResult(apiResult));
+            } catch (Exception e) {
+                LOGGER.error("构造返回值发生异常，意异常信息：", e);
+            }
+            return serviceResponse;
+        }
+
+        /**
+         * 返回值转换
+         *
+         * @param apiResult
+         * @return
+         */
+        protected abstract R convertResult(T apiResult);
+
+        /**
+         * post-execution process 后置处理
+         *
+         * @param response
+         */
+        protected void afterProcess(BaseResponse response) {
+        }
+    }
 
     public abstract static class ApiCallBack<T, R> {
 
@@ -117,21 +224,27 @@ public class AbstractApiImpl extends AbstractApi {
          * 将服务层返回的对象转成controller层返回的对象:DTO -> VO
          *
          * @param apiResult
-         * @param resultClazz
          * @return
          * @throws Throwable
          */
-        protected ServiceResponse<R> assembleResult(T apiResult, Class<R> resultClazz) throws Throwable {
+        protected ServiceResponse<R> assembleResult(T apiResult) throws Throwable {
             ServiceResponse<R> serviceResponse = ServiceResponse.valueOfSuccess();
             try {
-                //解决不存在无参构造函数导致的报错
-                R response = resultClazz.newInstance();
-                serviceResponse.setData(response);
+                serviceResponse.setData(convertResult(apiResult));
             } catch (Exception e) {
-                LOGGER.error("不存在无参构造函数，resultClazz={}", resultClazz.getName());
+                LOGGER.error("构造返回值发生异常，意异常信息：", e);
             }
             return serviceResponse;
         }
+
+        /**
+         * 返回值转换
+         *
+         * @param apiResult
+         * @return
+         */
+        protected abstract R convertResult(T apiResult);
+
 
         /**
          * post-execution process 后置处理

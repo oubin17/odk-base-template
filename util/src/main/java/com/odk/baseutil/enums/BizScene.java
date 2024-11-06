@@ -13,6 +13,8 @@ public enum BizScene {
     USER_REGISTER("USER_REGISTER", "用户注册"),
 
     USER_LOGIN("USER_LOGIN", "用户登录"),
+
+    USER_QUERY("USER_QUERY", "用户查询")
     ;
 
 

@@ -57,11 +57,8 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
             }
 
             @Override
-            protected ServiceResponse<String> assembleResult(String apiResult, Class<String> resultClazz) throws Throwable {
-                ServiceResponse<String> userRegisterResponse = super.assembleResult(apiResult, resultClazz);
-                userRegisterResponse.setData(apiResult);
-                return userRegisterResponse;
-
+            protected String convertResult(String apiResult) {
+                return apiResult;
             }
         });
     }

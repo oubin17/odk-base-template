@@ -1,5 +1,7 @@
 package com.odk.baseservice.impl.user;
 
+import com.odk.base.exception.AssertUtil;
+import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
@@ -7,6 +9,7 @@ import com.odk.baseapi.response.UserQueryResponse;
 import com.odk.basemanager.entity.UserEntity;
 import com.odk.basemanager.deal.user.UserQueryManager;
 import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.enums.BizScene;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,24 +28,60 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
     @Override
     public ServiceResponse<UserQueryResponse> queryUserByUserId(String userId) {
-        UserEntity userEntity = userQueryManager.queryByUserId(userId);
-        if (null == userEntity) {
-            return ServiceResponse.valueOfSuccess();
-        }
-        UserQueryResponse userQueryResponse = new UserQueryResponse();
-        BeanUtils.copyProperties(userEntity, userQueryResponse);
-        return ServiceResponse.valueOfSuccess(userQueryResponse);
+
+        return super.queryProcess(BizScene.USER_QUERY, userId, new QueryApiCallBack<UserEntity, UserQueryResponse>() {
+
+            @Override
+            protected void checkParams(Object request) {
+                AssertUtil.notNull(request, BizErrorCode.PARAM_ILLEGAL, "userId is null.");
+            }
+
+            @Override
+            protected UserEntity doProcess(Object args) {
+                return userQueryManager.queryByUserId(userId);
+            }
+
+            @Override
+            protected UserQueryResponse convertResult(UserEntity userEntity) {
+                if (null == userEntity) {
+                    return null;
+                }
+                UserQueryResponse userQueryResponse = new UserQueryResponse();
+                BeanUtils.copyProperties(userEntity, userQueryResponse);
+                return userQueryResponse;
+            }
+
+        });
+
     }
 
     @Override
     public ServiceResponse<UserQueryResponse> queryUserByLoginId(UserQueryRequest userQueryRequest) {
-        UserEntity userEntity = userQueryManager.queryByAccessToken(userQueryRequest.getLoginType(), userQueryRequest.getLoginId());
-        if (null == userEntity) {
-            return ServiceResponse.valueOfSuccess();
-        }
-        UserQueryResponse userQueryResponse = new UserQueryResponse();
-        BeanUtils.copyProperties(userEntity, userQueryResponse);
-        return ServiceResponse.valueOfSuccess(userQueryResponse);
+
+        return super.queryProcess(BizScene.USER_QUERY, userQueryRequest, new QueryApiCallBack<UserEntity, UserQueryResponse>() {
+            @Override
+            protected void checkParams(Object request) {
+                UserQueryRequest queryRequest = (UserQueryRequest) request;
+                AssertUtil.notNull(queryRequest.getLoginId(), BizErrorCode.PARAM_ILLEGAL, "loginId is null.");
+                AssertUtil.notNull(queryRequest.getLoginType(), BizErrorCode.PARAM_ILLEGAL, "loginType is null.");
+            }
+
+            @Override
+            protected UserEntity doProcess(Object args) {
+                return userQueryManager.queryByAccessToken(userQueryRequest.getLoginType(), userQueryRequest.getLoginId());
+            }
+
+            @Override
+            protected UserQueryResponse convertResult(UserEntity userEntity) {
+                if (null == userEntity) {
+                    return null;
+                }
+                UserQueryResponse userQueryResponse = new UserQueryResponse();
+                BeanUtils.copyProperties(userEntity, userQueryResponse);
+                return userQueryResponse;
+            }
+
+        });
     }
 
     @Autowired

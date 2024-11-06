@@ -69,10 +69,8 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             }
 
             @Override
-            protected ServiceResponse<UserLoginResponse> assembleResult(UserLoginResponse apiResult, Class<UserLoginResponse> resultClazz) throws Throwable {
-                ServiceResponse<UserLoginResponse> userLoginServiceResponse = super.assembleResult(apiResult, resultClazz);
-                userLoginServiceResponse.setData(apiResult);
-                return userLoginServiceResponse;
+            protected UserLoginResponse convertResult(UserLoginResponse apiResult) {
+                return apiResult;
             }
         });
     }
