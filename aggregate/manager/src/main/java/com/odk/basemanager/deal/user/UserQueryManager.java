@@ -2,11 +2,11 @@ package com.odk.basemanager.deal.user;
 
 import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.enums.user.UserTypeEnum;
-import com.odk.basemanager.entity.UserEntity;
 import com.odk.basedomain.domain.UserAccessTokenDO;
 import com.odk.basedomain.domain.UserBaseDO;
 import com.odk.basedomain.repository.UserAccessTokenRepository;
 import com.odk.basedomain.repository.UserBaseRepository;
+import com.odk.basemanager.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

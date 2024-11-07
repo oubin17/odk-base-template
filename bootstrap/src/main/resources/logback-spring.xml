@@ -153,6 +153,10 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         <appender-ref ref="SQL-DIGEST-APPENDER" />
     </logger>
 
+    <!-- 设置Hibernate事务日志级别 -->
+    <logger name="org.hibernate.transaction" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
     <!-- 指定日志主题 -->
     <logger name="topic-log" level="INFO" additivity="true">
