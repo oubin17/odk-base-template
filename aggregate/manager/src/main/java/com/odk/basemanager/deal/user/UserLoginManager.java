@@ -6,10 +6,10 @@ import com.odk.basedomain.domain.UserAccessTokenDO;
 import com.odk.basedomain.domain.UserIdentificationDO;
 import com.odk.basedomain.repository.UserAccessTokenRepository;
 import com.odk.basedomain.repository.UserIdentificationRepository;
+import com.odk.basemanager.deal.password.PasswordManager;
+import com.odk.basemanager.dto.UserLoginDTO;
 import com.odk.basemanager.entity.UserLoginEntity;
 import com.odk.baseutil.constext.TokenHolder;
-import com.odk.basemanager.dto.UserLoginDTO;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +27,8 @@ public class UserLoginManager {
 
     private UserIdentificationRepository identificationRepository;
 
+    private PasswordManager passwordManager;
+
     /**
      * 用户登录
      *
@@ -37,7 +39,7 @@ public class UserLoginManager {
         UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
         AssertUtil.notNull(userAccessTokenDO, BizErrorCode.USER_NOT_EXIST);
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userAccessTokenDO.getUserId(), userLoginDTO.getIdentifyType());
-        AssertUtil.isTrue(StringUtils.equals(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
+        AssertUtil.isTrue(passwordManager.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         UserLoginEntity userLoginVO = new UserLoginEntity();
         userLoginVO.setUserId(userAccessTokenDO.getUserId());
         userLoginVO.setToken(TokenHolder.createToken(userAccessTokenDO.getUserId()));
@@ -52,5 +54,10 @@ public class UserLoginManager {
     @Autowired
     public void setIdentificationRepository(UserIdentificationRepository identificationRepository) {
         this.identificationRepository = identificationRepository;
+    }
+
+    @Autowired
+    public void setPasswordManager(PasswordManager passwordManager) {
+        this.passwordManager = passwordManager;
     }
 }

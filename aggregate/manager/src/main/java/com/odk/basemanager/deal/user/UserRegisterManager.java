@@ -13,9 +13,9 @@ import com.odk.basedomain.domain.UserIdentificationDO;
 import com.odk.basedomain.repository.UserAccessTokenRepository;
 import com.odk.basedomain.repository.UserBaseRepository;
 import com.odk.basedomain.repository.UserIdentificationRepository;
+import com.odk.basemanager.deal.password.PasswordManager;
 import com.odk.basemanager.dto.UserRegisterDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -43,6 +43,8 @@ public class UserRegisterManager {
 
     private UserIdentificationRepository identificationRepository;
 
+    private PasswordManager passwordManager;
+
     private TransactionTemplate transactionTemplate;
 
     public String registerUser(UserRegisterDTO userRegisterDTO) {
@@ -56,6 +58,9 @@ public class UserRegisterManager {
                 protected void doInTransactionWithoutResult(TransactionStatus status) {
                     addUserBase(userId, userRegisterDTO);
                     addAccessToken(userId, userRegisterDTO);
+                    //密码加密
+                    String password = userRegisterDTO.getPassword();
+                    userRegisterDTO.setPassword(passwordManager.encode(password));
                     addIdentification(userId, userRegisterDTO);
                 }
             });
@@ -138,4 +143,8 @@ public class UserRegisterManager {
         this.transactionTemplate = transactionTemplate;
     }
 
+    @Autowired
+    public void setPasswordManager(PasswordManager passwordManager) {
+        this.passwordManager = passwordManager;
+    }
 }
