@@ -2,6 +2,7 @@ package com.odk.baseapi.inter.user;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.request.UserLoginRequest;
+import com.odk.baseapi.request.UserLogoutRequest;
 import com.odk.baseapi.response.UserLoginResponse;
 
 /**
@@ -21,4 +22,13 @@ public interface UserLoginApi {
      * @return
      */
     ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest);
+
+    /**
+     * 注销登录
+     *
+     * @param logoutRequest
+     * @return
+     */
+    ServiceResponse<Boolean> userLogout(UserLogoutRequest logoutRequest);
+
 }

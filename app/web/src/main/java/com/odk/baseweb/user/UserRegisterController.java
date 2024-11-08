@@ -1,6 +1,5 @@
 package com.odk.baseweb.user;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.baseapi.request.UserRegisterRequest;
@@ -36,7 +35,6 @@ public class UserRegisterController {
     @NoLoginCondition
     @PostMapping()
     public ServiceResponse<String> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
-        StpUtil.login(userRegisterRequest.getLoginId());
         return userRegisterApi.userRegister(userRegisterRequest);
     }
 }

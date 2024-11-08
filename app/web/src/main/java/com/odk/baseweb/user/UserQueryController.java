@@ -1,6 +1,5 @@
 package com.odk.baseweb.user;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
@@ -34,7 +33,6 @@ public class UserQueryController {
     @NoLoginCondition
     @GetMapping("/loginId")
     public ServiceResponse<UserQueryResponse> queryUserByLoginId(@RequestParam("loginId") String loginId, @RequestParam("loginType") String loginType) {
-        System.out.println("当前登录状态：" + StpUtil.isLogin());
         UserQueryRequest userQueryRequest = new UserQueryRequest();
         userQueryRequest.setLoginId(loginId);
         userQueryRequest.setLoginType(loginType);

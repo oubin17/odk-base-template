@@ -5,6 +5,7 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.domain.UserAccessTokenDO;
 import com.odk.basedomain.domain.UserIdentificationDO;
 import com.odk.basedomain.repository.UserAccessTokenRepository;
+import com.odk.basedomain.repository.UserBaseRepository;
 import com.odk.basedomain.repository.UserIdentificationRepository;
 import com.odk.basemanager.deal.password.PasswordManager;
 import com.odk.basemanager.dto.UserLoginDTO;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserLoginManager {
+
+    private UserBaseRepository baseRepository;
 
     private UserAccessTokenRepository accessTokenRepository;
 
@@ -44,6 +47,10 @@ public class UserLoginManager {
         userLoginVO.setUserId(userAccessTokenDO.getUserId());
         userLoginVO.setToken(TokenHolder.createToken(userAccessTokenDO.getUserId()));
         return userLoginVO;
+    }
+
+    public Boolean userLogout(String userId) {
+        return true;
     }
 
     @Autowired
