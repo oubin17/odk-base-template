@@ -2,11 +2,12 @@ package com.odk.basemanager.deal.user;
 
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.domain.UserAccessTokenDO;
-import com.odk.basedomain.domain.UserIdentificationDO;
-import com.odk.basedomain.repository.UserAccessTokenRepository;
-import com.odk.basedomain.repository.UserBaseRepository;
-import com.odk.basedomain.repository.UserIdentificationRepository;
+import com.odk.basedomain.domain.user.UserAccessTokenDO;
+import com.odk.basedomain.domain.user.UserBaseDO;
+import com.odk.basedomain.domain.user.UserIdentificationDO;
+import com.odk.basedomain.repository.user.UserAccessTokenRepository;
+import com.odk.basedomain.repository.user.UserBaseRepository;
+import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.basemanager.deal.password.PasswordManager;
 import com.odk.basemanager.dto.UserLoginDTO;
 import com.odk.basemanager.entity.UserLoginEntity;
@@ -50,6 +51,8 @@ public class UserLoginManager {
     }
 
     public Boolean userLogout(String userId) {
+        UserBaseDO byUserId = baseRepository.findByUserId(userId);
+        AssertUtil.notNull(byUserId, BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
         return true;
     }
 
@@ -66,5 +69,10 @@ public class UserLoginManager {
     @Autowired
     public void setPasswordManager(PasswordManager passwordManager) {
         this.passwordManager = passwordManager;
+    }
+
+    @Autowired
+    public void setBaseRepository(UserBaseRepository baseRepository) {
+        this.baseRepository = baseRepository;
     }
 }

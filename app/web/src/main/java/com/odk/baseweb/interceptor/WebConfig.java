@@ -1,5 +1,6 @@
 package com.odk.baseweb.interceptor;
 
+import cn.dev33.satoken.interceptor.SaInterceptor;
 import com.odk.baseweb.interceptor.tracer.TracerIdInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
@@ -21,7 +22,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册 MyInterceptor 拦截器，拦截所有路径
         registry.addInterceptor(new CorsInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(new TokenInterceptor()).addPathPatterns("/**");
+        //注册 Sa-Token 拦截器，打开注解式鉴权功能
+        registry.addInterceptor(new SaInterceptor()).addPathPatterns("/**");
+        //不配置token鉴权
+//        registry.addInterceptor(new TokenInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new TracerIdInterceptor());
     }
 

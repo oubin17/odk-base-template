@@ -1,6 +1,6 @@
-package com.odk.basedomain.repository;
+package com.odk.basedomain.repository.user;
 
-import com.odk.basedomain.domain.UserIdentificationDO;
+import com.odk.basedomain.domain.user.UserIdentificationDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

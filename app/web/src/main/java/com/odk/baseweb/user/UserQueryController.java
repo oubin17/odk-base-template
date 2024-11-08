@@ -1,10 +1,10 @@
 package com.odk.baseweb.user;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
 import com.odk.baseapi.response.UserQueryResponse;
-import com.odk.baseweb.interceptor.NoLoginCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +24,12 @@ public class UserQueryController {
 
     private UserQueryApi userQueryApi;
 
-    @NoLoginCondition
+    @SaCheckLogin
     @GetMapping("/userid")
     public ServiceResponse<UserQueryResponse> queryUserByUserId(@RequestParam("userId") String userId) {
         return userQueryApi.queryUserByUserId(userId);
     }
 
-    @NoLoginCondition
     @GetMapping("/loginId")
     public ServiceResponse<UserQueryResponse> queryUserByLoginId(@RequestParam("loginId") String loginId, @RequestParam("loginType") String loginType) {
         UserQueryRequest userQueryRequest = new UserQueryRequest();

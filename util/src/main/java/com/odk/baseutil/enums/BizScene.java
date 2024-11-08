@@ -16,7 +16,10 @@ public enum BizScene {
 
     USER_LOGOUT("USER_LOGOUT", "注销登录"),
 
-    USER_QUERY("USER_QUERY", "用户查询")
+    USER_QUERY("USER_QUERY", "用户查询"),
+
+    USER_PERMISSION("USER_PERMISSION", "用户权限")
+
     ;
 
 

@@ -1,4 +1,4 @@
-package com.odk.basedomain.domain;
+package com.odk.basedomain.domain.permission;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
@@ -9,45 +9,38 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serial;
 
 /**
- * UserAccessTokenDO
+ * UserRoleRelDO
  *
  * @description:
  * @version: 1.0
- * @author: oubin on 2024/11/4
+ * @author: oubin on 2024/11/8
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_access_token")
+@Table(name = "t_user_role_rel", indexes = {
+        @Index(name = "idx_user_role_id", columnList = "user_id,role_id", unique = true)
+})
 @EntityListeners(AuditingEntityListener.class)
-public class UserAccessTokenDO extends BaseDO {
+public class UserRoleRelDO extends BaseDO {
 
     @Serial
-    private static final long serialVersionUID = -3008078711003604352L;
+    private static final long serialVersionUID = 2261404806508249134L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 主键ID
-     *
-     */
-    private String tokenId;
-    /**
      * 用户id
      */
+    @Column(name = "user_id")
     private String userId;
 
     /**
-     * token 类型
-     * {@link com.odk.base.enums.user.TokenTypeEnum}
+     * 角色id
      */
-    private String tokenType;
-
-    /**
-     * token值
-     */
-    private String tokenValue;
+    @Column(name = "role_id")
+    private String roleId;
 
 }

@@ -1,11 +1,9 @@
 package com.odk.basemanager.deal.user;
 
-import com.odk.base.enums.user.UserStatusEnum;
-import com.odk.base.enums.user.UserTypeEnum;
-import com.odk.basedomain.domain.UserAccessTokenDO;
-import com.odk.basedomain.domain.UserBaseDO;
-import com.odk.basedomain.repository.UserAccessTokenRepository;
-import com.odk.basedomain.repository.UserBaseRepository;
+import com.odk.basedomain.domain.user.UserAccessTokenDO;
+import com.odk.basedomain.domain.user.UserBaseDO;
+import com.odk.basedomain.repository.user.UserAccessTokenRepository;
+import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basemanager.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +41,6 @@ public class UserQueryManager {
         }
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(userBaseDO, userEntity);
-        userEntity.setUserType(UserTypeEnum.getByCode(userBaseDO.getUserType()));
-        userEntity.setUserStatus(UserStatusEnum.getByCode(userBaseDO.getUserStatus()));
         return userEntity;
     }
 

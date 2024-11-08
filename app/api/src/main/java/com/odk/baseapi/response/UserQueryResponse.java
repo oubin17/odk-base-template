@@ -1,7 +1,5 @@
 package com.odk.baseapi.response;
 
-import com.odk.base.enums.user.UserStatusEnum;
-import com.odk.base.enums.user.UserTypeEnum;
 import lombok.Data;
 
 /**
@@ -28,12 +26,12 @@ public class UserQueryResponse {
      * 用户类型
      * {@link com.odk.base.enums.user.UserTypeEnum}
      */
-    private UserTypeEnum userType;
+    private String userType;
 
     /**
      * 用户状态
      * {@link com.odk.base.enums.user.UserStatusEnum}
      */
-    private UserStatusEnum userStatus;
+    private String userStatus;
 
 }

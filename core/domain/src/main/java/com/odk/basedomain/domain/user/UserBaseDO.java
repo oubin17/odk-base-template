@@ -1,4 +1,4 @@
-package com.odk.basedomain.domain;
+package com.odk.basedomain.domain.user;
 
 import com.odk.base.dos.BaseDO;
 import com.odk.base.enums.user.UserStatusEnum;
@@ -20,7 +20,9 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_base")
+@Table(name = "t_user_base", indexes = {
+        @Index(name = "idx_user_id", columnList = "user_id", unique = true)
+})
 @EntityListeners(AuditingEntityListener.class)
 public class UserBaseDO extends BaseDO {
 
@@ -37,23 +39,27 @@ public class UserBaseDO extends BaseDO {
     /**
      * 用户id
      */
+    @Column(name = "user_id", unique = true)
     private String userId;
 
     /**
      * 用户名称
      */
+    @Column(name = "user_name")
     private String userName;
 
     /**
      * 用户类型
      * {@link UserTypeEnum}
      */
+    @Column(name = "user_type")
     private String userType;
 
     /**
      * 用户状态
      * {@link UserStatusEnum}
      */
+    @Column(name = "user_status")
     private String userStatus;
 
 }
