@@ -1,6 +1,6 @@
 package com.odk.basemanager.deal.password;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.odk.base.security.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**

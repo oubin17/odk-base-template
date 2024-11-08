@@ -1,4 +1,4 @@
-package com.odk.baseweb.interceptor;
+package com.odk.baseweb.interceptor.exception;
 
 import com.odk.base.exception.BizException;
 import com.odk.base.vo.response.ServiceResponse;

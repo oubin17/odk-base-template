@@ -32,15 +32,15 @@ public class TokenInterceptor implements AsyncHandlerInterceptor {
             return true;
         }
 
-        String token = request.getHeader("token");
+        String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token)) {
-            logger.error("Token required: {}", request.getRequestURI());
+            logger.error("Authorization required: {}", request.getRequestURI());
             throw new BizException(BizErrorCode.TOKEN_MISSING);
         }
         if (isValidToken(token)) {
             //设置ThreadLocal等操作
         } else {
-            throw new BizException(BizErrorCode.TOKEN_EXPIRED, "token 已过期，请重新登录");
+            throw new BizException(BizErrorCode.TOKEN_EXPIRED, "Authorization 已过期，请重新登录");
         }
         return true;
     }
