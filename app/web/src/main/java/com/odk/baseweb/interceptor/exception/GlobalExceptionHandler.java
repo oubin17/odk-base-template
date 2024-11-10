@@ -1,5 +1,7 @@
 package com.odk.baseweb.interceptor.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.base.vo.response.ServiceResponse;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * 处理业务异常
+     *
+     * @param e
+     * @return
+     */
     @ExceptionHandler(BizException.class)
     public ResponseEntity<ServiceResponse> handleValidationException(BizException e) {
         // 处理校验异常，可以根据需要返回适当的响应
         return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 处理系统异常 ： SaToken
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(NotLoginException.class)
+    public ResponseEntity<ServiceResponse> handleValidationException(NotLoginException e) {
+        // 处理校验异常，可以根据需要返回适当的响应
+
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_EXPIRED, "token无效"), HttpStatus.BAD_REQUEST);
     }
 }
