@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
  * @version: 1.0
  * @author: oubin on 2024/1/20
  */
+@Deprecated
 public class TokenInterceptor implements AsyncHandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(TokenInterceptor.class);
     @Override

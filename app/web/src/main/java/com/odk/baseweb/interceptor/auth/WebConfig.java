@@ -1,8 +1,9 @@
-package com.odk.baseweb.interceptor;
+package com.odk.baseweb.interceptor.auth;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
+import com.odk.baseweb.interceptor.CorsInterceptor;
 import com.odk.baseweb.interceptor.tracer.TracerIdInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

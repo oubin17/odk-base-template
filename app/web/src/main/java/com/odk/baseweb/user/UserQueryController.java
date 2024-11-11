@@ -27,6 +27,8 @@ public class UserQueryController {
     @SaCheckLogin
     @GetMapping("/userid")
     public ServiceResponse<UserQueryResponse> queryUserByUserId(@RequestParam("userId") String userId) {
+
+
         return userQueryApi.queryUserByUserId(userId);
     }
 

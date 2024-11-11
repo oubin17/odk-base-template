@@ -1,5 +1,6 @@
 package com.odk.basemanager.deal.user;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.domain.user.UserAccessTokenDO;
@@ -11,7 +12,7 @@ import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.basemanager.deal.password.PasswordManager;
 import com.odk.basemanager.dto.UserLoginDTO;
 import com.odk.basemanager.entity.UserLoginEntity;
-import com.odk.baseutil.constext.TokenHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +47,13 @@ public class UserLoginManager {
         AssertUtil.isTrue(passwordManager.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         UserLoginEntity userLoginVO = new UserLoginEntity();
         userLoginVO.setUserId(userAccessTokenDO.getUserId());
-        userLoginVO.setToken(TokenHolder.createToken(userAccessTokenDO.getUserId()));
         return userLoginVO;
     }
 
     public Boolean userLogout(String userId) {
         UserBaseDO byUserId = baseRepository.findByUserId(userId);
         AssertUtil.notNull(byUserId, BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
+        AssertUtil.isTrue(StringUtils.equals(byUserId.getUserId(), StpUtil.getLoginIdAsString()), BizErrorCode.TOKEN_UNMATCHED);
         return true;
     }
 

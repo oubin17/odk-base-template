@@ -70,7 +70,6 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
                 UserLoginEntity userLoginEntity = userLoginManager.userLogin(userLoginDTO);
                 UserEntity userEntity = queryManager.queryByUserId(userLoginEntity.getUserId());
                 UserLoginResponse userLoginResponse = new UserLoginResponse();
-                userLoginResponse.setToken(userLoginEntity.getToken());
                 BeanUtils.copyProperties(userEntity, userLoginResponse);
                 return userLoginResponse;
             }
@@ -85,9 +84,9 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             protected void afterProcess(BaseResponse response) {
                 if (response.isSuccess()) {
                     ServiceResponse<UserLoginResponse> userLoginResponseServiceResponse = (ServiceResponse<UserLoginResponse>) response;
+                    //设置登录session
                     StpUtil.login(userLoginResponseServiceResponse.getData().getUserId());
-                    log.info("创建登录token成功，用户ID={}", userLoginResponseServiceResponse.getData().getUserId());
-
+                    userLoginResponseServiceResponse.getData().setToken(StpUtil.getTokenInfo().getTokenValue());
                 }
             }
         });

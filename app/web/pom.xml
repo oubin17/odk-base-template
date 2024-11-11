@@ -36,5 +36,15 @@
             <artifactId>sa-token-spring-boot3-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.odk</groupId>
+            <artifactId>redis-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
