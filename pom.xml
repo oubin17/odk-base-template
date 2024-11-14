@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.odk</groupId>
     <artifactId>base-template</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>base-template</name>
     <description>Demo project for Spring Boot3</description>
@@ -23,7 +23,8 @@
         <spring-boot.version>3.0.2</spring-boot.version>
 
         <!-- odk版本 -->
-        <base-template>0.0.1-SNAPSHOT</base-template>
+        <parent-odk-version>1.0-SNAPSHOT</parent-odk-version>
+        <base-template>1.0-SNAPSHOT</base-template>
         <odk-common-util-base>3.0.2-SNAPSHOT</odk-common-util-base>
         <database-spring-boot-starter>3.0.1-SNAPSHOT</database-spring-boot-starter>
         <redis-spring-boot-starter>3.0.2-SNAPSHOT</redis-spring-boot-starter>
