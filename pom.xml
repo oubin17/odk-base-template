@@ -6,27 +6,32 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>3.0.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.odk</groupId>
     <artifactId>base-template</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>base-template</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Demo project for Spring Boot3</description>
     <properties>
+
+        <!-- 项目依赖 -->
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>3.0.2</spring-boot.version>
 
-
+        <!-- odk版本 -->
+        <base-template>0.0.1-SNAPSHOT</base-template>
         <odk-common-util-base>3.0.2-SNAPSHOT</odk-common-util-base>
-        <lombok>1.18.24</lombok>
-        <guava>32.1.2-jre</guava>
         <database-spring-boot-starter>3.0.1-SNAPSHOT</database-spring-boot-starter>
         <redis-spring-boot-starter>3.0.2-SNAPSHOT</redis-spring-boot-starter>
 
+        <!-- 三方包版本 -->
+        <lombok>1.18.24</lombok>
+        <guava>32.1.2-jre</guava>
+        <fastjson>2.0.32</fastjson>
         <sa-token-version>1.39.0</sa-token-version>
     </properties>
 
@@ -64,7 +69,6 @@
                 <artifactId>sa-token-redis-jackson</artifactId>
                 <version>${sa-token-version}</version>
             </dependency>
-
 
             <!--            系统工具包-->
             <dependency>
@@ -104,62 +108,62 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>2.0.32</version>
+                <version>${fastjson}</version>
             </dependency>
 
-
+            <!-- module dependency -->
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-web</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-rpc</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-bootstrap</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-api</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-domain</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-infra</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-util</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.odk</groupId>
                 <artifactId>base-manager</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${base-template}</version>
             </dependency>
 
         </dependencies>
