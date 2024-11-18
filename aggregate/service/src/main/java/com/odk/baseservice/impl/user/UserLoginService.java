@@ -16,7 +16,6 @@ import com.odk.basemanager.deal.user.UserLoginManager;
 import com.odk.basemanager.deal.user.UserQueryManager;
 import com.odk.basemanager.dto.UserLoginDTO;
 import com.odk.basemanager.entity.UserEntity;
-import com.odk.basemanager.entity.UserLoginEntity;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.enums.BizScene;
 import lombok.extern.slf4j.Slf4j;
@@ -67,8 +66,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             @Override
             protected UserLoginResponse doProcess(Object args) {
                 UserLoginDTO userLoginDTO = (UserLoginDTO) args;
-                UserLoginEntity userLoginEntity = userLoginManager.userLogin(userLoginDTO);
-                UserEntity userEntity = queryManager.queryByUserId(userLoginEntity.getUserId());
+                UserEntity userEntity = userLoginManager.userLogin(userLoginDTO);
                 UserLoginResponse userLoginResponse = new UserLoginResponse();
                 BeanUtils.copyProperties(userEntity, userLoginResponse);
                 return userLoginResponse;
@@ -84,8 +82,6 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             protected void afterProcess(BaseResponse response) {
                 if (response.isSuccess()) {
                     ServiceResponse<UserLoginResponse> userLoginResponseServiceResponse = (ServiceResponse<UserLoginResponse>) response;
-                    //设置登录session
-                    StpUtil.login(userLoginResponseServiceResponse.getData().getUserId());
                     userLoginResponseServiceResponse.getData().setToken(StpUtil.getTokenInfo().getTokenValue());
                 }
             }

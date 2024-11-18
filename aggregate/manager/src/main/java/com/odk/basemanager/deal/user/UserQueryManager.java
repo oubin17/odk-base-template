@@ -1,5 +1,8 @@
 package com.odk.basemanager.deal.user;
 
+import com.odk.base.enums.user.UserStatusEnum;
+import com.odk.base.exception.BizErrorCode;
+import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.user.UserAccessTokenDO;
 import com.odk.basedomain.domain.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
@@ -45,6 +48,26 @@ public class UserQueryManager {
     }
 
     /**
+     * 检查用户状态
+     *
+     * @param userId
+     * @return
+     */
+    public UserEntity queryByUserIdAndCheck(String userId) {
+        UserBaseDO userBaseDO = baseRepository.findByUserId(userId);
+        if (null == userBaseDO) {
+            logger.error("找不到用户，用户ID={}", userId);
+            return null;
+        }
+        if (UserStatusEnum.NORMAL != UserStatusEnum.getByCode(userBaseDO.getUserStatus())) {
+            throw new BizException(BizErrorCode.USER_STATUS_ERROR);
+        }
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(userBaseDO, userEntity);
+        return userEntity;
+    }
+
+    /**
      * 根据登录凭证查找用户
      *
      * @param tokenType
@@ -59,8 +82,6 @@ public class UserQueryManager {
         }
         return queryByUserId(userAccessTokenDO.getUserId());
     }
-
-
 
     @Autowired
     public void setBaseRepository(UserBaseRepository baseRepository) {

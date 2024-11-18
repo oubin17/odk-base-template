@@ -11,7 +11,8 @@ import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.basemanager.deal.password.PasswordManager;
 import com.odk.basemanager.dto.UserLoginDTO;
-import com.odk.basemanager.entity.UserLoginEntity;
+import com.odk.basemanager.entity.UserEntity;
+import com.odk.baseutil.constants.UserInfoConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,20 +35,26 @@ public class UserLoginManager {
 
     private PasswordManager passwordManager;
 
+    private UserQueryManager userQueryManager;
+
     /**
      * 用户登录
      *
      * @param userLoginDTO
      * @return
      */
-    public UserLoginEntity userLogin(UserLoginDTO userLoginDTO) {
+    public UserEntity userLogin(UserLoginDTO userLoginDTO) {
         UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
         AssertUtil.notNull(userAccessTokenDO, BizErrorCode.USER_NOT_EXIST);
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userAccessTokenDO.getUserId(), userLoginDTO.getIdentifyType());
         AssertUtil.isTrue(passwordManager.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
-        UserLoginEntity userLoginVO = new UserLoginEntity();
-        userLoginVO.setUserId(userAccessTokenDO.getUserId());
-        return userLoginVO;
+        UserEntity userEntity = userQueryManager.queryByUserIdAndCheck(userAccessTokenDO.getUserId());
+        //设置登录session
+        StpUtil.login(userEntity.getUserId());
+        //缓存当前用户信息
+        StpUtil.getSession().set(UserInfoConstants.ACCOUNT_SESSION_USER, userEntity);
+
+        return userEntity;
     }
 
     public Boolean userLogout(String userId) {
@@ -75,5 +82,10 @@ public class UserLoginManager {
     @Autowired
     public void setBaseRepository(UserBaseRepository baseRepository) {
         this.baseRepository = baseRepository;
+    }
+
+    @Autowired
+    public void setUserQueryManager(UserQueryManager userQueryManager) {
+        this.userQueryManager = userQueryManager;
     }
 }
