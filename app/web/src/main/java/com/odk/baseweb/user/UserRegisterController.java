@@ -1,9 +1,9 @@
 package com.odk.baseweb.user;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.baseapi.request.UserRegisterRequest;
-import com.odk.baseweb.interceptor.NoLoginCondition;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class UserRegisterController {
      * @param userRegisterRequest
      * @return
      */
-    @NoLoginCondition
+    @SaIgnore
     @PostMapping()
     public ServiceResponse<String> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         return userRegisterApi.userRegister(userRegisterRequest);
