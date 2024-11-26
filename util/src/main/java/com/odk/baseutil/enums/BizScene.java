@@ -18,7 +18,13 @@ public enum BizScene {
 
     USER_QUERY("USER_QUERY", "用户查询"),
 
-    USER_PERMISSION("USER_PERMISSION", "用户权限")
+    USER_PERMISSION_QUERY("USER_PERMISSION_QUERY", "用户权限查询"),
+
+    USER_ROLE_ADD("USER_ROLE_ADD", "添加用户角色"),
+
+    ROLE_RELA_ADD("ROLE_RELA_ADD", "用户添加角色"),
+
+
 
     ;
 

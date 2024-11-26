@@ -1,6 +1,8 @@
 package com.odk.baseapi.inter.permission;
 
 import com.odk.base.vo.response.ServiceResponse;
+import com.odk.baseapi.request.role.RoleAddRequest;
+import com.odk.baseapi.request.role.UserRoleRelaRequest;
 import com.odk.baseapi.response.PermissionQueryResponse;
 
 /**
@@ -20,5 +22,22 @@ public interface PermissionApi {
      * @return
      */
     ServiceResponse<PermissionQueryResponse> userPermission(String userId);
+
+
+    /**
+     * 添加角色
+     *
+     * @param roleAddRequest
+     * @return
+     */
+    ServiceResponse<String> addRole(RoleAddRequest roleAddRequest);
+
+    /**
+     * 添加用户角色
+     *
+     * @param relaRequest
+     * @return
+     */
+    ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest);
 
 }

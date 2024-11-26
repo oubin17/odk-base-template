@@ -3,11 +3,10 @@ package com.odk.baseweb.permission;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
+import com.odk.baseapi.request.role.RoleAddRequest;
+import com.odk.baseapi.request.role.UserRoleRelaRequest;
 import com.odk.baseapi.response.PermissionQueryResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * PermissionController
@@ -26,9 +25,39 @@ public class PermissionController {
         this.permissionApi = permissionApi;
     }
 
+    /**
+     * 查询用户角色权限
+     *
+     * @param userId
+     * @return
+     */
     @SaCheckLogin
     @GetMapping("/userId")
     public ServiceResponse<PermissionQueryResponse> queryUserPermission(@RequestParam("userId") String userId) {
         return permissionApi.userPermission(userId);
+    }
+
+    /**
+     * 添加角色
+     *
+     * @param roleAddRequest
+     * @return
+     */
+    @SaCheckLogin
+    @PostMapping("/role/add")
+    public ServiceResponse<String> addRole(@RequestBody RoleAddRequest roleAddRequest) {
+        return permissionApi.addRole(roleAddRequest);
+    }
+
+    /**
+     * 用户-角色绑定
+     *
+     * @param relaRequest
+     * @return
+     */
+    @SaCheckLogin
+    @PostMapping("/role/rela/add")
+    public ServiceResponse<String> addRoleRel(@RequestBody UserRoleRelaRequest relaRequest) {
+        return permissionApi.addRoleRela(relaRequest);
     }
 }

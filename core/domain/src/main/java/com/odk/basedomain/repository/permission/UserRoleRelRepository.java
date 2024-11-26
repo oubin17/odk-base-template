@@ -11,4 +11,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author: oubin on 2024/11/8
  */
 public interface UserRoleRelRepository extends JpaRepository<UserRoleRelDO, Long> {
+
+
+    /**
+     * 根据id查找
+     *
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    UserRoleRelDO findByUserIdAndRoleId(String userId, String roleId);
 }

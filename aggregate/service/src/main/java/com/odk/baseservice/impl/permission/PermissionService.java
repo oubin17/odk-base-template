@@ -4,6 +4,8 @@ import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
+import com.odk.baseapi.request.role.RoleAddRequest;
+import com.odk.baseapi.request.role.UserRoleRelaRequest;
 import com.odk.baseapi.response.PermissionQueryResponse;
 import com.odk.baseapi.vo.PermissionVO;
 import com.odk.baseapi.vo.UserRoleVo;
@@ -32,7 +34,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
     @Override
     public ServiceResponse<PermissionQueryResponse> userPermission(String userId) {
-        return super.queryProcess(BizScene.USER_PERMISSION, userId, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
+        return super.queryProcess(BizScene.USER_PERMISSION_QUERY, userId, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
 
             @Override
             protected void checkParams(Object request) {
@@ -70,6 +72,63 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
                 }).collect(Collectors.toList());
                 permissionQueryResponse.setPermissions(permissions);
                 return permissionQueryResponse;
+            }
+
+        });
+    }
+
+    @Override
+    public ServiceResponse<String> addRole(RoleAddRequest roleAddRequest) {
+        return super.queryProcess(BizScene.USER_ROLE_ADD, roleAddRequest, new QueryApiCallBack<String, String>() {
+
+            @Override
+            protected void checkParams(Object request) {
+                RoleAddRequest addRequest = (RoleAddRequest) request;
+                AssertUtil.notNull(addRequest.getRoleCode(), BizErrorCode.PARAM_ILLEGAL, "roleCode不为空");
+                AssertUtil.notNull(addRequest.getRoleName(), BizErrorCode.PARAM_ILLEGAL, "roleName不为空");
+            }
+
+            @Override
+            protected Object convert(Object request) {
+                RoleAddRequest addRequest = (RoleAddRequest) request;
+                return new String[]{addRequest.getRoleCode(), addRequest.getRoleName()};
+            }
+
+            @Override
+            protected String doProcess(Object args) {
+                String[] args1 = (String[]) args;
+                return permissionManager.addRole(args1[0], args1[1]);
+            }
+
+            @Override
+            protected String convertResult(String roleId) {
+                return roleId;
+            }
+
+        });
+    }
+
+
+    @Override
+    public ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest) {
+        return super.queryProcess(BizScene.ROLE_RELA_ADD, relaRequest, new QueryApiCallBack<String, String>() {
+
+            @Override
+            protected void checkParams(Object request) {
+                UserRoleRelaRequest roleRelaRequest = (UserRoleRelaRequest) request;
+                AssertUtil.notNull(roleRelaRequest.getRoleId(), BizErrorCode.PARAM_ILLEGAL, "roleId 不为空");
+                AssertUtil.notNull(roleRelaRequest.getUserId(), BizErrorCode.PARAM_ILLEGAL, "userId 不为空");
+            }
+
+            @Override
+            protected String doProcess(Object args) {
+                UserRoleRelaRequest roleRelaRequest = (UserRoleRelaRequest) args;
+                return permissionManager.addUserRoleRela(roleRelaRequest.getRoleId(), roleRelaRequest.getUserId());
+            }
+
+            @Override
+            protected String convertResult(String id) {
+                return id;
             }
 
         });
