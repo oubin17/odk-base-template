@@ -1,11 +1,12 @@
 package com.odk.baseweb.permission;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
 import com.odk.baseapi.request.role.RoleAddRequest;
 import com.odk.baseapi.request.role.UserRoleRelaRequest;
 import com.odk.baseapi.response.PermissionQueryResponse;
+import com.odk.baseutil.enums.InnerRoleEnum;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
  * @author: oubin on 2024/11/8
  */
 @RestController
-@RequestMapping("/user/permission")
+@RequestMapping("/permission")
 public class PermissionController {
 
-    private PermissionApi permissionApi;
+    private final PermissionApi permissionApi;
 
     public PermissionController(PermissionApi permissionApi) {
         this.permissionApi = permissionApi;
@@ -31,7 +32,6 @@ public class PermissionController {
      * @param userId
      * @return
      */
-    @SaCheckLogin
     @GetMapping("/userId")
     public ServiceResponse<PermissionQueryResponse> queryUserPermission(@RequestParam("userId") String userId) {
         return permissionApi.userPermission(userId);
@@ -41,9 +41,10 @@ public class PermissionController {
      * 添加角色
      *
      * @param roleAddRequest
+     * {@link InnerRoleEnum}
      * @return
      */
-    @SaCheckLogin
+    @SaCheckRole(value = {"ADMIN"})
     @PostMapping("/role/add")
     public ServiceResponse<String> addRole(@RequestBody RoleAddRequest roleAddRequest) {
         return permissionApi.addRole(roleAddRequest);
@@ -55,7 +56,6 @@ public class PermissionController {
      * @param relaRequest
      * @return
      */
-    @SaCheckLogin
     @PostMapping("/role/rela/add")
     public ServiceResponse<String> addRoleRel(@RequestBody UserRoleRelaRequest relaRequest) {
         return permissionApi.addRoleRela(relaRequest);

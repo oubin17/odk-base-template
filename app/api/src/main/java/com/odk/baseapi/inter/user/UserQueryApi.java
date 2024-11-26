@@ -23,6 +23,14 @@ public interface UserQueryApi {
     ServiceResponse<UserQueryResponse> queryUserByUserId(String userId);
 
     /**
+     * 查找当前登录用户信息
+     *
+     * @return
+     */
+    ServiceResponse<UserQueryResponse> queryCurrentUser();
+
+
+    /**
      * 根据loginId查询对象
      *
      * @param userQueryRequest

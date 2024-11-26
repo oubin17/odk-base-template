@@ -1,6 +1,5 @@
 package com.odk.baseweb.user;
 
-import cn.dev33.satoken.annotation.SaIgnore;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.baseapi.request.UserRegisterRequest;
@@ -32,7 +31,6 @@ public class UserRegisterController {
      * @param userRegisterRequest
      * @return
      */
-    @SaIgnore
     @PostMapping()
     public ServiceResponse<String> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         return userRegisterApi.userRegister(userRegisterRequest);

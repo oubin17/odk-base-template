@@ -1,5 +1,6 @@
 package com.odk.basemanager.deal.permission;
 
+import com.google.common.collect.Lists;
 import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
@@ -54,6 +55,8 @@ public class PermissionManager {
             List<String> roleIds = userRoleDOS.stream().map(UserRoleDO::getRoleId).collect(Collectors.toList());
             List<PermissionDO> allRolePermission = permissionRepository.findAllRolePermission(roleIds);
             permissionEntity.setPermissions(allRolePermission);
+        } else {
+            permissionEntity.setPermissions(Lists.newArrayList());
         }
         return permissionEntity;
     }

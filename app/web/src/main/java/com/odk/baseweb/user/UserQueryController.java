@@ -1,6 +1,6 @@
 package com.odk.baseweb.user;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
@@ -24,11 +24,26 @@ public class UserQueryController {
 
     private UserQueryApi userQueryApi;
 
-    @GetMapping("/userid")
+    /**
+     * 根据用户id查找（管理员权限）
+     *
+     * @param userId {@link com.odk.baseutil.enums.InnerRoleEnum}
+     * @return
+     */
+    @SaCheckRole(value = {"ADMIN"})
+    @GetMapping("/userId")
     public ServiceResponse<UserQueryResponse> queryUserByUserId(@RequestParam("userId") String userId) {
-
-
         return userQueryApi.queryUserByUserId(userId);
+    }
+
+    /**
+     * 查找当前登录用户
+     *
+     * @return
+     */
+    @GetMapping()
+    public ServiceResponse<UserQueryResponse> queryCurrentUser() {
+        return userQueryApi.queryCurrentUser();
     }
 
     @GetMapping("/loginId")
