@@ -27,19 +27,19 @@ public class RolePermissionRelDO extends BaseDO {
     private static final long serialVersionUID = 6132591681856111018L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
-    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private String id;
+    @GeneratedValue(generator = "user-uuid")
+    @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private Long id;
 
     /**
      * 角色id
      */
     @Column(name = "role_id")
-    private String roleId;
+    private Long roleId;
 
     /**
      * 权限id
      */
     @Column(name = "permission_id")
-    private String permissionId;
+    private Long permissionId;
 }

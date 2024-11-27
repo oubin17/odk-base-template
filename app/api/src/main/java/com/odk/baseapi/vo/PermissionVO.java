@@ -15,7 +15,7 @@ public class PermissionVO {
     /**
      * 权限ID
      */
-    private String id;
+    private Long id;
 
     /**
      * 权限码

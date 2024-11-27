@@ -21,7 +21,7 @@ public interface PermissionApi {
      * @param userId
      * @return
      */
-    ServiceResponse<PermissionQueryResponse> userPermission(String userId);
+    ServiceResponse<PermissionQueryResponse> userPermission(Long userId);
 
 
     /**
@@ -30,7 +30,7 @@ public interface PermissionApi {
      * @param roleAddRequest
      * @return
      */
-    ServiceResponse<String> addRole(RoleAddRequest roleAddRequest);
+    ServiceResponse<Long> addRole(RoleAddRequest roleAddRequest);
 
     /**
      * 添加用户角色
@@ -38,6 +38,6 @@ public interface PermissionApi {
      * @param relaRequest
      * @return
      */
-    ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest);
+    ServiceResponse<Long> addRoleRela(UserRoleRelaRequest relaRequest);
 
 }

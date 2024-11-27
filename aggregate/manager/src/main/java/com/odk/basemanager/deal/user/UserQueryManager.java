@@ -14,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * UserQueryManager
  *
@@ -36,9 +38,9 @@ public class UserQueryManager {
      * @param userId
      * @return
      */
-    public UserEntity queryByUserId(String userId) {
-        UserBaseDO userBaseDO = baseRepository.findByUserId(userId);
-        if (null == userBaseDO) {
+    public UserEntity queryByUserId(Long userId) {
+        Optional<UserBaseDO> userBaseDO = baseRepository.findById(userId);
+        if (userBaseDO.isEmpty()) {
             logger.error("找不到用户，用户ID={}", userId);
             return null;
         }
@@ -53,13 +55,13 @@ public class UserQueryManager {
      * @param userId
      * @return
      */
-    public UserEntity queryByUserIdAndCheck(String userId) {
-        UserBaseDO userBaseDO = baseRepository.findByUserId(userId);
-        if (null == userBaseDO) {
+    public UserEntity queryByUserIdAndCheck(Long userId) {
+        Optional<UserBaseDO> userBaseDO = baseRepository.findById(userId);
+        if (userBaseDO.isEmpty()) {
             logger.error("找不到用户，用户ID={}", userId);
             return null;
         }
-        if (UserStatusEnum.NORMAL != UserStatusEnum.getByCode(userBaseDO.getUserStatus())) {
+        if (UserStatusEnum.NORMAL != UserStatusEnum.getByCode(userBaseDO.get().getUserStatus())) {
             throw new BizException(BizErrorCode.USER_STATUS_ERROR);
         }
         UserEntity userEntity = new UserEntity();

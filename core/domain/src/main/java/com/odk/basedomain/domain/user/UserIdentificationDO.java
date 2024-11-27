@@ -29,15 +29,15 @@ public class UserIdentificationDO extends BaseDO {
     private static final long serialVersionUID = -7115218095274721902L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
-    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private String id;
+    @GeneratedValue(generator = "user-uuid")
+    @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private Long id;
 
     /**
      * 用户ID
      */
     @Column(name = "user_id")
-    private String userId;
+    private Long userId;
 
     /**
      * 认证类型

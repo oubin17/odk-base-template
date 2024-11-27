@@ -47,13 +47,13 @@ public class PermissionManager {
      * @param userId
      * @return
      */
-    public PermissionEntity getAllPermissions(String userId) {
+    public PermissionEntity getAllPermissions(Long userId) {
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setUserId(userId);
         List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId);
         permissionEntity.setRoles(userRoleDOS);
         if (!CollectionUtils.isEmpty(userRoleDOS)) {
-            List<String> roleIds = userRoleDOS.stream().map(UserRoleDO::getId).collect(Collectors.toList());
+            List<Long> roleIds = userRoleDOS.stream().map(UserRoleDO::getId).collect(Collectors.toList());
             List<PermissionDO> allRolePermission = permissionRepository.findAllRolePermission(roleIds);
             permissionEntity.setPermissions(allRolePermission);
         } else {
@@ -69,7 +69,7 @@ public class PermissionManager {
      * @param roleName
      * @return
      */
-    public String addRole(String roleCode, String roleName) {
+    public Long addRole(String roleCode, String roleName) {
         UserRoleDO userRoleDO = userRoleRepository.findByRoleCode(roleCode);
         AssertUtil.isNull(userRoleDO, BizErrorCode.PARAM_ILLEGAL, "角色码重复，添加角色失败");
         UserRoleDO addRole = new UserRoleDO();
@@ -80,20 +80,20 @@ public class PermissionManager {
         return save.getId();
     }
 
-    public String addUserRoleRela(String roleId, String userId) {
+    public Long addUserRoleRela(Long roleId, Long userId) {
         UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleId(userId, roleId);
         AssertUtil.isNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户已具备该权限");
 
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
         AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
-        UserBaseDO userBaseDO = userBaseRepository.findByUserId(userId);
-        AssertUtil.notNull(userBaseDO, BizErrorCode.PARAM_ILLEGAL, "用户不存在");
+        Optional<UserBaseDO> userBaseDO = userBaseRepository.findById(userId);
+        AssertUtil.isTrue(userBaseDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "用户不存在");
 
         UserRoleRelDO roleRelDO = new UserRoleRelDO();
         roleRelDO.setUserId(userId);
         roleRelDO.setRoleId(roleId);
         UserRoleRelDO save = relRepository.save(roleRelDO);
-        return String.valueOf(save.getId());
+        return save.getId();
 
     }
 

@@ -23,7 +23,7 @@ public class UserLogoutRequest extends BaseRequest {
     /**
      * 用户ID
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 是否登录态

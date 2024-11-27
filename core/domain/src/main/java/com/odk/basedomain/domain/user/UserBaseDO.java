@@ -32,9 +32,9 @@ public class UserBaseDO extends BaseDO {
      * 主键id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
-    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private String id;
+    @GeneratedValue(generator = "user-uuid")
+    @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private Long id;
 
     /**
      * 用户名称

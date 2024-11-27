@@ -20,7 +20,7 @@ public interface UserQueryApi {
      * @param userId
      * @return
      */
-    ServiceResponse<UserQueryResponse> queryUserByUserId(String userId);
+    ServiceResponse<UserQueryResponse> queryUserByUserId(Long userId);
 
     /**
      * 查找当前登录用户信息

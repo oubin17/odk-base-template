@@ -29,20 +29,20 @@ public class UserRoleRelDO extends BaseDO {
     private static final long serialVersionUID = 2261404806508249134L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
-    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private String id;
+    @GeneratedValue(generator = "user-uuid")
+    @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private Long id;
 
     /**
      * 用户id
      */
     @Column(name = "user_id")
-    private String userId;
+    private Long userId;
 
     /**
      * 角色id
      */
     @Column(name = "role_id")
-    private String roleId;
+    private Long roleId;
 
 }

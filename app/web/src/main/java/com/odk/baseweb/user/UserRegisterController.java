@@ -32,7 +32,7 @@ public class UserRegisterController {
      * @return
      */
     @PostMapping()
-    public ServiceResponse<String> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ServiceResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         return userRegisterApi.userRegister(userRegisterRequest);
     }
 }

@@ -15,7 +15,7 @@ public class UserRoleVo {
     /**
      * 角色id
      */
-    private String id;
+    private Long id;
 
     /**
      * 角色码

@@ -19,7 +19,7 @@ public class PermissionEntity {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 角色列表

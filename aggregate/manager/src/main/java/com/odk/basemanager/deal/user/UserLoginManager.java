@@ -13,7 +13,6 @@ import com.odk.basemanager.deal.password.PasswordManager;
 import com.odk.basemanager.dto.UserLoginDTO;
 import com.odk.basemanager.entity.UserEntity;
 import com.odk.baseutil.constants.UserInfoConstants;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,10 +58,10 @@ public class UserLoginManager {
         return userEntity;
     }
 
-    public Boolean userLogout(String userId) {
+    public Boolean userLogout(Long userId) {
         Optional<UserBaseDO> byUserId = baseRepository.findById(userId);
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
-        AssertUtil.isTrue(StringUtils.equals(byUserId.get().getId(), StpUtil.getLoginIdAsString()), BizErrorCode.TOKEN_UNMATCHED);
+        AssertUtil.isTrue(byUserId.get().getId().equals( StpUtil.getLoginIdAsLong()), BizErrorCode.TOKEN_UNMATCHED);
         return true;
     }
 

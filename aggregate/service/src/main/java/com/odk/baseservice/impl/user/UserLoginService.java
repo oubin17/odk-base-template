@@ -118,7 +118,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
                 List request = (List) args;
                 Boolean isLogin = (Boolean) request.get(1);
                 if (isLogin) {
-                    return userLoginManager.userLogout((String) request.get(0));
+                    return userLoginManager.userLogout((Long) request.get(0));
                 } else {
                     return false;
                 }

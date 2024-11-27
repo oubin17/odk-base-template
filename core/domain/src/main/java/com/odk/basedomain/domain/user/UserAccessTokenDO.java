@@ -29,15 +29,15 @@ public class UserAccessTokenDO extends BaseDO {
     private static final long serialVersionUID = -3008078711003604352L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
-    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private String id;
+    @GeneratedValue(generator = "user-uuid")
+    @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private Long id;
 
     /**
      * 用户id
      */
     @Column(name = "user_id")
-    private String userId;
+    private Long userId;
 
     /**
      * token 类型

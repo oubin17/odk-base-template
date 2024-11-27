@@ -28,7 +28,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
     private UserQueryManager userQueryManager;
 
     @Override
-    public ServiceResponse<UserQueryResponse> queryUserByUserId(String userId) {
+    public ServiceResponse<UserQueryResponse> queryUserByUserId(Long userId) {
 
         return super.queryProcess(BizScene.USER_QUERY, userId, new QueryApiCallBack<UserEntity, UserQueryResponse>() {
 
@@ -66,7 +66,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
             @Override
             protected UserEntity doProcess(Object args) {
-                return userQueryManager.queryByUserId((String) StpUtil.getLoginId());
+                return userQueryManager.queryByUserId(StpUtil.getLoginIdAsLong());
             }
 
             @Override
