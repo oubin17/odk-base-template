@@ -4,6 +4,7 @@ import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
@@ -28,8 +29,9 @@ public class UserRoleRelDO extends BaseDO {
     private static final long serialVersionUID = 2261404806508249134L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
+    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private String id;
 
     /**
      * 用户id

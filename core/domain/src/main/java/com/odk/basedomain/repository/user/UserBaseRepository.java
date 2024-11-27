@@ -68,7 +68,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @version: 1.0
  * @author: oubin on 2024/11/4
  */
-public interface UserBaseRepository extends JpaRepository<UserBaseDO, Long> {
+public interface UserBaseRepository extends JpaRepository<UserBaseDO, String> {
 
     /**
      * 根据userId查找

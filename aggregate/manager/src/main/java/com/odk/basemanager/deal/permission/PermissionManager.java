@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +53,7 @@ public class PermissionManager {
         List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId);
         permissionEntity.setRoles(userRoleDOS);
         if (!CollectionUtils.isEmpty(userRoleDOS)) {
-            List<String> roleIds = userRoleDOS.stream().map(UserRoleDO::getRoleId).collect(Collectors.toList());
+            List<String> roleIds = userRoleDOS.stream().map(UserRoleDO::getId).collect(Collectors.toList());
             List<PermissionDO> allRolePermission = permissionRepository.findAllRolePermission(roleIds);
             permissionEntity.setPermissions(allRolePermission);
         } else {
@@ -76,15 +77,15 @@ public class PermissionManager {
         addRole.setRoleName(roleName);
         addRole.setStatus(CommonStatusEnum.NORMAL.getCode());
         UserRoleDO save = userRoleRepository.save(addRole);
-        return save.getRoleId();
+        return save.getId();
     }
 
     public String addUserRoleRela(String roleId, String userId) {
         UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleId(userId, roleId);
         AssertUtil.isNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户已具备该权限");
 
-        UserRoleDO userRoleDO = userRoleRepository.findByRoleId(roleId);
-        AssertUtil.notNull(userRoleDO, BizErrorCode.PARAM_ILLEGAL, "角色不存在");
+        Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
+        AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
         UserBaseDO userBaseDO = userBaseRepository.findByUserId(userId);
         AssertUtil.notNull(userBaseDO, BizErrorCode.PARAM_ILLEGAL, "用户不存在");
 

@@ -1,6 +1,5 @@
 package com.odk.baseapi.vo;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 /**
@@ -16,7 +15,7 @@ public class PermissionVO {
     /**
      * 权限ID
      */
-    private String permissionId;
+    private String id;
 
     /**
      * 权限码

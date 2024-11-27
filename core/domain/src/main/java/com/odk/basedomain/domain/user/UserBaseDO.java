@@ -6,6 +6,7 @@ import com.odk.base.enums.user.UserTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
@@ -20,9 +21,7 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_base", indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id", unique = true)
-})
+@Table(name = "t_user_base")
 @EntityListeners(AuditingEntityListener.class)
 public class UserBaseDO extends BaseDO {
 
@@ -33,14 +32,9 @@ public class UserBaseDO extends BaseDO {
      * 主键id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    /**
-     * 用户id
-     */
-    @Column(name = "user_id", unique = true)
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
+    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private String id;
 
     /**
      * 用户名称

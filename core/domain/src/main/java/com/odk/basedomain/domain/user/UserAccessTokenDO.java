@@ -4,6 +4,7 @@ import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
@@ -19,7 +20,7 @@ import java.io.Serial;
 @Data
 @Entity
 @Table(name = "t_user_access_token", indexes = {
-        @Index(name = "idx_type_id", columnList = "token_type,token_value", unique = true)
+        @Index(name = "idx_type_id", columnList = "token_value,token_type", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
 public class UserAccessTokenDO extends BaseDO {
@@ -28,15 +29,9 @@ public class UserAccessTokenDO extends BaseDO {
     private static final long serialVersionUID = -3008078711003604352L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    /**
-     * 主键ID
-     *
-     */
-    @Column(name = "token_id", unique = true)
-    private String tokenId;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
+    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private String id;
 
     /**
      * 用户id

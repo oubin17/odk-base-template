@@ -4,6 +4,7 @@ import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
@@ -19,7 +20,7 @@ import java.io.Serial;
 @Data
 @Entity
 @Table(name = "t_user_permission", indexes = {
-        @Index(name = "idx_permission_id", columnList = "permission_id", unique = true)
+        @Index(name = "idx_permission_id", columnList = "permission_code", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
 public class PermissionDO extends BaseDO {
@@ -28,14 +29,9 @@ public class PermissionDO extends BaseDO {
     private static final long serialVersionUID = 1983417677692607399L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    /**
-     * 权限ID
-     */
-    @Column(name = "permission_id")
-    private String permissionId;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "custom-id")
+    @GenericGenerator(name = "custom-id", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
+    private String id;
 
     /**
      * 权限码

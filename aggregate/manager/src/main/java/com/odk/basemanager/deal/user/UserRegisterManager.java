@@ -19,12 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.yaml.snakeyaml.constructor.DuplicateKeyException;
-
-import java.util.UUID;
 
 /**
  * UserRegisterManager
@@ -50,19 +46,17 @@ public class UserRegisterManager {
     public String registerUser(UserRegisterDTO userRegisterDTO) {
         UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValue(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId());
         AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, "用户已经存在，类型：" + userRegisterDTO.getLoginType() + "，登录ID：" + userRegisterDTO.getLoginId());
-        String userId = UUID.randomUUID().toString();
-
+        String userId;
         try {
-            transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    addUserBase(userId, userRegisterDTO);
-                    addAccessToken(userId, userRegisterDTO);
-                    //密码加密
-                    String password = userRegisterDTO.getPassword();
-                    userRegisterDTO.setPassword(passwordManager.encode(password));
-                    addIdentification(userId, userRegisterDTO);
-                }
+
+            userId = transactionTemplate.execute(status -> {
+                String userId1 = addUserBase(userRegisterDTO);
+                addAccessToken(userId1, userRegisterDTO);
+                //密码加密
+                String password = userRegisterDTO.getPassword();
+                userRegisterDTO.setPassword(passwordManager.encode(password));
+                addIdentification(userId1, userRegisterDTO);
+                return userId1;
             });
         } catch (DataIntegrityViolationException exception) {
             log.error("注册发生唯一键冲突：{}, 异常原因：", JSONObject.toJSONString(userRegisterDTO), exception);
@@ -81,16 +75,15 @@ public class UserRegisterManager {
     /**
      * 添加基础信息
      *
-     * @param userId
      * @param userRegisterDTO
      */
-    private void addUserBase(String userId, UserRegisterDTO userRegisterDTO) {
+    private String addUserBase(UserRegisterDTO userRegisterDTO) {
         UserBaseDO userBase = new UserBaseDO();
-        userBase.setUserId(userId);
         userBase.setUserType(UserTypeEnum.INDIVIDUAL.getCode());
         userBase.setUserStatus(UserStatusEnum.NORMAL.getCode());
         userBase.setUserName(userRegisterDTO.getUserName());
-        userBaseRepository.save(userBase);
+        UserBaseDO save = userBaseRepository.save(userBase);
+        return save.getId();
     }
 
     /**
@@ -101,7 +94,6 @@ public class UserRegisterManager {
      */
     private void addAccessToken(String userId, UserRegisterDTO userRegisterDTO) {
         UserAccessTokenDO accessToken = new UserAccessTokenDO();
-        accessToken.setTokenId(UUID.randomUUID().toString());
         accessToken.setUserId(userId);
         accessToken.setTokenType(userRegisterDTO.getLoginType());
         accessToken.setTokenValue(userRegisterDTO.getLoginId());
@@ -116,7 +108,6 @@ public class UserRegisterManager {
      */
     private void addIdentification(String userId, UserRegisterDTO userRegisterDTO) {
         UserIdentificationDO identification = new UserIdentificationDO();
-        identification.setIdentifyId(UUID.randomUUID().toString());
         identification.setUserId(userId);
         identification.setIdentifyType(IdentificationTypeEnum.PASSWORD.getCode());
         identification.setIdentifyValue(userRegisterDTO.getPassword());

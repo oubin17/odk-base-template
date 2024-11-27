@@ -55,7 +55,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
                 permissionQueryResponse.setUserId(permissionEntity.getUserId());
                 List<UserRoleVo> roles = permissionEntity.getRoles().stream().map(userRoleDO -> {
                     UserRoleVo userRoleVo = new UserRoleVo();
-                    userRoleVo.setRoleId(userRoleDO.getRoleId());
+                    userRoleVo.setId(userRoleDO.getId());
                     userRoleVo.setRoleCode(userRoleDO.getRoleCode());
                     userRoleVo.setRoleName(userRoleDO.getRoleName());
                     userRoleVo.setStatus(userRoleDO.getStatus());
@@ -64,7 +64,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
                 permissionQueryResponse.setRoles(roles);
                 List<PermissionVO> permissions = permissionEntity.getPermissions().stream().map(permissionDO -> {
                     PermissionVO permissionVO = new PermissionVO();
-                    permissionVO.setPermissionId(permissionDO.getPermissionId());
+                    permissionVO.setId(permissionDO.getId());
                     permissionVO.setPermissionCode(permissionDO.getPermissionCode());
                     permissionVO.setPermissionName(permissionDO.getPermissionName());
                     permissionVO.setStatus(permissionDO.getStatus());
