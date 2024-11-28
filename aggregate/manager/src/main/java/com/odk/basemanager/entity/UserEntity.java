@@ -15,7 +15,7 @@ public class UserEntity {
     /**
      * 用户id
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 用户名称

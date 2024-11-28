@@ -15,7 +15,7 @@ public class UserLoginVO {
     /**
      * 用户ID
      */
-    private String userId;
+    private Long userId;
 
     /**
      * 登录token

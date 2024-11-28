@@ -56,16 +56,17 @@ public class UserQueryManager {
      * @return
      */
     public UserEntity queryByUserIdAndCheck(Long userId) {
-        Optional<UserBaseDO> userBaseDO = baseRepository.findById(userId);
-        if (userBaseDO.isEmpty()) {
+        Optional<UserBaseDO> optionalUserBaseDO = baseRepository.findById(userId);
+        if (optionalUserBaseDO.isEmpty()) {
             logger.error("找不到用户，用户ID={}", userId);
             return null;
         }
-        if (UserStatusEnum.NORMAL != UserStatusEnum.getByCode(userBaseDO.get().getUserStatus())) {
+        if (UserStatusEnum.NORMAL != UserStatusEnum.getByCode(optionalUserBaseDO.get().getUserStatus())) {
             throw new BizException(BizErrorCode.USER_STATUS_ERROR);
         }
         UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userBaseDO, userEntity);
+        BeanUtils.copyProperties(optionalUserBaseDO.get(), userEntity);
+        userEntity.setUserId(optionalUserBaseDO.get().getId());
         return userEntity;
     }
 
