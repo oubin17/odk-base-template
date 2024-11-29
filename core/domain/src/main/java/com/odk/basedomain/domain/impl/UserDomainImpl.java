@@ -8,7 +8,6 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.PasswordDomain;
 import com.odk.basedomain.domain.UserDomain;
-import com.odk.basedomain.entity.UserEntity;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserIdentificationDO;
@@ -17,14 +16,11 @@ import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseutil.dto.UserRegisterDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.yaml.snakeyaml.constructor.DuplicateKeyException;
-
-import java.util.Optional;
 
 /**
  * UserDomainImpl
@@ -75,49 +71,6 @@ public class UserDomainImpl implements UserDomain {
 
         return userId;
     }
-
-
-    /**
-     * 根据userId查找用户
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public UserEntity queryByUserId(Long userId) {
-        Optional<UserBaseDO> userBaseDO = userBaseRepository.findById(userId);
-        if (userBaseDO.isEmpty()) {
-            log.error("找不到用户，用户ID={}", userId);
-            return null;
-        }
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userBaseDO, userEntity);
-        return userEntity;
-    }
-
-    /**
-     * 检查用户状态
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public UserEntity queryByUserIdAndCheck(Long userId) {
-        Optional<UserBaseDO> optionalUserBaseDO = userBaseRepository.findById(userId);
-        if (optionalUserBaseDO.isEmpty()) {
-            log.error("找不到用户，用户ID={}", userId);
-            return null;
-        }
-        if (UserStatusEnum.NORMAL != UserStatusEnum.getByCode(optionalUserBaseDO.get().getUserStatus())) {
-            throw new BizException(BizErrorCode.USER_STATUS_ERROR);
-        }
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(optionalUserBaseDO.get(), userEntity);
-        userEntity.setUserId(optionalUserBaseDO.get().getId());
-        return userEntity;
-    }
-
-
 
     /**
      * 添加基础信息

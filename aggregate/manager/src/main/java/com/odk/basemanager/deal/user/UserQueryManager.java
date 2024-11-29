@@ -1,6 +1,6 @@
 package com.odk.basemanager.deal.user;
 
-import com.odk.basedomain.domain.UserDomain;
+import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.entity.UserEntity;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
@@ -21,7 +21,7 @@ public class UserQueryManager {
 
     private UserAccessTokenRepository accessTokenRepository;
 
-    private UserDomain userDomain;
+    private UserQueryDomain userQueryDomain;
 
     /**
      * 根据userId查找用户
@@ -30,17 +30,7 @@ public class UserQueryManager {
      * @return
      */
     public UserEntity queryByUserId(Long userId) {
-        return this.userDomain.queryByUserId(userId);
-    }
-
-    /**
-     * 检查用户状态
-     *
-     * @param userId
-     * @return
-     */
-    public UserEntity queryByUserIdAndCheck(Long userId) {
-        return this.userDomain.queryByUserIdAndCheck(userId);
+        return this.userQueryDomain.queryByUserId(userId);
     }
 
     /**
@@ -65,7 +55,7 @@ public class UserQueryManager {
     }
 
     @Autowired
-    public void setUserDomain(UserDomain userDomain) {
-        this.userDomain = userDomain;
+    public void setUserQueryDomain(UserQueryDomain userQueryDomain) {
+        this.userQueryDomain = userQueryDomain;
     }
 }

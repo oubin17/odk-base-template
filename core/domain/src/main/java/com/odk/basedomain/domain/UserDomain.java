@@ -1,6 +1,5 @@
 package com.odk.basedomain.domain;
 
-import com.odk.basedomain.entity.UserEntity;
 import com.odk.baseutil.dto.UserRegisterDTO;
 
 /**
@@ -19,21 +18,5 @@ public interface UserDomain {
      * @return
      */
     Long registerUser(UserRegisterDTO userRegisterDTO);
-
-    /**
-     * 根据用户id查找
-     *
-     * @param userId
-     * @return
-     */
-    UserEntity queryByUserId(Long userId);
-
-    /**
-     * 根据用户id查找，如果不存在，抛异常
-     *
-     * @param userId
-     * @return
-     */
-    UserEntity queryByUserIdAndCheck(Long userId);
 
 }

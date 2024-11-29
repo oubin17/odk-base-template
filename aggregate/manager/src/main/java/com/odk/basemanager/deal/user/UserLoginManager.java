@@ -4,14 +4,13 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.domain.PasswordDomain;
-import com.odk.basedomain.domain.UserDomain;
-import com.odk.basedomain.model.user.UserAccessTokenDO;
+import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.entity.UserEntity;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
-import com.odk.basedomain.entity.UserEntity;
 import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.dto.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class UserLoginManager {
 
     private PasswordDomain passwordDomain;
 
-    private UserDomain userDomain;
+    private UserQueryDomain userQueryDomain;
 
     /**
      * 用户登录
@@ -46,11 +45,10 @@ public class UserLoginManager {
      * @return
      */
     public UserEntity userLogin(UserLoginDTO userLoginDTO) {
-        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
-        AssertUtil.notNull(userAccessTokenDO, BizErrorCode.USER_NOT_EXIST);
-        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userAccessTokenDO.getUserId(), userLoginDTO.getIdentifyType());
+        UserEntity userEntity = userQueryDomain.queryByLoginTypeAndLoginId(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
+        AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
+        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), userLoginDTO.getIdentifyType());
         AssertUtil.isTrue(passwordDomain.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
-        UserEntity userEntity = userDomain.queryByUserIdAndCheck(userAccessTokenDO.getUserId());
         //设置登录session
         StpUtil.login(userEntity.getUserId());
         //缓存当前用户信息
@@ -87,7 +85,7 @@ public class UserLoginManager {
     }
 
     @Autowired
-    public void setUserDomain(UserDomain userDomain) {
-        this.userDomain = userDomain;
+    public void setUserQueryDomain(UserQueryDomain userQueryDomain) {
+        this.userQueryDomain = userQueryDomain;
     }
 }
