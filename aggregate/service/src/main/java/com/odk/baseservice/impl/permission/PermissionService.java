@@ -10,7 +10,7 @@ import com.odk.baseapi.response.PermissionQueryResponse;
 import com.odk.baseapi.vo.PermissionVO;
 import com.odk.baseapi.vo.UserRoleVo;
 import com.odk.basemanager.deal.permission.PermissionManager;
-import com.odk.basemanager.entity.PermissionEntity;
+import com.odk.basedomain.entity.PermissionEntity;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.enums.BizScene;
 import org.springframework.beans.factory.annotation.Autowired;

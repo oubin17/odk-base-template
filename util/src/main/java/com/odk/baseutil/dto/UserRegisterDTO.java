@@ -1,4 +1,4 @@
-package com.odk.basemanager.dto;
+package com.odk.baseutil.dto;
 
 import com.odk.base.dto.DTO;
 import lombok.Data;
@@ -31,9 +31,16 @@ public class UserRegisterDTO extends DTO {
     private String userName;
 
     /**
+     * 密码类型
+     *
+     */
+    private String identifyType;
+
+    /**
      * 密码
      */
-    private String password;
+    private String identifyValue;
+
 
     /**
      * 用户ID

@@ -1,5 +1,6 @@
 package com.odk.baseservice.impl.user;
 
+import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
@@ -7,9 +8,10 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.baseapi.request.UserRegisterRequest;
-import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.basemanager.deal.user.UserRegisterManager;
-import com.odk.basemanager.dto.UserRegisterDTO;
+import com.odk.basemanager.deal.verificationcode.SmsVerificationManager;
+import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.dto.UserRegisterDTO;
 import com.odk.baseutil.enums.BizScene;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +28,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRegisterService extends AbstractApiImpl implements UserRegisterApi {
 
+    private SmsVerificationManager smsVerificationManager;
+
     private UserRegisterManager userRegisterManager;
 
     @Override
@@ -38,8 +42,16 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
                 UserRegisterRequest registerRequest = (UserRegisterRequest) request;
                 AssertUtil.notNull(registerRequest.getLoginId(), BizErrorCode.PARAM_ILLEGAL, "loginId is null.");
                 AssertUtil.notNull(TokenTypeEnum.getByCode(registerRequest.getLoginType()), BizErrorCode.PARAM_ILLEGAL, "loginType is null.");
+                AssertUtil.notNull(IdentificationTypeEnum.getByCode(registerRequest.getIdentifyType()), BizErrorCode.PARAM_ILLEGAL, "identifyType is null.");
+                AssertUtil.notNull(registerRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "password is null.");
                 AssertUtil.isTrue(StringUtils.isNotEmpty(registerRequest.getUserName()), BizErrorCode.PARAM_ILLEGAL, "userName is null.");
-                AssertUtil.notNull(registerRequest.getPassword(), BizErrorCode.PARAM_ILLEGAL, "password is null.");
+            }
+
+            @Override
+            protected void beforeProcess(BaseRequest request) {
+                //检查验证码是否有效
+                UserRegisterRequest registerRequest = (UserRegisterRequest) request;
+                AssertUtil.isTrue(smsVerificationManager.verifySms(registerRequest.getVerificationCode()), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
             }
 
             @Override
@@ -66,5 +78,10 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     @Autowired
     public void setUserRegisterManager(UserRegisterManager userRegisterManager) {
         this.userRegisterManager = userRegisterManager;
+    }
+
+    @Autowired
+    public void setSmsVerificationManager(SmsVerificationManager smsVerificationManager) {
+        this.smsVerificationManager = smsVerificationManager;
     }
 }

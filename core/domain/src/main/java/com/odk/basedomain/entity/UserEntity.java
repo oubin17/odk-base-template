@@ -1,6 +1,9 @@
-package com.odk.basemanager.entity;
+package com.odk.basedomain.entity;
 
 import lombok.Data;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * UserEntity
@@ -10,8 +13,10 @@ import lombok.Data;
  * @author: oubin on 2024/11/4
  */
 @Data
-public class UserEntity {
+public class UserEntity implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 3674637208987065622L;
     /**
      * 用户id
      */

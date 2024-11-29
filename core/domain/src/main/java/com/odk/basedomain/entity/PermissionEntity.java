@@ -1,7 +1,7 @@
-package com.odk.basemanager.entity;
+package com.odk.basedomain.entity;
 
-import com.odk.basedomain.domain.permission.PermissionDO;
-import com.odk.basedomain.domain.permission.UserRoleDO;
+import com.odk.basedomain.model.permission.PermissionDO;
+import com.odk.basedomain.model.permission.UserRoleDO;
 import lombok.Data;
 
 import java.util.List;

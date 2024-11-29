@@ -41,6 +41,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.odk</groupId>
             <artifactId>base-util</artifactId>
         </dependency>

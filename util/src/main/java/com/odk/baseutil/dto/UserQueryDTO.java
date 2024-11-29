@@ -1,19 +1,19 @@
-package com.odk.basemanager.dto;
+package com.odk.baseutil.dto;
 
 import com.odk.base.dto.DTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * UserLoginDTO
+ * UserQueryDTO
  *
  * @description:
  * @version: 1.0
- * @author: oubin on 2024/1/19
+ * @author: oubin on 2024/1/20
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserLoginDTO extends DTO {
+public class UserQueryDTO extends DTO {
 
     /**
      * 登录ID
@@ -24,14 +24,4 @@ public class UserLoginDTO extends DTO {
      * 登录类型
      */
     private String loginType;
-
-    /**
-     * 密码类型
-     */
-    private String identifyType;
-
-    /**
-     * 密码
-     */
-    private String identifyValue;
 }

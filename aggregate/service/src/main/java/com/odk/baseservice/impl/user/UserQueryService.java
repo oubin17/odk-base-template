@@ -8,7 +8,7 @@ import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
 import com.odk.baseapi.response.UserQueryResponse;
 import com.odk.basemanager.deal.user.UserQueryManager;
-import com.odk.basemanager.entity.UserEntity;
+import com.odk.basedomain.entity.UserEntity;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.enums.BizScene;
 import org.springframework.beans.BeanUtils;

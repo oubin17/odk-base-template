@@ -14,8 +14,8 @@ import com.odk.baseapi.request.UserLogoutRequest;
 import com.odk.baseapi.response.UserLoginResponse;
 import com.odk.basemanager.deal.user.UserLoginManager;
 import com.odk.basemanager.deal.user.UserQueryManager;
-import com.odk.basemanager.dto.UserLoginDTO;
-import com.odk.basemanager.entity.UserEntity;
+import com.odk.baseutil.dto.UserLoginDTO;
+import com.odk.basedomain.entity.UserEntity;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.enums.BizScene;
 import lombok.extern.slf4j.Slf4j;
@@ -127,18 +127,6 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             @Override
             protected Boolean convertResult(Boolean apiResult) {
                 return apiResult;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void afterProcess(BaseResponse response) {
-                if (response.isSuccess()) {
-                    ServiceResponse<Boolean> logoutResponse = (ServiceResponse<Boolean>) response;
-                    if (logoutResponse.getData()) {
-                        StpUtil.logout();
-                        log.info("删除登录token成功，用户ID={}", logoutRequest.getUserId());
-                    }
-                }
             }
         });
     }

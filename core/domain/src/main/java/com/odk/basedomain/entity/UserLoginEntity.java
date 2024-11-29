@@ -1,4 +1,4 @@
-package com.odk.basemanager.entity;
+package com.odk.basedomain.entity;
 
 import lombok.Data;
 

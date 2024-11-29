@@ -2,6 +2,7 @@ package com.odk.baseweb.interceptor.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotRoleException;
+import cn.dev33.satoken.exception.SaTokenException;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.base.vo.response.ServiceResponse;
@@ -35,27 +36,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理系统异常 ： SaToken
+     * 处理SaToken异常
      *
      * @param e
      * @return
      */
     @ExceptionHandler(NotLoginException.class)
-    public ResponseEntity<ServiceResponse> handleValidationException(NotLoginException e) {
+    public ResponseEntity<ServiceResponse> handleSaTokenException(SaTokenException e) {
         // 处理校验异常，可以根据需要返回适当的响应
-
-        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_EXPIRED, "token无效"), HttpStatus.BAD_REQUEST);
+        if (e instanceof NotLoginException) {
+            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_EXPIRED, "token无效"), HttpStatus.BAD_REQUEST);
+        } else if (e instanceof NotRoleException) {
+            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PERMISSION_DENY, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, "系统异常"), HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * 处理系统异常 ： SaToken
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(NotRoleException.class)
-    public ResponseEntity<ServiceResponse> handleValidationException(NotRoleException e) {
-        // 处理校验异常，可以根据需要返回适当的响应
-        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PERMISSION_DENY, e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
 }

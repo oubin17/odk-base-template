@@ -3,16 +3,17 @@ package com.odk.basemanager.deal.user;
 import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.domain.user.UserAccessTokenDO;
-import com.odk.basedomain.domain.user.UserBaseDO;
-import com.odk.basedomain.domain.user.UserIdentificationDO;
+import com.odk.basedomain.domain.PasswordDomain;
+import com.odk.basedomain.domain.UserDomain;
+import com.odk.basedomain.model.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserBaseDO;
+import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
-import com.odk.basemanager.deal.password.PasswordManager;
-import com.odk.basemanager.dto.UserLoginDTO;
-import com.odk.basemanager.entity.UserEntity;
+import com.odk.basedomain.entity.UserEntity;
 import com.odk.baseutil.constants.UserInfoConstants;
+import com.odk.baseutil.dto.UserLoginDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +35,9 @@ public class UserLoginManager {
 
     private UserIdentificationRepository identificationRepository;
 
-    private PasswordManager passwordManager;
+    private PasswordDomain passwordDomain;
 
-    private UserQueryManager userQueryManager;
+    private UserDomain userDomain;
 
     /**
      * 用户登录
@@ -48,20 +49,20 @@ public class UserLoginManager {
         UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
         AssertUtil.notNull(userAccessTokenDO, BizErrorCode.USER_NOT_EXIST);
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userAccessTokenDO.getUserId(), userLoginDTO.getIdentifyType());
-        AssertUtil.isTrue(passwordManager.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
-        UserEntity userEntity = userQueryManager.queryByUserIdAndCheck(userAccessTokenDO.getUserId());
+        AssertUtil.isTrue(passwordDomain.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
+        UserEntity userEntity = userDomain.queryByUserIdAndCheck(userAccessTokenDO.getUserId());
         //设置登录session
         StpUtil.login(userEntity.getUserId());
         //缓存当前用户信息
         StpUtil.getSession().set(UserInfoConstants.ACCOUNT_SESSION_USER, userEntity);
-
         return userEntity;
     }
 
     public Boolean userLogout(Long userId) {
         Optional<UserBaseDO> byUserId = baseRepository.findById(userId);
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
-        AssertUtil.isTrue(byUserId.get().getId().equals( StpUtil.getLoginIdAsLong()), BizErrorCode.TOKEN_UNMATCHED);
+        AssertUtil.isTrue(byUserId.get().getId().equals(StpUtil.getLoginIdAsLong()), BizErrorCode.TOKEN_UNMATCHED);
+        StpUtil.logout();
         return true;
     }
 
@@ -76,17 +77,17 @@ public class UserLoginManager {
     }
 
     @Autowired
-    public void setPasswordManager(PasswordManager passwordManager) {
-        this.passwordManager = passwordManager;
-    }
-
-    @Autowired
     public void setBaseRepository(UserBaseRepository baseRepository) {
         this.baseRepository = baseRepository;
     }
 
     @Autowired
-    public void setUserQueryManager(UserQueryManager userQueryManager) {
-        this.userQueryManager = userQueryManager;
+    public void setPasswordDomain(PasswordDomain passwordDomain) {
+        this.passwordDomain = passwordDomain;
+    }
+
+    @Autowired
+    public void setUserDomain(UserDomain userDomain) {
+        this.userDomain = userDomain;
     }
 }

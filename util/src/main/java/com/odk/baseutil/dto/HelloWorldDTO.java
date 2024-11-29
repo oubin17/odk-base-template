@@ -1,4 +1,4 @@
-package com.odk.basemanager.dto;
+package com.odk.baseutil.dto;
 
 import com.odk.base.dto.DTO;
 import lombok.Data;

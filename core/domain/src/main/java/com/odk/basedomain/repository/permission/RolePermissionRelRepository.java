@@ -1,6 +1,6 @@
 package com.odk.basedomain.repository.permission;
 
-import com.odk.basedomain.domain.permission.RolePermissionRelDO;
+import com.odk.basedomain.model.permission.RolePermissionRelDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

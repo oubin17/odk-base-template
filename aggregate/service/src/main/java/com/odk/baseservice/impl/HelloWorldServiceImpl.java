@@ -6,7 +6,7 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.HelloWorldApi;
 import com.odk.baseservice.template.AbstractApiImpl;
-import com.odk.basemanager.dto.HelloWorldDTO;
+import com.odk.baseutil.dto.HelloWorldDTO;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.request.HelloWorldRequest;
 import com.odk.baseutil.response.HelloWorldResponse;
