@@ -1,6 +1,9 @@
-package com.odk.baseapi.vo;
+package com.odk.baseutil.dto.permission;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * UserRoleVo
@@ -10,7 +13,7 @@ import lombok.Data;
  * @author: oubin on 2024/11/9
  */
 @Data
-public class UserRoleVo {
+public class UserRoleDTO {
 
     /**
      * 角色id
@@ -31,4 +34,9 @@ public class UserRoleVo {
      * 角色状态
      */
     private String status;
+
+    /**
+     * 角色对应权限
+     */
+    private List<PermissionDTO> permissions = Lists.newArrayList();
 }

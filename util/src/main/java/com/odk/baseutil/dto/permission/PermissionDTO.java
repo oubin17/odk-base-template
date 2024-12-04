@@ -1,4 +1,4 @@
-package com.odk.baseapi.vo;
+package com.odk.baseutil.dto.permission;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author: oubin on 2024/11/9
  */
 @Data
-public class PermissionVO {
+public class PermissionDTO {
 
     /**
      * 权限ID

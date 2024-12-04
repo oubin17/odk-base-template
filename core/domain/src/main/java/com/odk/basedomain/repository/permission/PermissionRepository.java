@@ -16,6 +16,16 @@ import java.util.List;
  */
 public interface PermissionRepository extends JpaRepository<PermissionDO, Long> {
 
-    @Query(value = "select * from t_user_permission where permission_id in (select permission_id from t_role_permission_rel where role_id in (:roleIds)) and status = '0'", nativeQuery = true)
+    @Query(value = "select * from t_user_permission where id in (select permission_id from t_role_permission_rel where role_id in (:roleIds)) and status = '0'", nativeQuery = true)
     List<PermissionDO> findAllRolePermission(@Param("roleIds")List<Long> roleIds);
+
+    /**
+     * 根据角色id查找角色对应权限
+     *
+     * @param roleId
+     * @return
+     */
+    @Query(value = "select * from t_user_permission where id in (select permission_id from t_role_permission_rel where role_id = :roleId) and status = '0'", nativeQuery = true)
+    List<PermissionDO> findRolePermissionByRoleId(@Param("roleId")Long roleId);
+
 }

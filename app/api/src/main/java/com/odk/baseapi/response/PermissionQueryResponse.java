@@ -1,7 +1,7 @@
 package com.odk.baseapi.response;
 
-import com.odk.baseapi.vo.PermissionVO;
-import com.odk.baseapi.vo.UserRoleVo;
+import com.odk.baseutil.dto.permission.PermissionDTO;
+import com.odk.baseutil.dto.permission.UserRoleDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -16,9 +16,18 @@ import java.util.List;
 @Data
 public class PermissionQueryResponse {
 
+    /**
+     * 用户id
+     */
     private Long userId;
 
-    private List<UserRoleVo> roles;
+    /**
+     * 角色列表
+     */
+    private List<UserRoleDTO> roles;
 
-    private List<PermissionVO> permissions;
+    /**
+     * 所有权限集合
+     */
+    private List<PermissionDTO> permissions;
 }

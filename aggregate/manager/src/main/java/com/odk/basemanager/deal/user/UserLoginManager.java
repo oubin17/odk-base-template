@@ -8,7 +8,6 @@ import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.entity.UserEntity;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserIdentificationDO;
-import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseutil.constants.UserInfoConstants;
@@ -29,8 +28,6 @@ import java.util.Optional;
 public class UserLoginManager {
 
     private UserBaseRepository baseRepository;
-
-    private UserAccessTokenRepository accessTokenRepository;
 
     private UserIdentificationRepository identificationRepository;
 
@@ -62,11 +59,6 @@ public class UserLoginManager {
         AssertUtil.isTrue(byUserId.get().getId().equals(StpUtil.getLoginIdAsLong()), BizErrorCode.TOKEN_UNMATCHED);
         StpUtil.logout();
         return true;
-    }
-
-    @Autowired
-    public void setAccessTokenRepository(UserAccessTokenRepository accessTokenRepository) {
-        this.accessTokenRepository = accessTokenRepository;
     }
 
     @Autowired

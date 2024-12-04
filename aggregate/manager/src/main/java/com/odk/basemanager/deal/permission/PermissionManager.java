@@ -1,10 +1,10 @@
 package com.odk.basemanager.deal.permission;
 
-import com.google.common.collect.Lists;
 import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.model.permission.PermissionDO;
+import com.odk.basedomain.domain.PermissionDomain;
+import com.odk.basedomain.entity.PermissionEntity;
 import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.model.permission.UserRoleRelDO;
 import com.odk.basedomain.model.user.UserBaseDO;
@@ -12,15 +12,11 @@ import com.odk.basedomain.repository.permission.PermissionRepository;
 import com.odk.basedomain.repository.permission.UserRoleRelRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
-import com.odk.basedomain.entity.PermissionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * PermissionManager
@@ -41,6 +37,8 @@ public class PermissionManager {
 
     private UserRoleRelRepository relRepository;
 
+    private PermissionDomain permissionDomain;
+
     /**
      * 查找用户权限
      *
@@ -48,18 +46,7 @@ public class PermissionManager {
      * @return
      */
     public PermissionEntity getAllPermissions(Long userId) {
-        PermissionEntity permissionEntity = new PermissionEntity();
-        permissionEntity.setUserId(userId);
-        List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId);
-        permissionEntity.setRoles(userRoleDOS);
-        if (!CollectionUtils.isEmpty(userRoleDOS)) {
-            List<Long> roleIds = userRoleDOS.stream().map(UserRoleDO::getId).collect(Collectors.toList());
-            List<PermissionDO> allRolePermission = permissionRepository.findAllRolePermission(roleIds);
-            permissionEntity.setPermissions(allRolePermission);
-        } else {
-            permissionEntity.setPermissions(Lists.newArrayList());
-        }
-        return permissionEntity;
+        return permissionDomain.getPermissionByUserId(userId);
     }
 
     /**
@@ -115,5 +102,10 @@ public class PermissionManager {
     @Autowired
     public void setRelRepository(UserRoleRelRepository relRepository) {
         this.relRepository = relRepository;
+    }
+
+    @Autowired
+    public void setPermissionDomain(PermissionDomain permissionDomain) {
+        this.permissionDomain = permissionDomain;
     }
 }

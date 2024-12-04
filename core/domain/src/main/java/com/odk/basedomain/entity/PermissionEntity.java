@@ -1,7 +1,6 @@
 package com.odk.basedomain.entity;
 
-import com.odk.basedomain.model.permission.PermissionDO;
-import com.odk.basedomain.model.permission.UserRoleDO;
+import com.odk.baseutil.dto.permission.UserRoleDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -24,10 +23,5 @@ public class PermissionEntity {
     /**
      * 角色列表
      */
-    private List<UserRoleDO> roles;
-
-    /**
-     * 权限列表
-     */
-    private List<PermissionDO> permissions;
+    private List<UserRoleDTO> roles;
 }

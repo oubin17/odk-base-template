@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 
@@ -21,6 +22,7 @@ import java.io.Serial;
 @Table(name = "t_role_permission_rel", indexes = {
         @Index(name = "idx_permission_id", columnList = "role_id,permission_id", unique = true)
 })
+@EntityListeners(AuditingEntityListener.class)
 public class RolePermissionRelDO extends BaseDO {
 
     @Serial

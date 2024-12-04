@@ -12,11 +12,10 @@ import com.odk.baseapi.inter.user.UserLoginApi;
 import com.odk.baseapi.request.UserLoginRequest;
 import com.odk.baseapi.request.UserLogoutRequest;
 import com.odk.baseapi.response.UserLoginResponse;
-import com.odk.basemanager.deal.user.UserLoginManager;
-import com.odk.basemanager.deal.user.UserQueryManager;
-import com.odk.baseutil.dto.UserLoginDTO;
 import com.odk.basedomain.entity.UserEntity;
+import com.odk.basemanager.deal.user.UserLoginManager;
 import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.dto.UserLoginDTO;
 import com.odk.baseutil.enums.BizScene;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -38,8 +37,6 @@ import java.util.List;
 public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
     private UserLoginManager userLoginManager;
-
-    private UserQueryManager queryManager;
 
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
@@ -129,11 +126,6 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
                 return apiResult;
             }
         });
-    }
-
-    @Autowired
-    public void setQueryManager(UserQueryManager queryManager) {
-        this.queryManager = queryManager;
     }
 
     @Autowired

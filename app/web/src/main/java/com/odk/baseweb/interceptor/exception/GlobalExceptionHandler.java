@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(BizException.class)
-    public ResponseEntity<ServiceResponse> handleValidationException(BizException e) {
+    public ResponseEntity<ServiceResponse> handleBizException(BizException e) {
         // 处理校验异常，可以根据需要返回适当的响应
         return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode()), HttpStatus.BAD_REQUEST);
     }
@@ -45,11 +45,24 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ServiceResponse> handleSaTokenException(SaTokenException e) {
         // 处理校验异常，可以根据需要返回适当的响应
         if (e instanceof NotLoginException) {
-            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_EXPIRED, "token无效"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_UNMATCHED, "token无效"), HttpStatus.BAD_REQUEST);
         } else if (e instanceof NotRoleException) {
             return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PERMISSION_DENY, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, "系统异常"), HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * 处理系统未知异常
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(NotLoginException.class)
+    public ResponseEntity<ServiceResponse> handleUnknownException(Exception e) {
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+
 
 }
