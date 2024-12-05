@@ -27,6 +27,17 @@ public class PermissionController {
     }
 
     /**
+     * 查询当前用户角色权限
+     *
+     * @return
+     */
+    @GetMapping("/info")
+    public ServiceResponse<PermissionQueryResponse> currentUserPermission() {
+        return permissionApi.userPermission(null);
+    }
+
+
+    /**
      * 查询用户角色权限
      *
      * @param userId

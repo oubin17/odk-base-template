@@ -4,11 +4,10 @@ import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.domain.PermissionDomain;
+import com.odk.basedomain.domodel.permission.UserRoleDO;
+import com.odk.basedomain.domodel.permission.UserRoleRelDO;
+import com.odk.basedomain.domodel.user.UserBaseDO;
 import com.odk.basedomain.entity.PermissionEntity;
-import com.odk.basedomain.model.permission.UserRoleDO;
-import com.odk.basedomain.model.permission.UserRoleRelDO;
-import com.odk.basedomain.model.user.UserBaseDO;
-import com.odk.basedomain.repository.permission.PermissionRepository;
 import com.odk.basedomain.repository.permission.UserRoleRelRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
@@ -32,8 +31,6 @@ public class PermissionManager {
     private UserBaseRepository userBaseRepository;
 
     private UserRoleRepository userRoleRepository;
-
-    private PermissionRepository permissionRepository;
 
     private UserRoleRelRepository relRepository;
 
@@ -87,11 +84,6 @@ public class PermissionManager {
     @Autowired
     public void setUserRoleRepository(UserRoleRepository userRoleRepository) {
         this.userRoleRepository = userRoleRepository;
-    }
-
-    @Autowired
-    public void setPermissionRepository(PermissionRepository permissionRepository) {
-        this.permissionRepository = permissionRepository;
     }
 
     @Autowired

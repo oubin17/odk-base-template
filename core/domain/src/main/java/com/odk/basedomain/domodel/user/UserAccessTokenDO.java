@@ -1,4 +1,4 @@
-package com.odk.basedomain.model.user;
+package com.odk.basedomain.domodel.user;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;

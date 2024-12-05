@@ -1,5 +1,6 @@
 package com.odk.baseservice.impl.permission;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.odk.base.exception.AssertUtil;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -39,13 +41,14 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
         return super.queryProcess(BizScene.USER_PERMISSION_QUERY, userId, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
 
             @Override
-            protected void checkParams(Object request) {
-                AssertUtil.notNull(request, BizErrorCode.PARAM_ILLEGAL, "userId is null.");
+            protected Object convert(Object request) {
+
+                return Objects.requireNonNullElseGet(request, StpUtil::getLoginIdAsLong);
             }
 
             @Override
             protected PermissionEntity doProcess(Object args) {
-                return permissionManager.getAllPermissions(userId);
+                return permissionManager.getAllPermissions((Long) args);
             }
 
             @Override

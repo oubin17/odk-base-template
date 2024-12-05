@@ -1,6 +1,6 @@
 package com.odk.basedomain.repository.permission;
 
-import com.odk.basedomain.model.permission.PermissionDO;
+import com.odk.basedomain.domodel.permission.PermissionDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

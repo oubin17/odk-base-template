@@ -1,8 +1,6 @@
-package com.odk.basedomain.model.user;
+package com.odk.basedomain.domodel.user;
 
 import com.odk.base.dos.BaseDO;
-import com.odk.base.enums.user.UserStatusEnum;
-import com.odk.base.enums.user.UserTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serial;
 
 /**
- * UserBaseDO
+ * UserIdentificationDO
  *
  * @description:
  * @version: 1.0
@@ -21,39 +19,37 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_base")
+@Table(name = "t_user_identification", indexes = {
+        @Index(name = "idx_user_id", columnList = "user_id", unique = true)
+})
 @EntityListeners(AuditingEntityListener.class)
-public class UserBaseDO extends BaseDO {
+public class UserIdentificationDO extends BaseDO {
 
     @Serial
-    private static final long serialVersionUID = 8720143544161713478L;
+    private static final long serialVersionUID = -7115218095274721902L;
 
-    /**
-     * 主键id
-     */
     @Id
     @GeneratedValue(generator = "user-uuid")
     @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
     private Long id;
 
     /**
-     * 用户名称
+     * 用户ID
      */
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "user_id")
+    private Long userId;
 
     /**
-     * 用户类型
-     * {@link UserTypeEnum}
+     * 认证类型
+     * {@link com.odk.base.enums.user.IdentificationTypeEnum}
      */
-    @Column(name = "user_type")
-    private String userType;
+    @Column(name = "identify_type")
+    private String identifyType;
 
     /**
-     * 用户状态
-     * {@link UserStatusEnum}
+     * 认证值
      */
-    @Column(name = "user_status")
-    private String userStatus;
+    @Column(name = "identify_value")
+    private String identifyValue;
 
 }

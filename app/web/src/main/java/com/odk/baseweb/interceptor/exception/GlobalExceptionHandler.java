@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(NotLoginException.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<ServiceResponse> handleUnknownException(Exception e) {
         return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
