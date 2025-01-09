@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @version: 1.0
  * @author: oubin on 2024/11/4
  */
-public interface UserAccessTokenRepository extends JpaRepository<UserAccessTokenDO, Long> {
+public interface UserAccessTokenRepository extends JpaRepository<UserAccessTokenDO, String> {
 
     /**
      * 查找手机号是否存在

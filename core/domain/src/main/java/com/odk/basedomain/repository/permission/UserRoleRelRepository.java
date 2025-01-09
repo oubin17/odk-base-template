@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @version: 1.0
  * @author: oubin on 2024/11/8
  */
-public interface UserRoleRelRepository extends JpaRepository<UserRoleRelDO, Long> {
+public interface UserRoleRelRepository extends JpaRepository<UserRoleRelDO, String> {
 
 
     /**
@@ -20,5 +20,5 @@ public interface UserRoleRelRepository extends JpaRepository<UserRoleRelDO, Long
      * @param roleId
      * @return
      */
-    UserRoleRelDO findByUserIdAndRoleId(Long userId, Long roleId);
+    UserRoleRelDO findByUserIdAndRoleId(String userId, String roleId);
 }

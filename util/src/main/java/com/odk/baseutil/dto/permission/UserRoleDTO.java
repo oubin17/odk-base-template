@@ -18,7 +18,7 @@ public class UserRoleDTO {
     /**
      * 角色id
      */
-    private Long id;
+    private String id;
 
     /**
      * 角色码

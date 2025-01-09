@@ -19,7 +19,7 @@ public class UserRegisterManager {
 
     private UserDomain userDomain;
 
-    public Long registerUser(UserRegisterDTO userRegisterDTO) {
+    public String registerUser(UserRegisterDTO userRegisterDTO) {
         return userDomain.registerUser(userRegisterDTO);
     }
 

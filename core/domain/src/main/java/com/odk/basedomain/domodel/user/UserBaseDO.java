@@ -6,6 +6,7 @@ import com.odk.base.enums.user.UserTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -34,12 +35,13 @@ public class UserBaseDO extends BaseDO {
     @Id
     @GeneratedValue(generator = "user-uuid")
     @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private Long id;
+    private String id;
 
     /**
      * 用户名称
      */
     @Column(name = "user_name")
+    @Comment("用户姓名")
     private String userName;
 
     /**

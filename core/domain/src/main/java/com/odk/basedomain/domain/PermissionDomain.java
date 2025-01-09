@@ -17,5 +17,5 @@ public interface PermissionDomain {
      * @param userId
      * @return
      */
-    PermissionEntity getPermissionByUserId(Long userId);
+    PermissionEntity getPermissionByUserId(String userId);
 }

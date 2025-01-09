@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @version: 1.0
  * @author: oubin on 2024/11/8
  */
-public interface RolePermissionRelRepository extends JpaRepository<RolePermissionRelDO, Long> {
+public interface RolePermissionRelRepository extends JpaRepository<RolePermissionRelDO, String> {
 }

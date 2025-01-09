@@ -19,7 +19,7 @@ public class PermissionQueryResponse {
     /**
      * 用户id
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 角色列表

@@ -29,7 +29,7 @@ public class UserQueryManager {
      * @param userId
      * @return
      */
-    public UserEntity queryByUserId(Long userId) {
+    public UserEntity queryByUserId(String userId) {
         return this.userQueryDomain.queryByUserId(userId);
     }
 

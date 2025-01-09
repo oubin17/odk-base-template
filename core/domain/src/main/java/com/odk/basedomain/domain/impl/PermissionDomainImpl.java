@@ -30,7 +30,7 @@ public class PermissionDomainImpl implements PermissionDomain {
     private PermissionRepository permissionRepository;
 
     @Override
-    public PermissionEntity getPermissionByUserId(Long userId) {
+    public PermissionEntity getPermissionByUserId(String userId) {
 
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setUserId(userId);

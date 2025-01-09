@@ -31,13 +31,13 @@ public class UserIdentificationDO extends BaseDO {
     @Id
     @GeneratedValue(generator = "user-uuid")
     @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private Long id;
+    private String id;
 
     /**
      * 用户ID
      */
     @Column(name = "user_id")
-    private Long userId;
+    private String userId;
 
     /**
      * 认证类型

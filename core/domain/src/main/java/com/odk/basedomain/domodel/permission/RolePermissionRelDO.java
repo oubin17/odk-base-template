@@ -31,17 +31,17 @@ public class RolePermissionRelDO extends BaseDO {
     @Id
     @GeneratedValue(generator = "user-uuid")
     @GenericGenerator(name = "user-uuid", strategy = "com.odk.basedomain.idgenerate.CustomIDGenerator")
-    private Long id;
+    private String id;
 
     /**
      * 角色id
      */
     @Column(name = "role_id")
-    private Long roleId;
+    private String roleId;
 
     /**
      * 权限id
      */
     @Column(name = "permission_id")
-    private Long permissionId;
+    private String permissionId;
 }

@@ -22,10 +22,10 @@ public class UserRoleRelaRequest extends BaseRequest {
     /**
      * 角色id
      */
-    private Long roleId;
+    private String roleId;
 
     /**
      * 用户id
      */
-    private Long userId;
+    private String userId;
 }

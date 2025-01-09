@@ -18,7 +18,7 @@ public interface UserQueryDomain {
      * @param userId
      * @return
      */
-    UserEntity queryByUserId(Long userId);
+    UserEntity queryByUserId(String userId);
 
     /**
      * 根据登录id查找
@@ -35,5 +35,5 @@ public interface UserQueryDomain {
      * @param userId
      * @return
      */
-    UserEntity queryByUserIdAndCheck(Long userId);
+    UserEntity queryByUserIdAndCheck(String userId);
 }

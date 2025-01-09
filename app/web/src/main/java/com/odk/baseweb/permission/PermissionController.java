@@ -44,7 +44,7 @@ public class PermissionController {
      * @return
      */
     @GetMapping("/userId")
-    public ServiceResponse<PermissionQueryResponse> queryUserPermission(@RequestParam("userId") Long userId) {
+    public ServiceResponse<PermissionQueryResponse> queryUserPermission(@RequestParam("userId") String userId) {
         return permissionApi.userPermission(userId);
     }
 
@@ -57,7 +57,7 @@ public class PermissionController {
      */
     @SaCheckRole(value = {"ADMIN"})
     @PostMapping("/role/add")
-    public ServiceResponse<Long> addRole(@RequestBody RoleAddRequest roleAddRequest) {
+    public ServiceResponse<String> addRole(@RequestBody RoleAddRequest roleAddRequest) {
         return permissionApi.addRole(roleAddRequest);
     }
 
@@ -68,7 +68,7 @@ public class PermissionController {
      * @return
      */
     @PostMapping("/role/rela/add")
-    public ServiceResponse<Long> addRoleRel(@RequestBody UserRoleRelaRequest relaRequest) {
+    public ServiceResponse<String> addRoleRel(@RequestBody UserRoleRelaRequest relaRequest) {
         return permissionApi.addRoleRela(relaRequest);
     }
 }

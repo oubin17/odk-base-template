@@ -17,6 +17,6 @@ public interface UserDomain {
      * @param userRegisterDTO
      * @return
      */
-    Long registerUser(UserRegisterDTO userRegisterDTO);
+    String registerUser(UserRegisterDTO userRegisterDTO);
 
 }

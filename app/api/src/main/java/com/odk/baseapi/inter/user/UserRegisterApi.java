@@ -18,6 +18,6 @@ public interface UserRegisterApi {
      * @param userRegisterRequest
      * @return
      */
-    ServiceResponse<Long> userRegister(UserRegisterRequest userRegisterRequest);
+    ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest);
 
 }

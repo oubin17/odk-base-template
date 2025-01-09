@@ -15,7 +15,7 @@ public class UserLoginEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 登录token

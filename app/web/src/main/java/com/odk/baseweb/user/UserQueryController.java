@@ -32,7 +32,7 @@ public class UserQueryController {
      */
     @SaCheckRole(value = {"ADMIN"})
     @GetMapping("/userId")
-    public ServiceResponse<UserQueryResponse> queryUserByUserId(@RequestParam("userId") Long userId) {
+    public ServiceResponse<UserQueryResponse> queryUserByUserId(@RequestParam("userId") String userId) {
         return userQueryApi.queryUserByUserId(userId);
     }
 

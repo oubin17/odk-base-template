@@ -33,8 +33,8 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     private UserRegisterManager userRegisterManager;
 
     @Override
-    public ServiceResponse<Long> userRegister(UserRegisterRequest userRegisterRequest) {
-        return super.bizProcess(BizScene.USER_REGISTER, userRegisterRequest, new ApiCallBack<Long, Long>() {
+    public ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest) {
+        return super.bizProcess(BizScene.USER_REGISTER, userRegisterRequest, new ApiCallBack<String, String>() {
 
             @Override
             protected void checkParams(BaseRequest request) {
@@ -63,13 +63,13 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
             }
 
             @Override
-            protected Long doProcess(Object args) {
+            protected String doProcess(Object args) {
                 UserRegisterDTO userRegisterDTO = (UserRegisterDTO) args;
                 return userRegisterManager.registerUser(userRegisterDTO);
             }
 
             @Override
-            protected Long convertResult(Long apiResult) {
+            protected String convertResult(String apiResult) {
                 return apiResult;
             }
         });

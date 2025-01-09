@@ -45,6 +45,6 @@ public class UserRegisterDTO extends DTO {
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
 
 }

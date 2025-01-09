@@ -18,10 +18,10 @@ import java.util.Optional;
  * @author: oubin on 2024/11/18
  */
 @Component
-public class EntityAuditorAwareImpl implements AuditorAware<Long> {
+public class EntityAuditorAwareImpl implements AuditorAware<String> {
 
     @Override
-    public Optional<Long> getCurrentAuditor() {
-        return StpUtil.isLogin() ? Optional.ofNullable((Long)StpUtil.getSession().getLoginId()) : Optional.empty();
+    public Optional<String> getCurrentAuditor() {
+        return StpUtil.isLogin() ? Optional.ofNullable((String)StpUtil.getSession().getLoginId()) : Optional.empty();
     }
 }

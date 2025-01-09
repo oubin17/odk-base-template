@@ -37,7 +37,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
 
     @Override
-    public ServiceResponse<PermissionQueryResponse> userPermission(Long userId) {
+    public ServiceResponse<PermissionQueryResponse> userPermission(String userId) {
         return super.queryProcess(BizScene.USER_PERMISSION_QUERY, userId, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
 
             @Override
@@ -48,7 +48,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
             @Override
             protected PermissionEntity doProcess(Object args) {
-                return permissionManager.getAllPermissions((Long) args);
+                return permissionManager.getAllPermissions((String) args);
             }
 
             @Override
@@ -60,7 +60,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
                 permissionQueryResponse.setUserId(permissionEntity.getUserId());
                 permissionQueryResponse.setRoles(permissionEntity.getRoles());
 
-                Set<Long> permissionIds = Sets.newHashSet();
+                Set<String> permissionIds = Sets.newHashSet();
                 List<PermissionDTO> permissionDTOS = Lists.newArrayList();
 
                 for (UserRoleDTO roleDTO : permissionEntity.getRoles()) {
@@ -80,8 +80,8 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
     }
 
     @Override
-    public ServiceResponse<Long> addRole(RoleAddRequest roleAddRequest) {
-        return super.queryProcess(BizScene.USER_ROLE_ADD, roleAddRequest, new QueryApiCallBack<Long, Long>() {
+    public ServiceResponse<String> addRole(RoleAddRequest roleAddRequest) {
+        return super.queryProcess(BizScene.USER_ROLE_ADD, roleAddRequest, new QueryApiCallBack<String, String>() {
 
             @Override
             protected void checkParams(Object request) {
@@ -97,13 +97,13 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
             }
 
             @Override
-            protected Long doProcess(Object args) {
+            protected String doProcess(Object args) {
                 String[] args1 = (String[]) args;
                 return permissionManager.addRole(args1[0], args1[1]);
             }
 
             @Override
-            protected Long convertResult(Long roleId) {
+            protected String convertResult(String roleId) {
                 return roleId;
             }
 
@@ -112,8 +112,8 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
 
     @Override
-    public ServiceResponse<Long> addRoleRela(UserRoleRelaRequest relaRequest) {
-        return super.queryProcess(BizScene.ROLE_RELA_ADD, relaRequest, new QueryApiCallBack<Long, Long>() {
+    public ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest) {
+        return super.queryProcess(BizScene.ROLE_RELA_ADD, relaRequest, new QueryApiCallBack<String, String>() {
 
             @Override
             protected void checkParams(Object request) {
@@ -123,13 +123,13 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
             }
 
             @Override
-            protected Long doProcess(Object args) {
+            protected String doProcess(Object args) {
                 UserRoleRelaRequest roleRelaRequest = (UserRoleRelaRequest) args;
                 return permissionManager.addUserRoleRela(roleRelaRequest.getRoleId(), roleRelaRequest.getUserId());
             }
 
             @Override
-            protected Long convertResult(Long id) {
+            protected String convertResult(String id) {
                 return id;
             }
 

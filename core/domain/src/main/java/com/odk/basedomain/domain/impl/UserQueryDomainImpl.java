@@ -38,7 +38,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     @Override
-    public UserEntity queryByUserId(Long userId) {
+    public UserEntity queryByUserId(String userId) {
         Optional<UserBaseDO> userBaseDO = userBaseRepository.findById(userId);
         if (userBaseDO.isEmpty()) {
             log.error("找不到用户，用户ID={}", userId);
@@ -66,7 +66,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     @Override
-    public UserEntity queryByUserIdAndCheck(Long userId) {
+    public UserEntity queryByUserIdAndCheck(String userId) {
         Optional<UserBaseDO> optionalUserBaseDO = userBaseRepository.findById(userId);
         if (optionalUserBaseDO.isEmpty()) {
             log.error("找不到用户，用户ID={}", userId);
