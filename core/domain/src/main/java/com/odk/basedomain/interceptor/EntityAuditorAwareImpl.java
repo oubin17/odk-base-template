@@ -1,6 +1,6 @@
 package com.odk.basedomain.interceptor;
 
-import cn.dev33.satoken.stp.StpUtil;
+import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +22,6 @@ public class EntityAuditorAwareImpl implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        return StpUtil.isLogin() ? Optional.ofNullable((String)StpUtil.getSession().getLoginId()) : Optional.empty();
+        return SessionContext.isLogin() ? Optional.ofNullable(SessionContext.getLoginIdAsString()) : Optional.empty();
     }
 }

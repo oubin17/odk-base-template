@@ -1,6 +1,5 @@
 package com.odk.baseservice.impl.permission;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.odk.base.exception.AssertUtil;
@@ -10,12 +9,13 @@ import com.odk.baseapi.inter.permission.PermissionApi;
 import com.odk.baseapi.request.role.RoleAddRequest;
 import com.odk.baseapi.request.role.UserRoleRelaRequest;
 import com.odk.baseapi.response.PermissionQueryResponse;
-import com.odk.basedomain.entity.PermissionEntity;
 import com.odk.basemanager.deal.permission.PermissionManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
+import com.odk.baseutil.entity.PermissionEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +42,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
             @Override
             protected Object convert(Object request) {
-
-                return Objects.requireNonNullElseGet(request, StpUtil::getLoginIdAsLong);
+                return Objects.requireNonNullElseGet(request, SessionContext::getLoginIdAsString);
             }
 
             @Override

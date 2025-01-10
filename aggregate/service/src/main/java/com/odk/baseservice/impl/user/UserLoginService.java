@@ -12,11 +12,12 @@ import com.odk.baseapi.inter.user.UserLoginApi;
 import com.odk.baseapi.request.UserLoginRequest;
 import com.odk.baseapi.request.UserLogoutRequest;
 import com.odk.baseapi.response.UserLoginResponse;
-import com.odk.basedomain.entity.UserEntity;
+import com.odk.baseutil.entity.UserEntity;
 import com.odk.basemanager.deal.user.UserLoginManager;
 import com.odk.baseservice.template.AbstractApiImpl;
-import com.odk.baseutil.dto.UserLoginDTO;
+import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             @Override
             protected void beforeProcess(BaseRequest request) {
                 UserLogoutRequest logout = (UserLogoutRequest) request;
-                if (!StpUtil.isLogin()) {
+                if (!SessionContext.isLogin()) {
                     logout.setLogin(false);
                     log.error("当前用户非登录态，登录注销失败！用户ID={}", logout.getUserId());
                 }

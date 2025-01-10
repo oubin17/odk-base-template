@@ -1,6 +1,6 @@
 package com.odk.basedomain.domain;
 
-import com.odk.basedomain.entity.UserEntity;
+import com.odk.baseutil.entity.UserEntity;
 
 /**
  * UserQueryDomain

@@ -1,6 +1,6 @@
 package com.odk.basedomain.domain;
 
-import com.odk.baseutil.dto.UserRegisterDTO;
+import com.odk.baseutil.dto.user.UserRegisterDTO;
 
 /**
  * UserDomain

@@ -1,7 +1,7 @@
 package com.odk.basemanager.deal.user;
 
 import com.odk.basedomain.domain.UserDomain;
-import com.odk.baseutil.dto.UserRegisterDTO;
+import com.odk.baseutil.dto.user.UserRegisterDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

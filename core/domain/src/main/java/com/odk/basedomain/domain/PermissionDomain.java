@@ -1,6 +1,6 @@
 package com.odk.basedomain.domain;
 
-import com.odk.basedomain.entity.PermissionEntity;
+import com.odk.baseutil.entity.PermissionEntity;
 
 /**
  * PermissionDomain

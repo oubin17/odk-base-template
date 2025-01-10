@@ -14,7 +14,7 @@ import com.odk.basedomain.domodel.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
-import com.odk.baseutil.dto.UserRegisterDTO;
+import com.odk.baseutil.dto.user.UserRegisterDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

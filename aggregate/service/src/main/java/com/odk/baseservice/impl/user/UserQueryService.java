@@ -1,6 +1,5 @@
 package com.odk.baseservice.impl.user;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
@@ -8,9 +7,10 @@ import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
 import com.odk.baseapi.response.UserQueryResponse;
 import com.odk.basemanager.deal.user.UserQueryManager;
-import com.odk.basedomain.entity.UserEntity;
 import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,12 +61,12 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
             @Override
             protected void checkParams(Object request) {
-                AssertUtil.isTrue(StpUtil.isLogin(), BizErrorCode.USER_NOT_LOGIN, "用户未登录.");
+                AssertUtil.isTrue(SessionContext.isLogin(), BizErrorCode.USER_NOT_LOGIN, "用户未登录.");
             }
 
             @Override
             protected UserEntity doProcess(Object args) {
-                return userQueryManager.queryByUserId(StpUtil.getLoginIdAsString());
+                return userQueryManager.queryByUserId(SessionContext.getLoginIdAsString());
             }
 
             @Override

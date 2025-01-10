@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author: oubin on 2024/11/26
  */
 @Component
-public class StpInterfaceImpl implements StpInterface {
+public class PermissionCheckInterfaceImpl implements StpInterface {
 
     private PermissionApi permissionApi;
 

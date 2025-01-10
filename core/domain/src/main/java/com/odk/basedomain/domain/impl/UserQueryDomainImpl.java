@@ -4,7 +4,7 @@ import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.UserQueryDomain;
-import com.odk.basedomain.entity.UserEntity;
+import com.odk.baseutil.entity.UserEntity;
 import com.odk.basedomain.domodel.user.UserAccessTokenDO;
 import com.odk.basedomain.domodel.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;

@@ -2,7 +2,7 @@ package com.odk.basedomain.domain.impl;
 
 import com.google.common.collect.Lists;
 import com.odk.basedomain.domain.PermissionDomain;
-import com.odk.basedomain.entity.PermissionEntity;
+import com.odk.baseutil.entity.PermissionEntity;
 import com.odk.basedomain.domodel.permission.PermissionDO;
 import com.odk.basedomain.domodel.permission.UserRoleDO;
 import com.odk.basedomain.repository.permission.PermissionRepository;

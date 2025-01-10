@@ -7,7 +7,7 @@ import com.odk.basedomain.domain.PermissionDomain;
 import com.odk.basedomain.domodel.permission.UserRoleDO;
 import com.odk.basedomain.domodel.permission.UserRoleRelDO;
 import com.odk.basedomain.domodel.user.UserBaseDO;
-import com.odk.basedomain.entity.PermissionEntity;
+import com.odk.baseutil.entity.PermissionEntity;
 import com.odk.basedomain.repository.permission.UserRoleRelRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
