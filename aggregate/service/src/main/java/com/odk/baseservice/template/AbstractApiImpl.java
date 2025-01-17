@@ -45,7 +45,7 @@ public class AbstractApiImpl extends AbstractApi {
      * @param <T>
      * @return
      */
-    protected <T, R> ServiceResponse<R> queryProcess(BizScene bizScene, Object object, QueryApiCallBack<T, R> callBack) {
+    protected <T, R> ServiceResponse<R> executeProcess(BizScene bizScene, Object object, CallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
         log.info(buildRequestDigestLog(bizScene, object, ServiceContextHolder.getUserId()));
         ServiceResponse<R> response = null;
@@ -128,7 +128,7 @@ public class AbstractApiImpl extends AbstractApi {
      *
      * @param <T>
      */
-    public abstract static class QueryApiCallBack<T, R> {
+    public abstract static class CallBack<T, R> {
 
         /**
          * 基本参数校验

@@ -9,6 +9,7 @@ import com.odk.baseweb.interceptor.CorsInterceptor;
 import com.odk.baseweb.interceptor.tracer.TracerIdInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -22,6 +23,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    /**
+     * 如果不指定端口，默认http -> 80   https -> 443
+     */
+    private static final String[] allowedOrigins = new String[]{"https://localhost", "http://localhost"} ;
+
+    /**
+     * 配置跨域请求规则
+     *
+     * @param registry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(allowedOrigins) // 允许访问的域名域名
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")//允许的http方法
+                .allowedHeaders("*") // 允许的请求头
+                .allowCredentials(true) // 允许携带凭证（如 cookies）
+                .exposedHeaders("Content-Disposition"); // 暴露 Content-Disposition 响应头
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

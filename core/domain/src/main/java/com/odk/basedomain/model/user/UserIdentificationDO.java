@@ -1,4 +1,4 @@
-package com.odk.basedomain.domodel.permission;
+package com.odk.basedomain.model.user;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
@@ -10,23 +10,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serial;
 
 /**
- * UserRoleDO
+ * UserIdentificationDO
  *
  * @description:
  * @version: 1.0
- * @author: oubin on 2024/11/8
+ * @author: oubin on 2024/11/4
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_role", indexes = {
-        @Index(name = "idx_role_code", columnList = "role_code", unique = true)
+@Table(name = "t_user_identification", indexes = {
+        @Index(name = "idx_user_id", columnList = "user_id", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
-public class UserRoleDO extends BaseDO {
+public class UserIdentificationDO extends BaseDO {
 
     @Serial
-    private static final long serialVersionUID = -1342391596496714969L;
+    private static final long serialVersionUID = -7115218095274721902L;
 
     @Id
     @GeneratedValue(generator = "user-uuid")
@@ -34,21 +34,22 @@ public class UserRoleDO extends BaseDO {
     private String id;
 
     /**
-     * 角色码
+     * 用户ID
      */
-    @Column(name = "role_code")
-    private String roleCode;
+    @Column(name = "user_id")
+    private String userId;
 
     /**
-     * 角色名称
+     * 认证类型
+     * {@link com.odk.base.enums.user.IdentificationTypeEnum}
      */
-    @Column(name = "role_name")
-    private String roleName;
+    @Column(name = "identify_type")
+    private String identifyType;
 
     /**
-     * 角色状态
+     * 认证值
      */
-    @Column(name = "status")
-    private String status;
+    @Column(name = "identify_value")
+    private String identifyValue;
 
 }

@@ -20,6 +20,18 @@ public interface UserQueryDomain {
      */
     UserEntity queryByUserId(String userId);
 
+    UserEntity queryBySession();
+
+    /**
+     * 根据用户id查找，如果不存在，抛异常
+     *
+     * @param userId
+     * @return
+     */
+    UserEntity queryByUserIdAndCheck(String userId);
+
+    UserEntity queryBySessionAndCheck();
+
     /**
      * 根据登录id查找
      *
@@ -29,11 +41,4 @@ public interface UserQueryDomain {
      */
     UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue);
 
-    /**
-     * 根据用户id查找，如果不存在，抛异常
-     *
-     * @param userId
-     * @return
-     */
-    UserEntity queryByUserIdAndCheck(String userId);
 }

@@ -38,7 +38,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
     @Override
     public ServiceResponse<PermissionQueryResponse> userPermission(String userId) {
-        return super.queryProcess(BizScene.USER_PERMISSION_QUERY, userId, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
+        return super.executeProcess(BizScene.USER_PERMISSION_QUERY, userId, new CallBack<PermissionEntity, PermissionQueryResponse>() {
 
             @Override
             protected Object convert(Object request) {
@@ -80,7 +80,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
     @Override
     public ServiceResponse<String> addRole(RoleAddRequest roleAddRequest) {
-        return super.queryProcess(BizScene.USER_ROLE_ADD, roleAddRequest, new QueryApiCallBack<String, String>() {
+        return super.executeProcess(BizScene.USER_ROLE_ADD, roleAddRequest, new CallBack<String, String>() {
 
             @Override
             protected void checkParams(Object request) {
@@ -112,7 +112,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
     @Override
     public ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest) {
-        return super.queryProcess(BizScene.ROLE_RELA_ADD, relaRequest, new QueryApiCallBack<String, String>() {
+        return super.executeProcess(BizScene.ROLE_RELA_ADD, relaRequest, new CallBack<String, String>() {
 
             @Override
             protected void checkParams(Object request) {

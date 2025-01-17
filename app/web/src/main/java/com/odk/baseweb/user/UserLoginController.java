@@ -3,7 +3,6 @@ package com.odk.baseweb.user;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserLoginApi;
 import com.odk.baseapi.request.UserLoginRequest;
-import com.odk.baseapi.request.UserLogoutRequest;
 import com.odk.baseapi.response.UserLoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +28,8 @@ public class UserLoginController {
     }
 
     @PostMapping("logout")
-    public ServiceResponse<Boolean> userLogout(@RequestBody UserLogoutRequest logoutRequest) {
-        return userLoginApi.userLogout(logoutRequest);
+    public ServiceResponse<Boolean> userLogout() {
+        return userLoginApi.userLogout();
     }
 
     @Autowired

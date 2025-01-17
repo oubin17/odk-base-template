@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
-import com.odk.baseapi.response.UserQueryResponse;
+import com.odk.baseutil.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class UserQueryController {
      */
     @SaCheckRole(value = {"ADMIN"})
     @GetMapping("/userId")
-    public ServiceResponse<UserQueryResponse> queryUserByUserId(@RequestParam("userId") String userId) {
+    public ServiceResponse<UserEntity> queryUserByUserId(@RequestParam("userId") String userId) {
         return userQueryApi.queryUserByUserId(userId);
     }
 
@@ -42,12 +42,12 @@ public class UserQueryController {
      * @return
      */
     @GetMapping()
-    public ServiceResponse<UserQueryResponse> queryCurrentUser() {
+    public ServiceResponse<UserEntity> queryCurrentUser() {
         return userQueryApi.queryCurrentUser();
     }
 
     @GetMapping("/loginId")
-    public ServiceResponse<UserQueryResponse> queryUserByLoginId(@RequestParam("loginId") String loginId, @RequestParam("loginType") String loginType) {
+    public ServiceResponse<UserEntity> queryUserByLoginId(@RequestParam("loginId") String loginId, @RequestParam("loginType") String loginType) {
         UserQueryRequest userQueryRequest = new UserQueryRequest();
         userQueryRequest.setLoginId(loginId);
         userQueryRequest.setLoginType(loginType);

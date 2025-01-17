@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BizException.class)
     public ResponseEntity<ServiceResponse> handleBizException(BizException e) {
         // 处理校验异常，可以根据需要返回适当的响应
-        return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode(), e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     /**

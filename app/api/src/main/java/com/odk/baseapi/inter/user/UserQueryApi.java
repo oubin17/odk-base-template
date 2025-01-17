@@ -2,7 +2,7 @@ package com.odk.baseapi.inter.user;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.request.UserQueryRequest;
-import com.odk.baseapi.response.UserQueryResponse;
+import com.odk.baseutil.entity.UserEntity;
 
 /**
  * UserQueryApi
@@ -20,14 +20,14 @@ public interface UserQueryApi {
      * @param userId
      * @return
      */
-    ServiceResponse<UserQueryResponse> queryUserByUserId(String userId);
+    ServiceResponse<UserEntity> queryUserByUserId(String userId);
 
     /**
      * 查找当前登录用户信息
      *
      * @return
      */
-    ServiceResponse<UserQueryResponse> queryCurrentUser();
+    ServiceResponse<UserEntity> queryCurrentUser();
 
 
     /**
@@ -36,6 +36,6 @@ public interface UserQueryApi {
      * @param userQueryRequest
      * @return
      */
-    ServiceResponse<UserQueryResponse> queryUserByLoginId(UserQueryRequest userQueryRequest);
+    ServiceResponse<UserEntity> queryUserByLoginId(UserQueryRequest userQueryRequest);
 
 }

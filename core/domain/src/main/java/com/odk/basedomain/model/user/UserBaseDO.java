@@ -1,4 +1,4 @@
-package com.odk.basedomain.domodel.user;
+package com.odk.basedomain.model.user;
 
 import com.odk.base.dos.BaseDO;
 import com.odk.base.enums.user.UserStatusEnum;

@@ -5,13 +5,11 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseapi.request.UserQueryRequest;
-import com.odk.baseapi.response.UserQueryResponse;
 import com.odk.basemanager.deal.user.UserQueryManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.userinfo.SessionContext;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +26,9 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
     private UserQueryManager userQueryManager;
 
     @Override
-    public ServiceResponse<UserQueryResponse> queryUserByUserId(String userId) {
+    public ServiceResponse<UserEntity> queryUserByUserId(String userId) {
 
-        return super.queryProcess(BizScene.USER_QUERY, userId, new QueryApiCallBack<UserEntity, UserQueryResponse>() {
+        return super.executeProcess(BizScene.USER_QUERY, userId, new CallBack<UserEntity, UserEntity>() {
 
             @Override
             protected void checkParams(Object request) {
@@ -43,21 +41,16 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
             }
 
             @Override
-            protected UserQueryResponse convertResult(UserEntity userEntity) {
-                if (null == userEntity) {
-                    return null;
-                }
-                UserQueryResponse userQueryResponse = new UserQueryResponse();
-                BeanUtils.copyProperties(userEntity, userQueryResponse);
-                return userQueryResponse;
+            protected UserEntity convertResult(UserEntity userEntity) {
+               return userEntity;
             }
 
         });
     }
 
     @Override
-    public ServiceResponse<UserQueryResponse> queryCurrentUser() {
-        return super.queryProcess(BizScene.USER_QUERY, null, new QueryApiCallBack<UserEntity, UserQueryResponse>() {
+    public ServiceResponse<UserEntity> queryCurrentUser() {
+        return super.executeProcess(BizScene.USER_QUERY, null, new CallBack<UserEntity, UserEntity>() {
 
             @Override
             protected void checkParams(Object request) {
@@ -70,22 +63,17 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
             }
 
             @Override
-            protected UserQueryResponse convertResult(UserEntity userEntity) {
-                if (null == userEntity) {
-                    return null;
-                }
-                UserQueryResponse userQueryResponse = new UserQueryResponse();
-                BeanUtils.copyProperties(userEntity, userQueryResponse);
-                return userQueryResponse;
+            protected UserEntity convertResult(UserEntity userEntity) {
+                return userEntity;
             }
 
         });
     }
 
     @Override
-    public ServiceResponse<UserQueryResponse> queryUserByLoginId(UserQueryRequest userQueryRequest) {
+    public ServiceResponse<UserEntity> queryUserByLoginId(UserQueryRequest userQueryRequest) {
 
-        return super.queryProcess(BizScene.USER_QUERY, userQueryRequest, new QueryApiCallBack<UserEntity, UserQueryResponse>() {
+        return super.executeProcess(BizScene.USER_QUERY, userQueryRequest, new CallBack<UserEntity, UserEntity>() {
             @Override
             protected void checkParams(Object request) {
                 UserQueryRequest queryRequest = (UserQueryRequest) request;
@@ -99,13 +87,8 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
             }
 
             @Override
-            protected UserQueryResponse convertResult(UserEntity userEntity) {
-                if (null == userEntity) {
-                    return null;
-                }
-                UserQueryResponse userQueryResponse = new UserQueryResponse();
-                BeanUtils.copyProperties(userEntity, userQueryResponse);
-                return userQueryResponse;
+            protected UserEntity convertResult(UserEntity userEntity) {
+               return userEntity;
             }
 
         });

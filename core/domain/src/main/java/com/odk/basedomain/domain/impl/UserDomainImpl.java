@@ -8,19 +8,28 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.PasswordDomain;
 import com.odk.basedomain.domain.UserDomain;
-import com.odk.basedomain.domodel.user.UserAccessTokenDO;
-import com.odk.basedomain.domodel.user.UserBaseDO;
-import com.odk.basedomain.domodel.user.UserIdentificationDO;
+import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.model.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserBaseDO;
+import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
+import com.odk.baseutil.constants.UserInfoConstants;
+import com.odk.baseutil.dto.user.PasswordResetDTO;
+import com.odk.baseutil.dto.user.PasswordUpdateDTO;
+import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
+import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.yaml.snakeyaml.constructor.DuplicateKeyException;
+
+import java.time.LocalDateTime;
 
 /**
  * UserDomainImpl
@@ -32,6 +41,8 @@ import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 @Slf4j
 @Service
 public class UserDomainImpl implements UserDomain {
+
+    private UserQueryDomain userQueryDomain;
 
     private UserBaseRepository userBaseRepository;
 
@@ -70,6 +81,43 @@ public class UserDomainImpl implements UserDomain {
         }
 
         return userId;
+    }
+
+    @Override
+    public UserEntity userLogin(UserLoginDTO userLoginDTO) {
+        UserEntity userEntity = userQueryDomain.queryByLoginTypeAndLoginId(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
+        AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
+        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), userLoginDTO.getIdentifyType());
+        AssertUtil.isTrue(passwordDomain.matches(userLoginDTO.getIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
+        //设置登录session
+        SessionContext.createLoginSession(userEntity.getUserId());
+        //缓存当前用户信息
+        SessionContext.setSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER, userEntity);
+        return userEntity;
+    }
+
+    @Override
+    public boolean updatePassword(PasswordUpdateDTO passwordUpdateDTO) {
+        //1.检查登录态
+        SessionContext.checkLogin();
+
+        //2.比对旧密码
+        UserEntity userEntity = userQueryDomain.queryByUserIdAndCheck(SessionContext.getLoginIdAsString());
+        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), passwordUpdateDTO.getIdentifyType());
+        AssertUtil.isTrue(passwordDomain.matches(passwordUpdateDTO.getOldIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
+
+        //4.对比新密码
+        String encode = passwordDomain.encode(passwordUpdateDTO.getNewIdentifyValue());
+        AssertUtil.isFalse(passwordDomain.matches(passwordUpdateDTO.getOldIdentifyValue(), encode), BizErrorCode.IDENTIFICATION_SAME);
+
+        //5.设置新密码
+        int count = this.identificationRepository.updatePassword(userIdentificationDO.getId(), passwordUpdateDTO.getIdentifyType(), encode, userEntity.getUserId(), LocalDateTime.now());
+        return count > 0;
+    }
+
+    @Override
+    public boolean resetPassword(PasswordResetDTO resetDTO) {
+        return false;
     }
 
     /**
@@ -139,4 +187,8 @@ public class UserDomainImpl implements UserDomain {
         this.transactionTemplate = transactionTemplate;
     }
 
+    @Autowired
+    public void setUserQueryDomain(UserQueryDomain userQueryDomain) {
+        this.userQueryDomain = userQueryDomain;
+    }
 }

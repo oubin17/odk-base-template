@@ -5,26 +5,23 @@ import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.base.exception.BizException;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserLoginApi;
 import com.odk.baseapi.request.UserLoginRequest;
-import com.odk.baseapi.request.UserLogoutRequest;
 import com.odk.baseapi.response.UserLoginResponse;
-import com.odk.baseutil.entity.UserEntity;
 import com.odk.basemanager.deal.user.UserLoginManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserLoginDTO;
+import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * UserLoginService
@@ -87,39 +84,17 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
     }
 
     @Override
-    public ServiceResponse<Boolean> userLogout(UserLogoutRequest logoutRequest) {
-        return super.bizProcess(BizScene.USER_LOGOUT, logoutRequest, new AbstractApiImpl.ApiCallBack<Boolean, Boolean>() {
-            @Override
-            protected void checkParams(BaseRequest request) {
-                super.checkParams(request);
-                UserLogoutRequest logout = (UserLogoutRequest) request;
-                AssertUtil.notNull(logout.getUserId(), BizErrorCode.PARAM_ILLEGAL, "用户ID不存在");
-            }
-
-            @Override
-            protected void beforeProcess(BaseRequest request) {
-                UserLogoutRequest logout = (UserLogoutRequest) request;
-                if (!SessionContext.isLogin()) {
-                    logout.setLogin(false);
-                    log.error("当前用户非登录态，登录注销失败！用户ID={}", logout.getUserId());
-                }
-            }
-
-            @Override
-            protected Object convert(BaseRequest request) {
-                UserLogoutRequest logout = (UserLogoutRequest) request;
-                return Arrays.asList(logout.getUserId(), logout.isLogin());
-            }
+    public ServiceResponse<Boolean> userLogout() {
+        return super.executeProcess(BizScene.USER_LOGOUT, null, new CallBack<Boolean, Boolean>() {
 
             @Override
             protected Boolean doProcess(Object args) {
-                List request = (List) args;
-                Boolean isLogin = (Boolean) request.get(1);
-                if (isLogin) {
-                    return userLoginManager.userLogout((String) request.get(0));
-                } else {
-                    return false;
+                if (!SessionContext.isLogin()) {
+                    log.error("当前用户非登录态，登录注销失败！");
+                    throw new BizException(BizErrorCode.PARAM_ILLEGAL, "用户非登录态，登出异常");
                 }
+                return userLoginManager.userLogout();
+
             }
 
             @Override

@@ -2,7 +2,7 @@ package com.odk.basemanager.deal.user;
 
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.baseutil.entity.UserEntity;
-import com.odk.basedomain.domodel.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
