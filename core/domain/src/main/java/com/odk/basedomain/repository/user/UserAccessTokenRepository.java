@@ -20,4 +20,12 @@ public interface UserAccessTokenRepository extends JpaRepository<UserAccessToken
      * @return
      */
     UserAccessTokenDO findByTokenTypeAndTokenValue(String tokenType, String tokenValue);
+
+    /**
+     * 根据用户id查询
+     *
+     * @param userId
+     * @return
+     */
+    UserAccessTokenDO findByUserId(String userId);
 }

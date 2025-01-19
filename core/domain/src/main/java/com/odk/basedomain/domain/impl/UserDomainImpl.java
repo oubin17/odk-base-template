@@ -12,9 +12,11 @@ import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserIdentificationDO;
+import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
+import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.dto.user.PasswordResetDTO;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
@@ -50,6 +52,8 @@ public class UserDomainImpl implements UserDomain {
 
     private UserIdentificationRepository identificationRepository;
 
+    private UserProfileRepository userProfileRepository;
+
     private PasswordDomain passwordDomain;
 
     private TransactionTemplate transactionTemplate;
@@ -61,12 +65,16 @@ public class UserDomainImpl implements UserDomain {
         String userId;
         try {
             userId = transactionTemplate.execute(status -> {
-                String userId1 = addUserBase(userRegisterDTO);
+                //1.生成用户id
+                String userId1 = addUserBase();
+                //2.添加登录信息
                 addAccessToken(userId1, userRegisterDTO);
-                //密码加密
+                //3.添加密码信息 密码加密
                 String password = userRegisterDTO.getIdentifyValue();
                 userRegisterDTO.setIdentifyValue(passwordDomain.encode(password));
                 addIdentification(userId1, userRegisterDTO);
+                //4.添加用户画像
+                addUserProfile(userId1, userRegisterDTO.getUserName());
                 return userId1;
             });
         } catch (DataIntegrityViolationException exception) {
@@ -123,13 +131,11 @@ public class UserDomainImpl implements UserDomain {
     /**
      * 添加基础信息
      *
-     * @param userRegisterDTO
      */
-    private String addUserBase(UserRegisterDTO userRegisterDTO) {
+    private String addUserBase() {
         UserBaseDO userBase = new UserBaseDO();
         userBase.setUserType(UserTypeEnum.INDIVIDUAL.getCode());
         userBase.setUserStatus(UserStatusEnum.NORMAL.getCode());
-        userBase.setUserName(userRegisterDTO.getUserName());
         UserBaseDO save = userBaseRepository.save(userBase);
         return save.getId();
     }
@@ -162,6 +168,19 @@ public class UserDomainImpl implements UserDomain {
         identificationRepository.save(identification);
     }
 
+    /**
+     * 添加用户画像
+     *
+     * @param userId
+     * @param userName
+     */
+    private void addUserProfile(String userId, String userName) {
+        UserProfileDO userProfileDO = new UserProfileDO();
+        userProfileDO.setUserId(userId);
+        userProfileDO.setUserName(userName);
+        userProfileRepository.save(userProfileDO);
+    }
+
     @Autowired
     public void setUserBaseRepository(UserBaseRepository userBaseRepository) {
         this.userBaseRepository = userBaseRepository;
@@ -190,5 +209,10 @@ public class UserDomainImpl implements UserDomain {
     @Autowired
     public void setUserQueryDomain(UserQueryDomain userQueryDomain) {
         this.userQueryDomain = userQueryDomain;
+    }
+
+    @Autowired
+    public void setUserProfileRepository(UserProfileRepository userProfileRepository) {
+        this.userProfileRepository = userProfileRepository;
     }
 }

@@ -11,4 +11,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author: oubin on 2025/1/17
  */
 public interface UserProfileRepository extends JpaRepository<UserProfileDO, String> {
+
+    /**
+     * 根据用户id查询
+     *
+     * @param userId
+     * @return
+     */
+    UserProfileDO findByUserId(String userId);
 }

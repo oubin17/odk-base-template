@@ -32,5 +32,17 @@ public class UserProfileDO extends BaseDO {
     @Comment("用户ID")
     private String userId;
 
+    @Column(name = "user_name")
+    @Comment("用户姓名")
+    private String userName;
+
+    @Column(name = "gender")
+    @Comment("性别")
+    private String gender;
+
+    @Column(name = "birthday")
+    @Comment("生日")
+    private String birthDay;
+
 
 }

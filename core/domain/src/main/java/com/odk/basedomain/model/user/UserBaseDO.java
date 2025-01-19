@@ -9,7 +9,6 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
@@ -30,13 +29,6 @@ public class UserBaseDO extends BaseDO {
 
     @Serial
     private static final long serialVersionUID = 8720143544161713478L;
-
-    /**
-     * 用户名称
-     */
-    @Column(name = "user_name")
-    @Comment("用户姓名")
-    private String userName;
 
     /**
      * 用户类型

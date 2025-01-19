@@ -39,5 +39,14 @@ public class UserEntity implements Serializable {
      */
     private String userStatus;
 
+    /**
+     * 登录账号
+     */
+    private AccessTokenEntity accessToken;
+
+    /**
+     * 用户画像
+     */
+    private UserProfileEntity userProfile;
 
 }
