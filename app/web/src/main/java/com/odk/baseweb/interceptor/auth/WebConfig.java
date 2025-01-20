@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * 如果不指定端口，默认http -> 80   https -> 443
      */
-    private static final String[] allowedOrigins = new String[]{"https://localhost", "http://localhost"} ;
+    private static final String[] allowedOrigins = new String[]{"http://localhost:5173", "http://localhost"} ;
 
     /**
      * 配置跨域请求规则
