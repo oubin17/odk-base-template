@@ -38,7 +38,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
-        return super.bizProcess(BizScene.USER_LOGIN, userLoginRequest, new ApiCallBack<UserLoginResponse, UserLoginResponse>() {
+        return super.strictBizProcess(BizScene.USER_LOGIN, userLoginRequest, new StrictApiCallBack<UserLoginResponse, UserLoginResponse>() {
 
             @Override
             protected void checkParams(BaseRequest request) {
@@ -85,7 +85,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
     @Override
     public ServiceResponse<Boolean> userLogout() {
-        return super.executeProcess(BizScene.USER_LOGOUT, null, new CallBack<Boolean, Boolean>() {
+        return super.bizProcess(BizScene.USER_LOGOUT, null, new ApiCallBack<Boolean, Boolean>() {
 
             @Override
             protected Boolean doProcess(Object args) {

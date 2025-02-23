@@ -9,6 +9,7 @@ import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseutil.constext.ServiceContextHolder;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,9 +46,9 @@ public class AbstractApiImpl extends AbstractApi {
      * @param <T>
      * @return
      */
-    protected <T, R> ServiceResponse<R> executeProcess(BizScene bizScene, Object object, CallBack<T, R> callBack) {
+    protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, Object object, ApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
-        log.info(buildRequestDigestLog(bizScene, object, ServiceContextHolder.getUserId()));
+        log.info(buildDigestLog(bizScene, object, REQUEST));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -61,7 +62,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
             response = callBack.assembleResult(apiResponse);
-            log.info(buildResponseDigestLog(bizScene, response, ServiceContextHolder.getUserId()));
+            log.info(buildDigestLog(bizScene, response, RESPONSE));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -70,7 +71,7 @@ public class AbstractApiImpl extends AbstractApi {
             long executeTime = System.currentTimeMillis() - startTime;
             callBack.afterProcess(response);
             if (null != response) {
-                log.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
+                log.info(buildSummaryDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime));
             }
             clearContext();
         }
@@ -89,9 +90,9 @@ public class AbstractApiImpl extends AbstractApi {
      * @param <R>
      * @return
      */
-    protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, BaseRequest request, ApiCallBack<T, R> callBack) {
+    protected <T, R> ServiceResponse<R> strictBizProcess(BizScene bizScene, BaseRequest request, StrictApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
-        log.info(buildRequestDigestLog(bizScene, request, ServiceContextHolder.getUserId()));
+        log.info(buildDigestLog(bizScene, request, REQUEST));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -107,7 +108,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
             response = callBack.assembleResult(apiResponse);
-            log.info(buildResponseDigestLog(bizScene, response, ServiceContextHolder.getUserId()));
+            log.info(buildDigestLog(bizScene, response, RESPONSE));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -116,7 +117,7 @@ public class AbstractApiImpl extends AbstractApi {
             long executeTime = System.currentTimeMillis() - startTime;
             callBack.afterProcess(response);
             if (null != response) {
-                log.info(buildDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime, ServiceContextHolder.getUserId()));
+                log.info(buildSummaryDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime));
             }
             clearContext();
         }
@@ -128,7 +129,7 @@ public class AbstractApiImpl extends AbstractApi {
      *
      * @param <T>
      */
-    public abstract static class CallBack<T, R> {
+    public abstract static class ApiCallBack<T, R> {
 
         /**
          * 基本参数校验
@@ -190,7 +191,7 @@ public class AbstractApiImpl extends AbstractApi {
         }
     }
 
-    public abstract static class ApiCallBack<T, R> {
+    public abstract static class StrictApiCallBack<T, R> {
 
         /**
          * 基本参数校验
@@ -329,17 +330,10 @@ public class AbstractApiImpl extends AbstractApi {
         return generateBaseResult(e);
     }
 
-    private String buildRequestDigestLog(BizScene bizScene, Object request, String loginId) {
+    private String buildDigestLog(BizScene bizScene, Object object, String logType) {
         return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
-                REQUEST + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(request), NULL_REPLACE) + "]";
-
-    }
-
-    private String buildResponseDigestLog(BizScene bizScene, Object request, String loginId) {
-        return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
-                RESPONSE + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(request), NULL_REPLACE) + "]";
+                StringUtils.defaultIfBlank(SessionContext.getLoginIdAsString(), NULL_REPLACE) + SEP +
+                logType + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(object), NULL_REPLACE) + "]";
 
     }
 
@@ -349,13 +343,12 @@ public class AbstractApiImpl extends AbstractApi {
      * @param isSuccess
      * @param resultCode
      * @param executeTime
-     * @param loginId
      * @return
      */
-    private String buildDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime, String loginId) {
+    private String buildSummaryDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime) {
         return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(loginId, NULL_REPLACE) + SEP +
-                isSuccess + SEP +
+                StringUtils.defaultIfBlank(SessionContext.getLoginIdAsString(), NULL_REPLACE) + SEP +
+                String.valueOf(isSuccess).toUpperCase() + SEP +
                 StringUtils.defaultIfBlank(resultCode, NULL_REPLACE) + "]" +
                 "(" + executeTime + "ms)";
 

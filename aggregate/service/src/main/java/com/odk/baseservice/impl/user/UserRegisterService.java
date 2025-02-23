@@ -34,7 +34,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
 
     @Override
     public ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest) {
-        return super.bizProcess(BizScene.USER_REGISTER, userRegisterRequest, new ApiCallBack<String, String>() {
+        return super.strictBizProcess(BizScene.USER_REGISTER, userRegisterRequest, new StrictApiCallBack<String, String>() {
 
             @Override
             protected void checkParams(BaseRequest request) {
