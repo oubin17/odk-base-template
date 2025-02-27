@@ -1,7 +1,7 @@
 package com.odk.baseapi.inter.user;
 
 import com.odk.base.vo.response.ServiceResponse;
-import com.odk.baseapi.request.UserQueryRequest;
+import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.baseutil.entity.UserEntity;
 
 /**

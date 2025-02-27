@@ -35,12 +35,22 @@ public class SessionContext {
     }
 
     /**
-     * 获取当前用户登录ID
+     * 获取当前用户登录ID，如果用户未登录，抛异常NotLoginException
      *
      * @return
      */
-    public static String getLoginIdAsString() {
+    public static String getLoginIdWithCheck() {
         return StpUtil.getLoginIdAsString();
+    }
+
+    /**
+     * 返回当前登录ID，如果用户未登录，返回默认值
+     *
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static String getLoginIdOrDefault(String defaultValue) {
+        return isLogin() ? getLoginIdWithCheck() : defaultValue;
     }
 
     /**

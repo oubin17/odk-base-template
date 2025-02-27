@@ -11,7 +11,6 @@ import com.odk.baseutil.entity.UserEntity;
  */
 public interface UserQueryDomain {
 
-
     /**
      * 根据用户id查找
      *

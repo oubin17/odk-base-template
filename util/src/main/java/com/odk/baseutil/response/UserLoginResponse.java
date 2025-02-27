@@ -1,4 +1,4 @@
-package com.odk.baseapi.response;
+package com.odk.baseutil.response;
 
 import com.odk.baseutil.entity.UserEntity;
 import lombok.Data;

@@ -22,7 +22,11 @@ public enum BizScene {
 
     USER_ROLE_ADD("USER_ROLE_ADD", "添加用户角色"),
 
+    USER_ROLE_DELETE("USER_ROLE_DELETE", "删除用户角色"),
+
     ROLE_RELA_ADD("ROLE_RELA_ADD", "用户添加角色"),
+
+    USER_PERMISSION_ADD("USER_PERMISSION_ADD", "添加角色权限"),
 
 
 

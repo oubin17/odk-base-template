@@ -7,7 +7,7 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
-import com.odk.baseapi.request.UserRegisterRequest;
+import com.odk.baseutil.request.UserRegisterRequest;
 import com.odk.basemanager.deal.user.UserRegisterManager;
 import com.odk.basemanager.deal.verificationcode.SmsVerificationManager;
 import com.odk.baseservice.template.AbstractApiImpl;

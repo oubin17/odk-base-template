@@ -3,11 +3,11 @@ package com.odk.baseweb.permission;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
-import com.odk.baseapi.request.role.RoleAddRequest;
-import com.odk.baseapi.request.role.UserRoleRelaRequest;
-import com.odk.baseapi.response.PermissionQueryResponse;
-import com.odk.baseutil.enums.InnerRoleEnum;
-import org.springframework.web.bind.annotation.*;
+import com.odk.baseutil.request.role.PermissionAddRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * PermissionController
@@ -27,48 +27,16 @@ public class PermissionController {
     }
 
     /**
-     * 查询当前用户角色权限
+     * 添加权限
      *
-     * @return
-     */
-    @GetMapping("/info")
-    public ServiceResponse<PermissionQueryResponse> currentUserPermission() {
-        return permissionApi.userPermission(null);
-    }
-
-
-    /**
-     * 查询用户角色权限
-     *
-     * @param userId
-     * @return
-     */
-    @GetMapping("/userId")
-    public ServiceResponse<PermissionQueryResponse> queryUserPermission(@RequestParam("userId") String userId) {
-        return permissionApi.userPermission(userId);
-    }
-
-    /**
-     * 添加角色
-     *
-     * @param roleAddRequest
-     * {@link InnerRoleEnum}
+     * @param permissionAddRequest
      * @return
      */
     @SaCheckRole(value = {"ADMIN"})
-    @PostMapping("/role/add")
-    public ServiceResponse<String> addRole(@RequestBody RoleAddRequest roleAddRequest) {
-        return permissionApi.addRole(roleAddRequest);
+    @PostMapping("/add")
+    public ServiceResponse<Boolean> addPermission(@RequestBody PermissionAddRequest permissionAddRequest) {
+        return this.permissionApi.addPermission(permissionAddRequest);
     }
 
-    /**
-     * 用户-角色绑定
-     *
-     * @param relaRequest
-     * @return
-     */
-    @PostMapping("/role/rela/add")
-    public ServiceResponse<String> addRoleRel(@RequestBody UserRoleRelaRequest relaRequest) {
-        return permissionApi.addRoleRela(relaRequest);
-    }
+
 }

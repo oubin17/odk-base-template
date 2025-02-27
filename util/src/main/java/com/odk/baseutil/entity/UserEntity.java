@@ -23,11 +23,6 @@ public class UserEntity implements Serializable {
     private String userId;
 
     /**
-     * 用户名称
-     */
-    private String userName;
-
-    /**
      * 用户类型
      * {@link com.odk.base.enums.user.UserTypeEnum}
      */

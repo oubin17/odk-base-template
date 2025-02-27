@@ -2,7 +2,7 @@ package com.odk.baseweb.user;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
-import com.odk.baseapi.request.UserRegisterRequest;
+import com.odk.baseutil.request.UserRegisterRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

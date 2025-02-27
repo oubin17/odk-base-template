@@ -13,7 +13,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>base-template</name>
-    <description>Demo project for Spring Boot3</description>
+    <description>Template demo project for Spring Boot3</description>
     <properties>
 
         <!-- 项目依赖 -->

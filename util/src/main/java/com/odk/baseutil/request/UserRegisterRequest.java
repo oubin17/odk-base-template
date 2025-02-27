@@ -1,4 +1,4 @@
-package com.odk.baseapi.request;
+package com.odk.baseutil.request;
 
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.enums.user.TokenTypeEnum;
