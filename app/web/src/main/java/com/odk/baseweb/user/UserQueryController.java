@@ -3,7 +3,7 @@ package com.odk.baseweb.user;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
-import com.odk.baseapi.request.UserQueryRequest;
+import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.baseutil.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,8 +1,8 @@
 package com.odk.baseapi.inter.user;
 
 import com.odk.base.vo.response.ServiceResponse;
-import com.odk.baseapi.request.UserLoginRequest;
-import com.odk.baseapi.response.UserLoginResponse;
+import com.odk.baseutil.request.UserLoginRequest;
+import com.odk.baseutil.response.UserLoginResponse;
 
 /**
  * UserLoginApi

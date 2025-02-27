@@ -4,7 +4,7 @@ import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
-import com.odk.baseapi.request.UserQueryRequest;
+import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.basemanager.deal.user.UserQueryManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.entity.UserEntity;

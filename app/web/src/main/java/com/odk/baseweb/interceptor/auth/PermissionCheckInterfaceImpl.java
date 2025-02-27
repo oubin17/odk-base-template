@@ -2,8 +2,8 @@ package com.odk.baseweb.interceptor.auth;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.odk.base.vo.response.ServiceResponse;
-import com.odk.baseapi.inter.permission.PermissionApi;
-import com.odk.baseapi.response.PermissionQueryResponse;
+import com.odk.baseapi.inter.permission.RoleApi;
+import com.odk.baseutil.response.PermissionQueryResponse;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +22,24 @@ import java.util.stream.Collectors;
 @Component
 public class PermissionCheckInterfaceImpl implements StpInterface {
 
-    private PermissionApi permissionApi;
+    private RoleApi roleApi;
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        ServiceResponse<PermissionQueryResponse> response = permissionApi.userPermission((String) loginId);
+        ServiceResponse<PermissionQueryResponse> response = this.roleApi.userRoles((String) loginId);
         List<PermissionDTO> permissions = response.getData().getPermissions();
         return permissions.stream().map(PermissionDTO::getPermissionCode).collect(Collectors.toList());
     }
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        ServiceResponse<PermissionQueryResponse> response = permissionApi.userPermission((String) loginId);
+        ServiceResponse<PermissionQueryResponse> response = this.roleApi.userRoles((String) loginId);
         List<UserRoleDTO> roles = response.getData().getRoles();
         return roles.stream().map(UserRoleDTO::getRoleCode).collect(Collectors.toList());
     }
 
     @Autowired
-    public void setPermissionApi(PermissionApi permissionApi) {
-        this.permissionApi = permissionApi;
+    public void setRoleApi(RoleApi roleApi) {
+        this.roleApi = roleApi;
     }
 }
