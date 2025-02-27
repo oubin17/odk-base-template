@@ -34,7 +34,7 @@ public class PermissionController {
      */
     @SaCheckRole(value = {"ADMIN"})
     @PostMapping("/add")
-    public ServiceResponse<String> addPermission(@RequestBody PermissionAddRequest permissionAddRequest) {
+    public ServiceResponse<Boolean> addPermission(@RequestBody PermissionAddRequest permissionAddRequest) {
         return this.permissionApi.addPermission(permissionAddRequest);
     }
 
