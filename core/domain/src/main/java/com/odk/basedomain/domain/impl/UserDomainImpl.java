@@ -110,7 +110,7 @@ public class UserDomainImpl implements UserDomain {
         SessionContext.checkLogin();
 
         //2.比对旧密码
-        UserEntity userEntity = userQueryDomain.queryByUserIdAndCheck(SessionContext.getLoginIdAsString());
+        UserEntity userEntity = userQueryDomain.queryByUserIdAndCheck(SessionContext.getLoginIdWithCheck());
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), passwordUpdateDTO.getIdentifyType());
         AssertUtil.isTrue(passwordDomain.matches(passwordUpdateDTO.getOldIdentifyValue(), userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
 

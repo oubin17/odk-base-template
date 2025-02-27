@@ -42,7 +42,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
             @Override
             protected Object convert(Object request) {
-                return Objects.requireNonNullElseGet(request, SessionContext::getLoginIdAsString);
+                return Objects.requireNonNullElseGet(request, SessionContext::getLoginIdWithCheck);
             }
 
             @Override

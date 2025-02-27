@@ -38,7 +38,7 @@ public class UserLoginManager {
     }
 
     public Boolean userLogout() {
-        Optional<UserBaseDO> byUserId = baseRepository.findById(SessionContext.getLoginIdAsString());
+        Optional<UserBaseDO> byUserId = baseRepository.findById(SessionContext.getLoginIdWithCheck());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
         SessionContext.logOut();
         return true;

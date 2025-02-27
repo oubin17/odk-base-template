@@ -22,6 +22,6 @@ public class EntityAuditorAwareImpl implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        return SessionContext.isLogin() ? Optional.ofNullable(SessionContext.getLoginIdAsString()) : Optional.empty();
+        return SessionContext.isLogin() ? Optional.ofNullable(SessionContext.getLoginIdWithCheck()) : Optional.empty();
     }
 }

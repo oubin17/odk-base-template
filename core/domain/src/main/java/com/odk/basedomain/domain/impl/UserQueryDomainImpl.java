@@ -52,7 +52,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     @Override
     public UserEntity queryBySession() {
-        return getUserInfo(SessionContext.getLoginIdAsString());
+        return getUserInfo(SessionContext.getLoginIdWithCheck());
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     @Override
     public UserEntity queryBySessionAndCheck() {
-        return queryByUserIdAndCheck(SessionContext.getLoginIdAsString());
+        return queryByUserIdAndCheck(SessionContext.getLoginIdWithCheck());
     }
 
     @Override

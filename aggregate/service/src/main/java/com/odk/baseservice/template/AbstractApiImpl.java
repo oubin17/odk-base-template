@@ -332,7 +332,7 @@ public class AbstractApiImpl extends AbstractApi {
 
     private String buildDigestLog(BizScene bizScene, Object object, String logType) {
         return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(SessionContext.getLoginIdAsString(), NULL_REPLACE) + SEP +
+                StringUtils.defaultIfBlank(SessionContext.getLoginIdOrDefault("-"), NULL_REPLACE) + SEP +
                 logType + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(object), NULL_REPLACE) + "]";
 
     }
@@ -347,7 +347,7 @@ public class AbstractApiImpl extends AbstractApi {
      */
     private String buildSummaryDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime) {
         return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(SessionContext.getLoginIdAsString(), NULL_REPLACE) + SEP +
+                StringUtils.defaultIfBlank(SessionContext.getLoginIdOrDefault("-"), NULL_REPLACE) + SEP +
                 String.valueOf(isSuccess).toUpperCase() + SEP +
                 StringUtils.defaultIfBlank(resultCode, NULL_REPLACE) + "]" +
                 "(" + executeTime + "ms)";
