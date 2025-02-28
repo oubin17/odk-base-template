@@ -139,7 +139,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
 
     </logger>
 
-    <!-- 指定打印到某个文件夹 -->
+    <!-- 指定打印到某个目录 -->
     <logger name="com.odk.baseservice.template" level="INFO" additivity="true">
         <appender-ref ref="SERVICE-DIGEST-APPENDER"/>
     </logger>
@@ -155,7 +155,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
 
     <!-- 设置Hibernate事务日志级别 -->
     <logger name="org.hibernate.transaction" level="DEBUG" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="SQL-DIGEST-APPENDER" />
     </logger>
 
     <!-- 指定日志主题 -->
@@ -168,15 +168,12 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
     要么是定义的logger，要么是root，判断的关键在于找到这个logger，然后判断这个logger的appender和level。
     -->
     <root level="info">
+        <!-- 控制台输出 -->
         <appender-ref ref="CONSOLE"/>
+        <!-- 常规日志文件 -->
         <appender-ref ref="DEFAULT-APPENDER"/>
+        <!-- 错误日志文件 -->
         <appender-ref ref="ERROR-APPENDER"/>
     </root>
-
-    <!-- 调研如何制定appender [ application Logger]  core service DRM-->
-    <!--    <logger name="com.alipay.ap.bizprod.core.service.component.drm" level="${log_level}" additivity="false">-->
-    <!--        <appender-ref ref="APBIZPROD-CORE-APPENDER-DRM"/>-->
-    <!--        <appender-ref ref="ERROR-APPENDER"/>-->
-    <!--    </logger>-->
 
 </configuration>
