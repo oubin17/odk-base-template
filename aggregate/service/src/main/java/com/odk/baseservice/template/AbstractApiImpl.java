@@ -92,9 +92,9 @@ public class AbstractApiImpl extends AbstractApi {
      */
     protected <T, R> ServiceResponse<R> strictBizProcess(BizScene bizScene, BaseRequest request, StrictApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
-        log.info(buildDigestLog(bizScene, request, REQUEST));
         ServiceResponse<R> response = null;
         try {
+            log.info(buildDigestLog(bizScene, request, REQUEST));
             //1. 初始化上下文
             initContext(bizScene);
             //2.简单参数校验
@@ -216,7 +216,9 @@ public class AbstractApiImpl extends AbstractApi {
          * @param request
          * @return
          */
-        protected abstract Object convert(BaseRequest request);
+        protected Object convert(BaseRequest request){
+            return request;
+        }
 
         /**
          * 核心业务处理

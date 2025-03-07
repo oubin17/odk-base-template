@@ -1,8 +1,10 @@
 package com.odk.baseweb.user;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.odk.base.vo.response.ServiceResponse;
+import com.odk.baseapi.inter.user.PasswordApi;
+import com.odk.baseutil.request.password.PasswordUpdateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * PasswordController
@@ -16,4 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/password")
 public class PasswordController {
 
+    private PasswordApi passwordApi;
+
+    /**
+     * 更新密码
+     *
+     */
+    @PostMapping("/update")
+    ServiceResponse<Boolean> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        return passwordApi.passwordUpdate(passwordUpdateRequest);
+    }
+
+    @Autowired
+    public void setPasswordApi(PasswordApi passwordApi) {
+        this.passwordApi = passwordApi;
+    }
 }
