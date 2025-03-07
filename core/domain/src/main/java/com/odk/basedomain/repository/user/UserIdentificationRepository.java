@@ -39,6 +39,6 @@ public interface UserIdentificationRepository extends JpaRepository<UserIdentifi
      */
     @Modifying
     @Transactional
-    @Query(value = "UPDATE t_user_identification t  SET t.identify_value = :identifyType, t.update_by = :updateBy, t.update_time = : updateTime where t.id = :id and t.identify_type = :identifyType", nativeQuery = true)
-    int updatePassword(@Param("id") String id, @Param("id")String identifyType, @Param("id") String identifyValue, @Param("id") String updateBy, @Param("id") LocalDateTime updateTime);
+    @Query(value = "UPDATE t_user_identification t  SET t.identify_value = :identifyValue, t.update_by = :updateBy, t.update_time = :updateTime where t.id = :id and t.identify_type = :identifyType", nativeQuery = true)
+    int updatePassword(@Param("id") String id, @Param("identifyType") String identifyType, @Param("identifyValue") String identifyValue, @Param("updateBy") String updateBy, @Param("updateTime") LocalDateTime updateTime);
 }

@@ -125,6 +125,8 @@ public class UserDomainImpl implements UserDomain {
 
     @Override
     public boolean resetPassword(PasswordResetDTO resetDTO) {
+        //这里需要有些安全校验
+
         return false;
     }
 

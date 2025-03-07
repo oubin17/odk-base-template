@@ -28,6 +28,9 @@ public enum BizScene {
 
     USER_PERMISSION_ADD("USER_PERMISSION_ADD", "添加角色权限"),
 
+    PASSWORD_UPDATE("PASSWORD_UPDATE", "修改密码"),
+
+
 
 
     ;
