@@ -30,9 +30,10 @@
         <redis-spring-boot-starter>3.0.2-SNAPSHOT</redis-spring-boot-starter>
 
         <!-- 三方包版本 -->
-        <lombok>1.18.24</lombok>
-        <guava>32.1.2-jre</guava>
-        <fastjson>2.0.32</fastjson>
+        <lombok.version>1.18.24</lombok.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <guava.version>32.1.2-jre</guava.version>
+        <fastjson.version>2.0.32</fastjson.version>
         <sa-token-version>1.39.0</sa-token-version>
     </properties>
 
@@ -90,28 +91,6 @@
                 <version>${redis-spring-boot-starter}</version>
             </dependency>
 
-            <!--            开发工具包-->
-            <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok}</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava}</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson}</version>
-            </dependency>
-
             <!-- module dependency -->
             <dependency>
                 <groupId>com.odk</groupId>
@@ -167,6 +146,40 @@
                 <version>${base-template}</version>
             </dependency>
 
+            <!--            开发工具包-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- MapStruct 核心依赖 -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <!-- 注解处理器（编译时生成代码） -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -179,6 +192,22 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+
+                    <annotationProcessorPaths>
+                        <!-- Lombok 优先 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <!-- MapStruct 其次 -->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

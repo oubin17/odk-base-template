@@ -3,7 +3,7 @@ package com.odk.basemanager.deal.user;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.domain.UserDomain;
-import com.odk.basedomain.model.user.UserBaseDO;
+import com.odk.basedomain.dataobject.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;

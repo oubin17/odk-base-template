@@ -10,16 +10,16 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserLoginApi;
-import com.odk.baseutil.request.UserLoginRequest;
-import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.basemanager.deal.user.UserLoginManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.mapper.UserLoginMapper;
+import com.odk.baseutil.request.UserLoginRequest;
+import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +35,8 @@ import org.springframework.stereotype.Service;
 public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
     private UserLoginManager userLoginManager;
+
+    private UserLoginMapper userLoginMapper;
 
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
@@ -53,18 +55,14 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             @Override
             protected Object convert(BaseRequest request) {
                 UserLoginRequest loginRequest = (UserLoginRequest) request;
-                UserLoginDTO userLoginDTO = new UserLoginDTO();
-                BeanUtils.copyProperties(loginRequest, userLoginDTO);
-                return userLoginDTO;
+                return userLoginMapper.toDTO(loginRequest);
             }
 
             @Override
             protected UserLoginResponse doProcess(Object args) {
                 UserLoginDTO userLoginDTO = (UserLoginDTO) args;
                 UserEntity userEntity = userLoginManager.userLogin(userLoginDTO);
-                UserLoginResponse userLoginResponse = new UserLoginResponse();
-                BeanUtils.copyProperties(userEntity, userLoginResponse);
-                return userLoginResponse;
+                return userLoginMapper.toResponse(userEntity);
             }
 
             @Override
@@ -107,5 +105,10 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
     @Autowired
     public void setUserLoginManager(UserLoginManager userLoginManager) {
         this.userLoginManager = userLoginManager;
+    }
+
+    @Autowired
+    public void setUserLoginMapper(UserLoginMapper userLoginMapper) {
+        this.userLoginMapper = userLoginMapper;
     }
 }

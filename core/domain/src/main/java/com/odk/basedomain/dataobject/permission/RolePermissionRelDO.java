@@ -1,4 +1,4 @@
-package com.odk.basedomain.model.permission;
+package com.odk.basedomain.dataobject.permission;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serial;
 
 /**
- * UserRoleRelDO
+ * RolePermissionRelDO
  *
  * @description:
  * @version: 1.0
@@ -18,20 +18,14 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_role_rel", indexes = {
-        @Index(name = "idx_user_role_id", columnList = "user_id,role_id", unique = true)
+@Table(name = "t_role_permission_rel", indexes = {
+        @Index(name = "idx_permission_id", columnList = "role_id,permission_id", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
-public class UserRoleRelDO extends BaseDO {
+public class RolePermissionRelDO extends BaseDO {
 
     @Serial
-    private static final long serialVersionUID = 2261404806508249134L;
-
-    /**
-     * 用户id
-     */
-    @Column(name = "user_id")
-    private String userId;
+    private static final long serialVersionUID = 6132591681856111018L;
 
     /**
      * 角色id
@@ -39,4 +33,9 @@ public class UserRoleRelDO extends BaseDO {
     @Column(name = "role_id")
     private String roleId;
 
+    /**
+     * 权限id
+     */
+    @Column(name = "permission_id")
+    private String permissionId;
 }

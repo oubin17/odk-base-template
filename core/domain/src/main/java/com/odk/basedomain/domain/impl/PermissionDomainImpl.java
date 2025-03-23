@@ -1,15 +1,16 @@
 package com.odk.basedomain.domain.impl;
 
 import com.google.common.collect.Lists;
+import com.odk.basedomain.dataobject.permission.PermissionDO;
+import com.odk.basedomain.dataobject.permission.UserRoleDO;
 import com.odk.basedomain.domain.PermissionDomain;
-import com.odk.baseutil.entity.PermissionEntity;
-import com.odk.basedomain.model.permission.PermissionDO;
-import com.odk.basedomain.model.permission.UserRoleDO;
+import com.odk.basedomain.mapper.PermissionDomainMapper;
+import com.odk.basedomain.mapper.UserDomainMapper;
 import com.odk.basedomain.repository.permission.PermissionRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
-import org.springframework.beans.BeanUtils;
+import com.odk.baseutil.entity.PermissionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class PermissionDomainImpl implements PermissionDomain {
     private UserRoleRepository userRoleRepository;
 
     private PermissionRepository permissionRepository;
+
+    private UserDomainMapper userDomainMapper;
+
+    private PermissionDomainMapper permissionDomainMapper;
 
     @Override
     public PermissionEntity getPermissionByUserId(String userId) {
@@ -59,9 +64,7 @@ public class PermissionDomainImpl implements PermissionDomain {
      * @return
      */
     private UserRoleDTO convert(UserRoleDO userRoleDO) {
-        UserRoleDTO userRoleDTO = new UserRoleDTO();
-        BeanUtils.copyProperties(userRoleDO, userRoleDTO);
-        return userRoleDTO;
+        return this.userDomainMapper.toDTO(userRoleDO);
     }
 
     /**
@@ -71,9 +74,7 @@ public class PermissionDomainImpl implements PermissionDomain {
      * @return
      */
     private PermissionDTO convert(PermissionDO permissionDO) {
-        PermissionDTO permissionDTO = new PermissionDTO();
-        BeanUtils.copyProperties(permissionDO, permissionDTO);
-        return permissionDTO;
+        return this.permissionDomainMapper.toDTO(permissionDO);
     }
 
     @Autowired
@@ -84,5 +85,15 @@ public class PermissionDomainImpl implements PermissionDomain {
     @Autowired
     public void setPermissionRepository(PermissionRepository permissionRepository) {
         this.permissionRepository = permissionRepository;
+    }
+
+    @Autowired
+    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
+        this.userDomainMapper = userDomainMapper;
+    }
+
+    @Autowired
+    public void setPermissionDomainMapper(PermissionDomainMapper permissionDomainMapper) {
+        this.permissionDomainMapper = permissionDomainMapper;
     }
 }

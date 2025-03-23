@@ -15,7 +15,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class OdkBootstrapApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OdkBootstrapApplication.class, args);
+        try {
+            SpringApplication.run(OdkBootstrapApplication.class, args);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
 
 }

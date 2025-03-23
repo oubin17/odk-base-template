@@ -7,14 +7,14 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
-import com.odk.baseutil.request.UserRegisterRequest;
 import com.odk.basemanager.deal.user.UserRegisterManager;
 import com.odk.basemanager.deal.verificationcode.SmsVerificationManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.mapper.UserRegisterMapper;
+import com.odk.baseutil.request.UserRegisterRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,8 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     private SmsVerificationManager smsVerificationManager;
 
     private UserRegisterManager userRegisterManager;
+
+    private UserRegisterMapper userRegisterMapper;
 
     @Override
     public ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest) {
@@ -57,9 +59,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
             @Override
             protected Object convert(BaseRequest request) {
                 UserRegisterRequest registerRequest = (UserRegisterRequest) request;
-                UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
-                BeanUtils.copyProperties(registerRequest, userRegisterDTO);
-                return userRegisterDTO;
+                return userRegisterMapper.toDTO(registerRequest);
             }
 
             @Override
@@ -83,5 +83,10 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     @Autowired
     public void setSmsVerificationManager(SmsVerificationManager smsVerificationManager) {
         this.smsVerificationManager = smsVerificationManager;
+    }
+
+    @Autowired
+    public void setUserRegisterMapper(UserRegisterMapper userRegisterMapper) {
+        this.userRegisterMapper = userRegisterMapper;
     }
 }

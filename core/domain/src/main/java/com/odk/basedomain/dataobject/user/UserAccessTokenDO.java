@@ -1,4 +1,4 @@
-package com.odk.basedomain.model.user;
+package com.odk.basedomain.dataobject.user;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serial;
 
 /**
- * UserIdentificationDO
+ * UserAccessTokenDO
  *
  * @description:
  * @version: 1.0
@@ -18,32 +18,33 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "t_user_identification", indexes = {
+@Table(name = "t_user_access_token", indexes = {
+        @Index(name = "idx_type_id", columnList = "token_value,token_type", unique = true),
         @Index(name = "idx_user_id", columnList = "user_id", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
-public class UserIdentificationDO extends BaseDO {
+public class UserAccessTokenDO extends BaseDO {
 
     @Serial
-    private static final long serialVersionUID = -7115218095274721902L;
+    private static final long serialVersionUID = -3008078711003604352L;
 
     /**
-     * 用户ID
+     * 用户id
      */
     @Column(name = "user_id")
     private String userId;
 
     /**
-     * 认证类型
-     * {@link com.odk.base.enums.user.IdentificationTypeEnum}
+     * token 类型
+     * {@link com.odk.base.enums.user.TokenTypeEnum}
      */
-    @Column(name = "identify_type")
-    private String identifyType;
+    @Column(name = "token_type")
+    private String tokenType;
 
     /**
-     * 认证值
+     * token值
      */
-    @Column(name = "identify_value")
-    private String identifyValue;
+    @Column(name = "token_value")
+    private String tokenValue;
 
 }
