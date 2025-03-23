@@ -3,19 +3,17 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
+import com.odk.basedomain.dataobject.user.UserBaseDO;
+import com.odk.basedomain.dataobject.user.UserProfileDO;
 import com.odk.basedomain.domain.UserQueryDomain;
-import com.odk.basedomain.model.user.UserAccessTokenDO;
-import com.odk.basedomain.model.user.UserBaseDO;
-import com.odk.basedomain.model.user.UserProfileDO;
+import com.odk.basedomain.mapper.UserDomainMapper;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
-import com.odk.baseutil.entity.AccessTokenEntity;
 import com.odk.baseutil.entity.UserEntity;
-import com.odk.baseutil.entity.UserProfileEntity;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +35,8 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     private UserAccessTokenRepository accessTokenRepository;
 
     private UserProfileRepository userProfileRepository;
+
+    private UserDomainMapper userDomainMapper;
 
     /**
      * 根据userId查找用户
@@ -96,22 +96,16 @@ public class UserQueryDomainImpl implements UserQueryDomain {
             return null;
         }
         //1.用户id
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userBaseDOOptional.get(), userEntity);
-        userEntity.setUserId(userBaseDOOptional.get().getId());
+        UserEntity userEntity = this.userDomainMapper.toEntity(userBaseDOOptional.get());
 
         //2.账号信息
         UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserId(userId);
-        AccessTokenEntity accessToken = new AccessTokenEntity();
-        BeanUtils.copyProperties(accessTokenDO, accessToken);
-        userEntity.setAccessToken(accessToken);
+        userEntity.setAccessToken(this.userDomainMapper.toEntity(accessTokenDO));
 
         //3.用户画像
         UserProfileDO userProfileDO = userProfileRepository.findByUserId(userId);
         if (null != userProfileDO) {
-            UserProfileEntity userProfile = new UserProfileEntity();
-            BeanUtils.copyProperties(userProfileDO, userProfile);
-            userEntity.setUserProfile(userProfile);
+            userEntity.setUserProfile(this.userDomainMapper.toEntity(userProfileDO));
         }
         return userEntity;
     }
@@ -130,5 +124,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Autowired
     public void setUserProfileRepository(UserProfileRepository userProfileRepository) {
         this.userProfileRepository = userProfileRepository;
+    }
+
+    @Autowired
+    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
+        this.userDomainMapper = userDomainMapper;
     }
 }

@@ -10,10 +10,10 @@ import com.odk.basemanager.deal.user.PasswordManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.mapper.PasswordMapper;
 import com.odk.baseutil.request.password.PasswordUpdateRequest;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 public class PasswordService extends AbstractApiImpl implements PasswordApi {
 
     private PasswordManager passwordManager;
+
+    private PasswordMapper passwordMapper;
 
     @Override
     public ServiceResponse<Boolean> passwordUpdate(PasswordUpdateRequest passwordUpdateRequest) {
@@ -46,9 +48,7 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
             @Override
             protected Object convert(BaseRequest request) {
                 PasswordUpdateRequest updateRequest = (PasswordUpdateRequest) request;
-                PasswordUpdateDTO updateDTO = new PasswordUpdateDTO();
-                BeanUtils.copyProperties(updateRequest, updateDTO);
-                return updateDTO;
+                return passwordMapper.toDTO(updateRequest);
             }
 
             @Override
@@ -76,5 +76,10 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
     @Autowired
     public void setPasswordManager(PasswordManager passwordManager) {
         this.passwordManager = passwordManager;
+    }
+
+    @Autowired
+    public void setPasswordMapper(PasswordMapper passwordMapper) {
+        this.passwordMapper = passwordMapper;
     }
 }

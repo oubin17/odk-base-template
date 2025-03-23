@@ -1,6 +1,5 @@
 package com.odk.baseutil.entity;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.io.Serial;
