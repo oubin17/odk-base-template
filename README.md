@@ -79,12 +79,12 @@
 > git clone https://github.com/oubin17/odk-base-template.git
 2. 修改配置文件：
    在 `src/main/resources/application.yml` 和 `src/main/resources/application-dev.yml` 中填写你的数据库连接信息和其他配置。
-3. 执行 SQL 初始化脚本：
+3. 执行 SQL 初始化脚本：https://github.com/oubin17/base-template/blob/main/z-non-project-file/odk_template.sql
 4. 启动项目：
 > mvn spring-boot:run
 
 ## 📚 目录结构
-![odk-base-template](https://github.com/oubin17/odk-common-util/blob/spring_boot_version_3.0.2/%E5%A4%96%E9%83%A8%E8%B5%84%E6%BA%90%E6%96%87%E4%BB%B6/odk-base-util.png?raw=true)
+![odk-base-template](https://github.com/oubin17/base-template/blob/main/z-non-project-file/odk-module.png?raw=true)
 
 
 ---
