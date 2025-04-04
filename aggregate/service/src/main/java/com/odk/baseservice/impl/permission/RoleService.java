@@ -82,13 +82,6 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
         return super.bizProcess(BizScene.USER_ROLE_ADD, roleAddRequest, new ApiCallBack<String, String>() {
 
             @Override
-            protected void checkParams(Object request) {
-                RoleAddRequest addRequest = (RoleAddRequest) request;
-                AssertUtil.notNull(addRequest.getRoleCode(), BizErrorCode.PARAM_ILLEGAL, "roleCode不为空");
-                AssertUtil.notNull(addRequest.getRoleName(), BizErrorCode.PARAM_ILLEGAL, "roleName不为空");
-            }
-
-            @Override
             protected Object convert(Object request) {
                 RoleAddRequest addRequest = (RoleAddRequest) request;
                 return new String[]{addRequest.getRoleCode(), addRequest.getRoleName()};
@@ -129,13 +122,6 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
     @Override
     public ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest) {
         return super.bizProcess(BizScene.ROLE_RELA_ADD, relaRequest, new ApiCallBack<String, String>() {
-
-            @Override
-            protected void checkParams(Object request) {
-                UserRoleRelaRequest roleRelaRequest = (UserRoleRelaRequest) request;
-                AssertUtil.notNull(roleRelaRequest.getRoleId(), BizErrorCode.PARAM_ILLEGAL, "roleId 不为空");
-                AssertUtil.notNull(roleRelaRequest.getUserId(), BizErrorCode.PARAM_ILLEGAL, "userId 不为空");
-            }
 
             @Override
             protected String doProcess(Object args) {

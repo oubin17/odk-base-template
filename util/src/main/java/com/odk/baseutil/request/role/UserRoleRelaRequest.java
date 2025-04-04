@@ -1,6 +1,7 @@
 package com.odk.baseutil.request.role;
 
 import com.odk.base.vo.request.BaseRequest;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,10 +23,12 @@ public class UserRoleRelaRequest extends BaseRequest {
     /**
      * 角色id
      */
+    @NotBlank(message = "角色 ID 不能为空")
     private String roleId;
 
     /**
      * 用户id
      */
+    @NotBlank(message = "用户 ID 不能为空")
     private String userId;
 }

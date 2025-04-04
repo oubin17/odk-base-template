@@ -5,7 +5,6 @@ import cn.dev33.satoken.router.SaRouter;
 import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.userinfo.RoleContext;
 import com.odk.baseutil.userinfo.SessionContext;
-import com.odk.baseweb.interceptor.CorsInterceptor;
 import com.odk.baseweb.interceptor.tracer.TracerIdInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
@@ -46,8 +45,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 注册 MyInterceptor 拦截器，拦截所有路径
-        registry.addInterceptor(new CorsInterceptor()).addPathPatterns("/**");
         //trace id
         registry.addInterceptor(new TracerIdInterceptor());
         //注册 Sa-Token 拦截器，打开注解式鉴权功能

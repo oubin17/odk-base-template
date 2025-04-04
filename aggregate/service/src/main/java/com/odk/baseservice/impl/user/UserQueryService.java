@@ -74,12 +74,6 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
     public ServiceResponse<UserEntity> queryUserByLoginId(UserQueryRequest userQueryRequest) {
 
         return super.bizProcess(BizScene.USER_QUERY, userQueryRequest, new ApiCallBack<UserEntity, UserEntity>() {
-            @Override
-            protected void checkParams(Object request) {
-                UserQueryRequest queryRequest = (UserQueryRequest) request;
-                AssertUtil.notNull(queryRequest.getLoginId(), BizErrorCode.PARAM_ILLEGAL, "loginId is null.");
-                AssertUtil.notNull(queryRequest.getLoginType(), BizErrorCode.PARAM_ILLEGAL, "loginType is null.");
-            }
 
             @Override
             protected UserEntity doProcess(Object args) {
