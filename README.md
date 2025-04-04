@@ -2,7 +2,7 @@
 
 ![GitHub](https://img.shields.io/badge/license-MIT-blue) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen) ![Java](https://img.shields.io/badge/Java-17-blueviolet)
 
-> **一个现代化、模块化、高性能的 Spring Boot 3 项目基础框架，助你快速构建企业级应用！**
+> **一个现代化、模块化、高性能的 Spring Boot 3 项目基础框架，助你快速构建个人应用！**
 
 ---
 

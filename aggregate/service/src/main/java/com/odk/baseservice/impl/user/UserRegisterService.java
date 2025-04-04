@@ -1,7 +1,5 @@
 package com.odk.baseservice.impl.user;
 
-import com.odk.base.enums.user.IdentificationTypeEnum;
-import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
@@ -14,7 +12,6 @@ import com.odk.baseutil.dto.user.UserRegisterDTO;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.mapper.UserRegisterMapper;
 import com.odk.baseutil.request.UserRegisterRequest;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,17 +34,6 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     @Override
     public ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest) {
         return super.strictBizProcess(BizScene.USER_REGISTER, userRegisterRequest, new StrictApiCallBack<String, String>() {
-
-            @Override
-            protected void checkParams(BaseRequest request) {
-                super.checkParams(request);
-                UserRegisterRequest registerRequest = (UserRegisterRequest) request;
-                AssertUtil.notNull(registerRequest.getLoginId(), BizErrorCode.PARAM_ILLEGAL, "loginId is null.");
-                AssertUtil.notNull(TokenTypeEnum.getByCode(registerRequest.getLoginType()), BizErrorCode.PARAM_ILLEGAL, "loginType is null.");
-                AssertUtil.notNull(IdentificationTypeEnum.getByCode(registerRequest.getIdentifyType()), BizErrorCode.PARAM_ILLEGAL, "identifyType is null.");
-                AssertUtil.notNull(registerRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "password is null.");
-                AssertUtil.isTrue(StringUtils.isNotEmpty(registerRequest.getUserName()), BizErrorCode.PARAM_ILLEGAL, "userName is null.");
-            }
 
             @Override
             protected void beforeProcess(BaseRequest request) {

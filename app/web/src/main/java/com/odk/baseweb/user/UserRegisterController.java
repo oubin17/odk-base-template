@@ -3,6 +3,7 @@ package com.odk.baseweb.user;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.baseutil.request.UserRegisterRequest;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class UserRegisterController {
      * @return
      */
     @PostMapping()
-    public ServiceResponse<String> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ServiceResponse<String> userRegister(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         return userRegisterApi.userRegister(userRegisterRequest);
     }
 }
