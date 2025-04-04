@@ -1,7 +1,5 @@
 package com.odk.baseservice.impl.user;
 
-import com.odk.base.exception.AssertUtil;
-import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
@@ -36,14 +34,6 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
     public ServiceResponse<Boolean> passwordUpdate(PasswordUpdateRequest passwordUpdateRequest) {
 
         return super.strictBizProcess(BizScene.PASSWORD_UPDATE, passwordUpdateRequest, new StrictApiCallBack<Boolean, Boolean>() {
-
-            @Override
-            protected void checkParams(BaseRequest request) {
-                PasswordUpdateRequest updateRequest = (PasswordUpdateRequest) request;
-                AssertUtil.notNull(updateRequest.getOldIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "旧密码不为空");
-                AssertUtil.notNull(updateRequest.getNewIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "新密码不为空");
-
-            }
 
             @Override
             protected Object convert(BaseRequest request) {

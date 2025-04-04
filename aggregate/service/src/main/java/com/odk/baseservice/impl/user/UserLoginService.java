@@ -1,9 +1,6 @@
 package com.odk.baseservice.impl.user;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.odk.base.enums.user.IdentificationTypeEnum;
-import com.odk.base.enums.user.TokenTypeEnum;
-import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.base.vo.request.BaseRequest;
@@ -41,16 +38,6 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
         return super.strictBizProcess(BizScene.USER_LOGIN, userLoginRequest, new StrictApiCallBack<UserLoginResponse, UserLoginResponse>() {
-
-            @Override
-            protected void checkParams(BaseRequest request) {
-                super.checkParams(request);
-                UserLoginRequest loginRequest = (UserLoginRequest) request;
-                AssertUtil.notNull(loginRequest.getLoginId(), BizErrorCode.PARAM_ILLEGAL, "loginId is null.");
-                AssertUtil.notNull(TokenTypeEnum.getByCode(loginRequest.getLoginType()), BizErrorCode.PARAM_ILLEGAL, "loginType is null.");
-                AssertUtil.notNull(IdentificationTypeEnum.getByCode(loginRequest.getIdentifyType()), BizErrorCode.PARAM_ILLEGAL, "identifyType is null.");
-                AssertUtil.notNull(loginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "identifyValue is null.");
-            }
 
             @Override
             protected Object convert(BaseRequest request) {
