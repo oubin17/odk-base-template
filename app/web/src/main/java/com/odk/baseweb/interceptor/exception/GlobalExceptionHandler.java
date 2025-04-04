@@ -5,11 +5,17 @@ import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SaTokenException;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
+import com.odk.base.util.JacksonUtil;
 import com.odk.base.vo.response.ServiceResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * GlobalExceptionHandler
@@ -30,7 +36,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(BizException.class)
-    public ResponseEntity<ServiceResponse> handleBizException(BizException e) {
+    public ResponseEntity<ServiceResponse<Void>> handleBizException(BizException e) {
         // 处理校验异常，可以根据需要返回适当的响应
         return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode(), e.getMessage()), HttpStatus.BAD_REQUEST);
     }
@@ -42,7 +48,7 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(NotLoginException.class)
-    public ResponseEntity<ServiceResponse> handleSaTokenException(SaTokenException e) {
+    public ResponseEntity<ServiceResponse<Void>> handleSaTokenException(SaTokenException e) {
         // 处理校验异常，可以根据需要返回适当的响应
         if (e instanceof NotLoginException) {
             return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_UNMATCHED, "token无效"), HttpStatus.BAD_REQUEST);
@@ -59,8 +65,25 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ServiceResponse> handleUnknownException(Exception e) {
+    public ResponseEntity<ServiceResponse<Void>> handleUnknownException(Exception e) {
         return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 处理参数校验异常
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ServiceResponse<Void>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, JacksonUtil.toJsonString(errors)), HttpStatus.BAD_REQUEST);
     }
 
 
