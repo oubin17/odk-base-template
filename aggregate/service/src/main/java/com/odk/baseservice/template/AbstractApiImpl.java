@@ -53,14 +53,13 @@ public class AbstractApiImpl extends AbstractApi {
         try {
             //1. 初始化上下文
             initContext(bizScene);
-            //2.简单参数校验
-            //3.参数校验
+            //2.参数校验
             callBack.checkParams(object);
-            //5.对象转换：request -> dto
+            //3.对象转换：request -> dto
             Object args = callBack.convert(object);
-            //5.对象转换：request -> dto
+            //4.对象转换：核心处理
             T apiResponse = callBack.doProcess(args);
-            //6.出参转换：dto -> response
+            //5.出参转换：dto -> response,执行到这里，默认系统处理成功，无异常，如果异常，doProcess 直接抛出
             response = callBack.assembleResult(apiResponse);
             log.info(buildDigestLog(bizScene, response, RESPONSE));
         } catch (BizException exception) {
@@ -285,7 +284,7 @@ public class AbstractApiImpl extends AbstractApi {
      * @param bizEx
      * @return
      */
-    private ServiceResponse handleBizException(BizException bizEx) {
+    private <R> ServiceResponse<R> handleBizException(BizException bizEx) {
         log.error("biz exception occurred，error code: {}，error message: {}", bizEx.getErrorCode(), bizEx.getMessage());
         return generateBaseResult(bizEx);
     }
@@ -297,11 +296,10 @@ public class AbstractApiImpl extends AbstractApi {
      * @param throwable
      * @return
      */
-    private ServiceResponse generateBaseResult(Throwable throwable) {
+    private <R> ServiceResponse<R> generateBaseResult(Throwable throwable) {
         BizErrorCode errorCode;
         String errorMsg = null;
-        if (throwable instanceof BizException) {
-            BizException exception = (BizException) throwable;
+        if (throwable instanceof BizException exception) {
             errorCode = exception.getErrorCode();
             if (errorCode == BizErrorCode.PARAM_ILLEGAL) {
                 errorMsg = throwable.getMessage();
@@ -327,15 +325,15 @@ public class AbstractApiImpl extends AbstractApi {
      * @param e
      * @return
      */
-    private ServiceResponse handleSystemException(Throwable e) {
+    private <R> ServiceResponse<R> handleSystemException(Throwable e) {
         log.error("unknown exception occurred, error message: ", e);
         return generateBaseResult(e);
     }
 
     private String buildDigestLog(BizScene bizScene, Object object, String logType) {
-        return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(SessionContext.getLoginIdOrDefault("-"), NULL_REPLACE) + SEP +
-                logType + SEP + StringUtils.defaultIfBlank(JSON.toJSONString(object), NULL_REPLACE) + "]";
+        return "[" + bizScene.getCode() + "," +
+                SessionContext.getLoginIdOrDefault("-") + "," +
+                logType + "," + StringUtils.defaultIfBlank(JSON.toJSONString(object), "-") + "]";
 
     }
 
@@ -348,11 +346,9 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private String buildSummaryDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime) {
-        return "[" + bizScene.getCode() + SEP +
-                StringUtils.defaultIfBlank(SessionContext.getLoginIdOrDefault("-"), NULL_REPLACE) + SEP +
-                String.valueOf(isSuccess).toUpperCase() + SEP +
-                StringUtils.defaultIfBlank(resultCode, NULL_REPLACE) + "]" +
-                "(" + executeTime + "ms)";
+        return "[" + bizScene.getCode() + "," +
+                SessionContext.getLoginIdOrDefault("-") + "," + String.valueOf(isSuccess).toUpperCase() + "," +
+                StringUtils.defaultIfBlank(resultCode, "-") + "]" + "(" + executeTime + "ms)";
 
     }
 }
