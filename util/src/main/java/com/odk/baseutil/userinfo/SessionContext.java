@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 
 /**
  * SessionContext
+ * 用户登录 Session 管理器，核心依赖 SaToken 接口能力
  *
  * @description:
  * @version: 1.0
