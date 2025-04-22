@@ -26,16 +26,6 @@ import java.util.Objects;
 public class AbstractApiImpl extends AbstractApi {
 
     /**
-     * summary log
-     */
-    private static final String SEP = ",";
-
-    private static final String NULL_REPLACE = "-";
-
-    private static final String REQUEST = "REQUEST";
-    private static final String RESPONSE = "RESPONSE";
-
-    /**
      * 通用服务处理模板
      * 1.规定入参出参需要满足的条件；
      * 2.规定对象在service层和controller层的不同父类；
@@ -48,7 +38,7 @@ public class AbstractApiImpl extends AbstractApi {
      */
     protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, Object object, ApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
-        log.info(buildDigestLog(bizScene, object, REQUEST));
+        log.info(buildDigestLog(bizScene, object, "REQUEST"));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -61,7 +51,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //5.出参转换：dto -> response,执行到这里，默认系统处理成功，无异常，如果异常，doProcess 直接抛出
             response = callBack.assembleResult(apiResponse);
-            log.info(buildDigestLog(bizScene, response, RESPONSE));
+            log.info(buildDigestLog(bizScene, response, "RESPONSE"));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -93,7 +83,7 @@ public class AbstractApiImpl extends AbstractApi {
         long startTime = System.currentTimeMillis();
         ServiceResponse<R> response = null;
         try {
-            log.info(buildDigestLog(bizScene, request, REQUEST));
+            log.info(buildDigestLog(bizScene, request, "REQUEST"));
             //1. 初始化上下文
             initContext(bizScene);
             //2.简单参数校验
@@ -107,7 +97,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
             response = callBack.assembleResult(apiResponse);
-            log.info(buildDigestLog(bizScene, response, RESPONSE));
+            log.info(buildDigestLog(bizScene, response, "RESPONSE"));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
