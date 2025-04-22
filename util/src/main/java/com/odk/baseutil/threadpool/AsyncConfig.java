@@ -50,7 +50,7 @@ public class AsyncConfig {
         executor.setMaxPoolSize(Runtime.getRuntime().availableProcessors() * 2);
         executor.setQueueCapacity(200);
         executor.setKeepAliveSeconds(60);
-        executor.setThreadNamePrefix("Async-Executor-");
+        executor.setThreadNamePrefix("async-spring-boot-");
 
         // 设置拒绝策略（重要！）
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
