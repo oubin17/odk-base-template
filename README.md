@@ -2,7 +2,7 @@
 
 ![GitHub](https://img.shields.io/badge/license-MIT-blue) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen) ![Java](https://img.shields.io/badge/Java-17-blueviolet)
 
-> **一个现代化、模块化、高性能的 Spring Boot 3 项目基础框架，助你快速构建个人应用！**
+> **一个现代化、模块化、高性能的 Spring Boot 3 项目基础框架，助你快速构建应用！**
 
 ---
 
@@ -19,7 +19,7 @@
 - **高拓展性**：项目融合微服务的思想，非常方便由单体应用拓展到微服务应用。
 - **开箱即用**：内置常用功能模块（如日志管理、异常处理、统一返回格式等）。
 - **高性能**：优化的配置和依赖管理，确保运行效率。
-- **易于集成**：支持与主流中间件（如 Redis、MySQL、RabbitMQ 等）无缝集成。项目采用配置分离的方式，常用中间件的集成由工程[odk-common-util](https://github.com/oubin17/odk-common-util)负责，本项目只需引入 odk-common-util 对应模块即可。
+- **易于集成**：支持与主流中间件（如 Redis、MySQL、RabbitMQ 等）无缝集成。项目采用配置分离的方式，常用中间件的集成由工程[odk-common-util](https://github.com/oubin17/odk-common-util)实现，本项目只需引入 odk-common-util 对应模块即可。
 - **完善的文档**：详细的代码注释和使用说明，降低学习成本。
 
 ---
@@ -43,8 +43,9 @@
 
 - **后端框架**：
   - [Spring Boot 3](https://spring.io/projects/spring-boot)
-  - [Sa-Token](https://sa-token.cc/index.html)
   - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+  - [Sa-Token](https://sa-token.cc/index.html)
+  - Spring Boot 全家桶，如 Spring MVC、 Redis Starter等。
 - **数据库**：
   - MySQL / Oracle
   - Redis（缓存支持）
@@ -61,6 +62,7 @@
   - Tracer (链路追踪)
   - MapStruct（对象映射）
   - Jackson（JSON 处理）
+  - Redisson（分布式锁）
 
 ---
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * RedissionLockManager
+ * RedissonLockManager
  *
  * @description:
  * @version: 1.0
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class RedissionLockManager {
+public class RedissonLockManager {
 
     private DistributedLockService distributedLockService;
 
