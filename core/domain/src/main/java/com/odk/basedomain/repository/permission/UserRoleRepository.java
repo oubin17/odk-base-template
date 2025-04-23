@@ -20,6 +20,14 @@ public interface UserRoleRepository extends JpaRepository<UserRoleDO, String> {
     List<UserRoleDO> findAllUserRole(@Param("userId") String userId);
 
     /**
+     * 根据状态查询
+     *
+     * @param status
+     * @return
+     */
+    List<UserRoleDO> findByStatus(String status);
+
+    /**
      * 根据角色码查询角色
      *
      * @param roleCode

@@ -9,12 +9,15 @@ import com.odk.basedomain.dataobject.permission.UserRoleDO;
 import com.odk.basedomain.dataobject.permission.UserRoleRelDO;
 import com.odk.basedomain.repository.permission.UserRoleRelRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
+import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * PermissionManager
@@ -76,6 +79,18 @@ public class RoleManager {
         return true;
     }
 
+    public List<UserRoleDTO> roleList() {
+        return userRoleRepository.findByStatus(CommonStatusEnum.NORMAL.getCode()).stream().map(userRoleDO -> {
+            UserRoleDTO userRoleDTO = new UserRoleDTO();
+            userRoleDTO.setId(userRoleDO.getId());
+            userRoleDTO.setRoleCode(userRoleDO.getRoleCode());
+            userRoleDTO.setRoleName(userRoleDO.getRoleName());
+            userRoleDTO.setStatus(userRoleDO.getStatus());
+            return userRoleDTO;
+        }).collect(Collectors.toList());
+
+    }
+
     public String addUserRoleRela(String roleId, String userId) {
         UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleId(userId, roleId);
         AssertUtil.isNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户已具备该权限");
@@ -88,6 +103,13 @@ public class RoleManager {
         roleRelDO.setRoleId(roleId);
         UserRoleRelDO save = relRepository.save(roleRelDO);
         return save.getId();
+    }
+
+    public Boolean deleteUserRoleRela(String roleId, String userId) {
+        UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleId(userId, roleId);
+        AssertUtil.notNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户不具备该权限");
+        relRepository.deleteById(userRoleRelDO.getId());
+        return true;
     }
 
     @Autowired

@@ -5,10 +5,14 @@ import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
 import com.odk.basemanager.deal.permission.PermissionManager;
 import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.request.role.PermissionAddRequest;
+import com.odk.baseutil.request.role.PermissionQueryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * PermissionService
@@ -38,6 +42,23 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
             @Override
             protected Boolean convertResult(Boolean result) {
+                return result;
+            }
+
+        });
+    }
+
+    @Override
+    public ServiceResponse<List<PermissionDTO>> permissionList(PermissionQueryRequest permissionQueryRequest) {
+        return super.strictBizProcess(BizScene.PERMISSION_LIST, permissionQueryRequest, new StrictApiCallBack<List<PermissionDTO>, List<PermissionDTO>>() {
+
+            @Override
+            protected List<PermissionDTO> doProcess(Object args) {
+                return permissionManager.permissionList(permissionQueryRequest);
+            }
+
+            @Override
+            protected List<PermissionDTO> convertResult(List<PermissionDTO> result) {
                 return result;
             }
 

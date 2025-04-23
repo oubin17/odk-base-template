@@ -3,11 +3,12 @@ package com.odk.baseweb.permission;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
+import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.request.role.PermissionAddRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.odk.baseutil.request.role.PermissionQueryRequest;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * PermissionController
@@ -38,5 +39,16 @@ public class PermissionController {
         return this.permissionApi.addPermission(permissionAddRequest);
     }
 
+    /**
+     * 权限列表
+     *
+     * @param permissionQueryRequest
+     * @return
+     */
+    @SaCheckRole(value = {"ADMIN"})
+    @GetMapping("/list")
+    public ServiceResponse<List<PermissionDTO>> permissionList(@RequestBody PermissionQueryRequest permissionQueryRequest) {
+        return this.permissionApi.permissionList(permissionQueryRequest);
+    }
 
 }
