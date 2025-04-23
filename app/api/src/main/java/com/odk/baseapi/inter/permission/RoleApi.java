@@ -1,9 +1,12 @@
 package com.odk.baseapi.inter.permission;
 
 import com.odk.base.vo.response.ServiceResponse;
+import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.request.role.RoleAddRequest;
 import com.odk.baseutil.request.role.UserRoleRelaRequest;
 import com.odk.baseutil.response.PermissionQueryResponse;
+
+import java.util.List;
 
 /**
  * RoleApi
@@ -39,6 +42,13 @@ public interface RoleApi {
     ServiceResponse<Boolean> deleteRole(String roleId);
 
     /**
+     * 角色列表
+     *
+     * @return
+     */
+    ServiceResponse<List<UserRoleDTO>> roleList();
+
+    /**
      * 添加用户角色
      *
      * @param relaRequest
@@ -46,4 +56,11 @@ public interface RoleApi {
      */
     ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest);
 
+    /**
+     * 去除用户角色
+     *
+     * @param relaRequest
+     * @return
+     */
+    ServiceResponse<Boolean> deleteRoleRela(UserRoleRelaRequest relaRequest);
 }

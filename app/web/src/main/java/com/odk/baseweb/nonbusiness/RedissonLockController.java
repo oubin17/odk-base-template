@@ -1,5 +1,6 @@
 package com.odk.baseweb.nonbusiness;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.nonbusiness.RedissonLockApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RedissonLockController {
 
     private RedissonLockApi redissonLockApi;
 
+    @SaIgnore
     @GetMapping("/lock")
     public ServiceResponse<Boolean> addPermission(@RequestParam("lockKey") String lockKey) {
         return this.redissonLockApi.lock(lockKey);

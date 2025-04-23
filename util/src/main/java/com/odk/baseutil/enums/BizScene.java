@@ -20,13 +20,20 @@ public enum BizScene {
 
     USER_PERMISSION_QUERY("USER_PERMISSION_QUERY", "用户权限查询"),
 
+
+    ROLE_LIST("ROLE_LIST", "角色列表"),
+
     USER_ROLE_ADD("USER_ROLE_ADD", "添加用户角色"),
 
     USER_ROLE_DELETE("USER_ROLE_DELETE", "删除用户角色"),
 
     ROLE_RELA_ADD("ROLE_RELA_ADD", "用户添加角色"),
 
+    ROLE_RELA_DELETE("ROLE_RELA_DELETE", "用户删除角色"),
+
     USER_PERMISSION_ADD("USER_PERMISSION_ADD", "添加角色权限"),
+
+    PERMISSION_LIST("PERMISSION_LIST", "权限列表"),
 
     PASSWORD_UPDATE("PASSWORD_UPDATE", "修改密码"),
 

@@ -120,6 +120,20 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
     }
 
     @Override
+    public ServiceResponse<List<UserRoleDTO>> roleList() {
+        return super.bizProcess(BizScene.ROLE_LIST, null, new ApiCallBack<List<UserRoleDTO>, List<UserRoleDTO>>() {
+            @Override
+            protected List<UserRoleDTO> doProcess(Object args) {
+                return permissionManager.roleList();
+            }
+            @Override
+            protected List<UserRoleDTO> convertResult(List<UserRoleDTO> result) {
+                return result;
+            }
+        });
+    }
+
+    @Override
     public ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest) {
         return super.bizProcess(BizScene.ROLE_RELA_ADD, relaRequest, new ApiCallBack<String, String>() {
 
@@ -136,6 +150,24 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
 
         });
     }
+
+    @Override
+    public ServiceResponse<Boolean> deleteRoleRela(UserRoleRelaRequest relaRequest) {
+        return super.bizProcess(BizScene.ROLE_RELA_DELETE, relaRequest, new ApiCallBack<Boolean, Boolean>() {
+
+            @Override
+            protected Boolean doProcess(Object args) {
+                return permissionManager.deleteUserRoleRela(relaRequest.getRoleId(), relaRequest.getUserId());
+            }
+
+            @Override
+            protected Boolean convertResult(Boolean result) {
+                return result;
+            }
+
+        });
+    }
+
 
 
     @Autowired

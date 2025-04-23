@@ -1,13 +1,13 @@
 package com.odk.baseservice.template;
 
-import com.alibaba.fastjson.JSON;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
+import com.odk.base.util.JacksonUtil;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
-import com.odk.baseutil.constext.ServiceContextHolder;
+import com.odk.baseutil.context.ServiceContextHolder;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -323,7 +323,7 @@ public class AbstractApiImpl extends AbstractApi {
     private String buildDigestLog(BizScene bizScene, Object object, String logType) {
         return "[" + bizScene.getCode() + "," +
                 SessionContext.getLoginIdOrDefault("-") + "," +
-                logType + "," + StringUtils.defaultIfBlank(JSON.toJSONString(object), "-") + "]";
+                logType + "," + StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-") + "]";
 
     }
 
