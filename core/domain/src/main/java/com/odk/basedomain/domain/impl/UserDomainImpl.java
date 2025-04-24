@@ -100,7 +100,7 @@ public class UserDomainImpl implements UserDomain {
         AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), userLoginDTO.getIdentifyType());
 
-        String decrypt = iDecrypt.decrypt(userIdentificationDO.getIdentifyValue());
+        String decrypt = iDecrypt.decrypt(userLoginDTO.getIdentifyValue());
         AssertUtil.isTrue(iEncrypt.matches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         //设置登录session
         SessionContext.createLoginSession(userEntity.getUserId());

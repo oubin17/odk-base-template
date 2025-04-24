@@ -37,6 +37,8 @@ public enum BizScene {
 
     PASSWORD_UPDATE("PASSWORD_UPDATE", "修改密码"),
 
+    ENCODE_DATA("ENCODE_DATA", "加密"),
+
 
 
 

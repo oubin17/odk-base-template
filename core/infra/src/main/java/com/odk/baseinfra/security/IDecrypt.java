@@ -17,4 +17,12 @@ public interface IDecrypt {
      */
     String decrypt(String encryptedBase64);
 
+    /**
+     * 公钥加密
+     *
+     * @param rawData
+     * @return
+     */
+    String encrypt(String rawData);
+
 }

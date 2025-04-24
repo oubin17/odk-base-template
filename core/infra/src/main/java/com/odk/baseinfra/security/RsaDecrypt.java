@@ -11,11 +11,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 /**
@@ -29,10 +32,35 @@ import java.util.Base64;
 @Service
 public class RsaDecrypt implements InitializingBean, IDecrypt {
 
+    @Value("${security.public-key-path}")
+    private String publicKeyPath;
+
     @Value("${security.private-key-path}")
     private String privateKeyPath;
 
+    private PublicKey publicKey;
+
     private PrivateKey privateKey;
+
+    @Override
+    public String encrypt(String rawData) {
+        try {
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            byte[] encryptedBytes = cipher.doFinal(rawData.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (IllegalBlockSizeException e) {
+            log.error("加密数据长度超过117字节", e);
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL, "加密数据过长（最大117字节）");
+        } catch (BadPaddingException e) {
+            log.error("加密填充异常", e);
+            throw new BizException(BizErrorCode.SYSTEM_ERROR, "加密配置错误");
+        } catch (Exception e) {
+            log.error("加密系统错误", e);
+            throw new BizException(BizErrorCode.SYSTEM_ERROR, "加密失败");
+        }
+    }
 
     @Override
     public String decrypt(String encryptedBase64) {
@@ -58,6 +86,20 @@ public class RsaDecrypt implements InitializingBean, IDecrypt {
         }
     }
 
+    // 新增公钥加载方法
+    private PublicKey loadPublicKey(String keyPath) throws Exception {
+        String pemContent = new String(Files.readAllBytes(Paths.get(keyPath)));
+        String publicKeyPEM = pemContent
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+
+        byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decoded);
+        return KeyFactory.getInstance("RSA").generatePublic(keySpec);
+    }
+
+
     private PrivateKey loadPrivateKey(String keyPath) throws Exception {
         // 1. 读取PEM文件内容
         String pemContent = new String(Files.readAllBytes(Paths.get(keyPath)));
@@ -80,6 +122,7 @@ public class RsaDecrypt implements InitializingBean, IDecrypt {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        publicKey = loadPublicKey(publicKeyPath);
         privateKey = loadPrivateKey(privateKeyPath);
     }
 
