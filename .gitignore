@@ -34,3 +34,7 @@ build/
 
 ### prod ###
 *-prod.properties
+
+### keys ###
+bootstrap/config/keys/
+
