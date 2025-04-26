@@ -34,6 +34,15 @@ public class UserQueryManager {
     }
 
     /**
+     * 从 session 中获取用户信息
+     *
+     * @return
+     */
+    public UserEntity queryBySession() {
+        return this.userQueryDomain.queryBySession();
+    }
+
+    /**
      * 根据登录凭证查找用户
      *
      * @param tokenType
