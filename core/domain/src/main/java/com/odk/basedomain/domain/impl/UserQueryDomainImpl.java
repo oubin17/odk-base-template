@@ -1,12 +1,13 @@
 package com.odk.basedomain.domain.impl;
 
-import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
 import com.odk.basedomain.dataobject.user.UserBaseDO;
 import com.odk.basedomain.dataobject.user.UserProfileDO;
 import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
+import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.mapper.UserDomainMapper;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
@@ -18,7 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * UserQueryDomainImpl
@@ -39,52 +43,119 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     private UserDomainMapper userDomainMapper;
 
+
+    @Override
+    public UserEntity queryUser(UserQueryCriteria criteria) {
+
+        AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL, "userQueryTypeEnum is null.");
+        UserEntity userEntity = switch (criteria.getQueryType()) {
+            case USER_ID -> getUserInfo(criteria.getUserId());
+            case LOGIN_ID -> queryByLoginTypeAndLoginId(
+                    criteria.getLoginType(),
+                    criteria.getLoginId()
+            );
+            case SESSION -> queryBySession();
+
+            case USER_ID_LIST -> null;
+        };
+        if (!criteria.isNullAllowed()) {
+            AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
+        }
+        return userEntity;
+    }
+
+    @Override
+    public List<UserEntity> queryUserList(UserListQueryCriteria criteria) {
+        AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL, "userQueryTypeEnum is null.");
+        return switch (criteria.getQueryType()) {
+            case USER_ID, SESSION, LOGIN_ID -> new ArrayList<>();
+            case USER_ID_LIST -> queryByUserIdList(criteria.getUserIds());
+        };
+    }
+
     /**
-     * 根据userId查找用户
+     * 根据userIdList查找用户
      *
-     * @param userId
+     * @param userIds
      * @return
      */
-    @Override
-    public UserEntity queryByUserId(String userId) {
-      return getUserInfo(userId);
-    }
-
-
-    @Override
-    public UserEntity queryBySession() {
-        return (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
+    private List<UserEntity> queryByUserIdList(List<String> userIds) {
+        return userIds.stream()
+                .map(this::getUserInfo)
+                .collect(Collectors.toList());
     }
 
     /**
-     * 检查用户状态
+     * 根据tokenType和tokenValue查找用户
      *
-     * @param userId
+     * @param tokenType
+     * @param tokenValue
      * @return
      */
-    @Override
-    public UserEntity queryByUserIdAndCheck(String userId) {
-        UserEntity userInfo = getUserInfo(userId);
-        AssertUtil.notNull(userInfo, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + userId);
-        AssertUtil.equal(UserStatusEnum.NORMAL.getCode(), userInfo.getUserStatus(), BizErrorCode.USER_STATUS_ERROR, "用户状态异常，用户ID:" + userId);
-        return userInfo;
-    }
-
-    @Override
-    public UserEntity queryBySessionAndCheck() {
-        UserEntity sessionValue = (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
-        AssertUtil.notNull(sessionValue, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + sessionValue.getUserId());
-        return sessionValue;
-    }
-
-    @Override
-    public UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue) {
+    private UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue) {
         UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(tokenType, tokenValue);
         if (null == userAccessTokenDO) {
             return null;
         }
-        return queryByUserIdAndCheck(userAccessTokenDO.getUserId());
+        return getUserInfo(userAccessTokenDO.getUserId());
     }
+
+    /**
+     * 根据session查找用户
+     *
+     * @return
+     */
+    private UserEntity queryBySession() {
+        return (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
+    }
+
+
+//    /**
+//     * 根据userId查找用户
+//     *
+//     * @param userId
+//     * @return
+//     */
+//    @Override
+//    public UserEntity queryByUserId(String userId) {
+//      return getUserInfo(userId);
+//    }
+//
+//
+//    @Override
+//    public UserEntity queryBySession() {
+//        return (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
+//    }
+//
+//    /**
+//     * 检查用户状态
+//     *
+//     * @param userId
+//     * @return
+//     */
+//    @Override
+//    public UserEntity queryByUserIdAndCheck(String userId) {
+//        UserEntity userInfo = getUserInfo(userId);
+//        AssertUtil.notNull(userInfo, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + userId);
+//        AssertUtil.equal(UserStatusEnum.NORMAL.getCode(), userInfo.getUserStatus(), BizErrorCode.USER_STATUS_ERROR, "用户状态异常，用户ID:" + userId);
+//        return userInfo;
+//    }
+//
+//    @Override
+//    public UserEntity queryBySessionAndCheck() {
+//        UserEntity sessionValue = (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
+//        AssertUtil.notNull(sessionValue, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + sessionValue.getUserId());
+//        return sessionValue;
+//    }
+//
+//    @Override
+//    public UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue) {
+//        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(tokenType, tokenValue);
+//        if (null == userAccessTokenDO) {
+//            return null;
+//        }
+//        return queryByUserIdAndCheck(userAccessTokenDO.getUserId());
+//    }
 
     /**
      * 通用获取用户信息方法
