@@ -36,6 +36,16 @@ public class SessionContext {
     }
 
     /**
+     * 从当前登录 session 中获取用户信息
+     *
+     * @param key
+     * @return
+     */
+    public static Object getSessionValue(String key) {
+        return StpUtil.getSession().get(key);
+    }
+
+    /**
      * 获取当前用户登录ID，如果用户未登录，抛异常NotLoginException
      *
      * @return

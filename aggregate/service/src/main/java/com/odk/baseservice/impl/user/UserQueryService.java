@@ -59,7 +59,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
             @Override
             protected UserEntity doProcess(Object args) {
-                return userQueryManager.queryByUserId(SessionContext.getLoginIdWithCheck());
+                return userQueryManager.queryBySession();
             }
 
             @Override

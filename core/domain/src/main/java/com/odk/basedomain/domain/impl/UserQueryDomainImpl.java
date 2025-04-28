@@ -11,6 +11,7 @@ import com.odk.basedomain.mapper.UserDomainMapper;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
+import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     @Override
     public UserEntity queryBySession() {
-        return getUserInfo(SessionContext.getLoginIdWithCheck());
+        return (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
     }
 
     /**
@@ -71,7 +72,9 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     @Override
     public UserEntity queryBySessionAndCheck() {
-        return queryByUserIdAndCheck(SessionContext.getLoginIdWithCheck());
+        UserEntity sessionValue = (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
+        AssertUtil.notNull(sessionValue, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + sessionValue.getUserId());
+        return sessionValue;
     }
 
     @Override

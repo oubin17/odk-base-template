@@ -19,8 +19,6 @@ public interface UserQueryDomain {
      */
     UserEntity queryByUserId(String userId);
 
-    UserEntity queryBySession();
-
     /**
      * 根据用户id查找，如果不存在，抛异常
      *
@@ -28,6 +26,14 @@ public interface UserQueryDomain {
      * @return
      */
     UserEntity queryByUserIdAndCheck(String userId);
+
+    /**
+     * 从 session 中获取用户信息
+     *
+     * @return
+     */
+    UserEntity queryBySession();
+
 
     UserEntity queryBySessionAndCheck();
 
