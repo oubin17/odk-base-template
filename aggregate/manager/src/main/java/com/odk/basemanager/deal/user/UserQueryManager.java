@@ -1,9 +1,11 @@
 package com.odk.basemanager.deal.user;
 
 import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
+import com.odk.baseutil.enums.UserQueryTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,12 @@ public class UserQueryManager {
      * @return
      */
     public UserEntity queryByUserId(String userId) {
-        return this.userQueryDomain.queryByUserId(userId);
+        return this.userQueryDomain.queryUser(
+                UserQueryCriteria.builder()
+                .queryType(UserQueryTypeEnum.USER_ID)
+                .userId(userId)
+                .build()
+        );
     }
 
     /**
@@ -39,7 +46,11 @@ public class UserQueryManager {
      * @return
      */
     public UserEntity queryBySession() {
-        return this.userQueryDomain.queryBySession();
+        return this.userQueryDomain.queryUser(
+                UserQueryCriteria.builder()
+                .queryType(UserQueryTypeEnum.SESSION)
+                .build()
+        );
     }
 
     /**
@@ -55,7 +66,11 @@ public class UserQueryManager {
         if (null == userAccessTokenDO) {
             return null;
         }
-        return queryByUserId(userAccessTokenDO.getUserId());
+        UserQueryCriteria build = UserQueryCriteria.builder()
+                .queryType(UserQueryTypeEnum.USER_ID)
+                .userId(userAccessTokenDO.getUserId())
+                .build();
+        return this.userQueryDomain.queryUser(build);
     }
 
     @Autowired

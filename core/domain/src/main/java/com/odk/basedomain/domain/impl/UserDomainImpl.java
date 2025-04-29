@@ -10,9 +10,9 @@ import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
 import com.odk.basedomain.dataobject.user.UserBaseDO;
 import com.odk.basedomain.dataobject.user.UserIdentificationDO;
 import com.odk.basedomain.dataobject.user.UserProfileDO;
-import com.odk.basedomain.domain.PasswordDomain;
 import com.odk.basedomain.domain.UserDomain;
 import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
@@ -23,6 +23,7 @@ import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.enums.UserQueryTypeEnum;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +53,7 @@ public class UserDomainImpl implements UserDomain {
 
     private UserProfileRepository userProfileRepository;
 
-    private PasswordDomain passwordDomain;
-
     private TransactionTemplate transactionTemplate;
-
 
     private IDecrypt iDecrypt;
 
@@ -96,8 +94,13 @@ public class UserDomainImpl implements UserDomain {
 
     @Override
     public UserEntity userLogin(UserLoginDTO userLoginDTO) {
-        UserEntity userEntity = userQueryDomain.queryByLoginTypeAndLoginId(userLoginDTO.getLoginType(), userLoginDTO.getLoginId());
-        AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
+
+        UserQueryCriteria build = UserQueryCriteria.builder()
+                .queryType(UserQueryTypeEnum.LOGIN_ID)
+                .loginId(userLoginDTO.getLoginId())
+                .loginType(userLoginDTO.getLoginType())
+                .build();
+        UserEntity userEntity = userQueryDomain.queryUser(build);
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), userLoginDTO.getIdentifyType());
 
         String decrypt = iDecrypt.decrypt(userLoginDTO.getIdentifyValue());
@@ -174,11 +177,6 @@ public class UserDomainImpl implements UserDomain {
     @Autowired
     public void setIdentificationRepository(UserIdentificationRepository identificationRepository) {
         this.identificationRepository = identificationRepository;
-    }
-
-    @Autowired
-    public void setPasswordDomain(PasswordDomain passwordDomain) {
-        this.passwordDomain = passwordDomain;
     }
 
     @Autowired

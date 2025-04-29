@@ -3,14 +3,16 @@ package com.odk.basemanager.deal.permission;
 import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.domain.PermissionDomain;
-import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.dataobject.permission.UserRoleDO;
 import com.odk.basedomain.dataobject.permission.UserRoleRelDO;
+import com.odk.basedomain.domain.PermissionDomain;
+import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.repository.permission.UserRoleRelRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
+import com.odk.baseutil.enums.UserQueryTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,12 +94,12 @@ public class RoleManager {
     }
 
     public String addUserRoleRela(String roleId, String userId) {
+        this.userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(userId).build());
         UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleId(userId, roleId);
         AssertUtil.isNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户已具备该权限");
 
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
         AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
-        this.userQueryDomain.queryByUserIdAndCheck(userId);
         UserRoleRelDO roleRelDO = new UserRoleRelDO();
         roleRelDO.setUserId(userId);
         roleRelDO.setRoleId(roleId);
