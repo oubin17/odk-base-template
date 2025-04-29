@@ -1,7 +1,6 @@
 package com.odk.baseutil.context;
 
 
-import com.odk.baseutil.constants.ServiceConstants;
 import com.odk.baseutil.enums.BizScene;
 
 /**
@@ -13,9 +12,15 @@ import com.odk.baseutil.enums.BizScene;
  */
 public class ServiceContextHolder {
 
-    private static final ThreadLocal<BizScene> sceneCode = new ThreadLocal<>();
+    /**
+     * 场景上下文
+     */
+    private static final ThreadLocal<BizScene> SCENE_CODE = new ThreadLocal<>();
 
-    private static final ThreadLocal<ServiceContext> SERVICE_CONTEXT = new ThreadLocal<>();
+    /**
+     * 服务上下文，不限制格式
+     */
+    private static final ThreadLocal<Object> SERVICE_CONTEXT = new ThreadLocal<>();
 
     private static final ThreadLocal<String> USER_ID_CONTEXT = new ThreadLocal<>();
 
@@ -26,46 +31,64 @@ public class ServiceContextHolder {
      * @param bizScene
      */
     public static void setSceneCode(BizScene bizScene) {
-        ServiceContextHolder.sceneCode.set(bizScene);
+        ServiceContextHolder.SCENE_CODE.set(bizScene);
     }
 
-    public static void setUserId(String userId) {
-        ServiceContext context = SERVICE_CONTEXT.get();
-        if (null == context) {
-            context = new ServiceContext();
-            SERVICE_CONTEXT.set(context);
-        }
-        context.setUserId(userId);
+    /**
+     * 设置上下文
+     *
+     * @param object
+     */
+    public static void setServiceContext(Object object) {
+        ServiceContextHolder.SERVICE_CONTEXT.set(object);
     }
+
+    /**
+     * 返回上下文
+     *
+     * @return
+     */
+    public static Object getServiceContext() {
+        return SERVICE_CONTEXT.get();
+    }
+
+//    public static void setUserId(String userId) {
+//        ServiceContext context = SERVICE_CONTEXT.get();
+//        if (null == context) {
+//            context = new ServiceContext();
+//            SERVICE_CONTEXT.set(context);
+//        }
+//        context.setUserId(userId);
+//    }
 
     /**
      * 获取用户ID
      *
      * @return
      */
-    public static String getUserId() {
-        ServiceContext sc = SERVICE_CONTEXT.get();
-        if (null == sc) {
-            return null;
-        }
-        return sc.getUserId();
-    }
+//    public static String getUserId() {
+//        ServiceContext sc = SERVICE_CONTEXT.get();
+//        if (null == sc) {
+//            return null;
+//        }
+//        return sc.getUserId();
+//    }
 
     /**
      * 获取租户ID
      *
      * @return
      */
-    public static String getTntInstId() {
-        ServiceContext sc = SERVICE_CONTEXT.get();
-        if (null == sc) {
-            return ServiceConstants.TENANT_ID;
-        }
-        return sc.getTenantId();
-    }
+//    public static String getTntInstId() {
+//        ServiceContext sc = SERVICE_CONTEXT.get();
+//        if (null == sc) {
+//            return ServiceConstants.TENANT_ID;
+//        }
+//        return sc.getTenantId();
+//    }
 
     public static void clear() {
-        sceneCode.remove();
+        SCENE_CODE.remove();
         SERVICE_CONTEXT.remove();
         USER_ID_CONTEXT.remove();
     }

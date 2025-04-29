@@ -6,7 +6,7 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.basemanager.deal.user.UserRegisterManager;
-import com.odk.basemanager.deal.verificationcode.SmsVerificationManager;
+import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import com.odk.baseutil.enums.BizScene;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRegisterService extends AbstractApiImpl implements UserRegisterApi {
 
-    private SmsVerificationManager smsVerificationManager;
+    private VerificationCodeManager verificationCodeManager;
 
     private UserRegisterManager userRegisterManager;
 
@@ -39,7 +39,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
             protected void beforeProcess(BaseRequest request) {
                 //检查验证码是否有效
                 UserRegisterRequest registerRequest = (UserRegisterRequest) request;
-                AssertUtil.isTrue(smsVerificationManager.verifySms(registerRequest.getVerificationCode()), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
+                AssertUtil.isTrue(verificationCodeManager.verifySms(registerRequest.getVerificationCode()), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
             }
 
             @Override
@@ -67,8 +67,8 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     }
 
     @Autowired
-    public void setSmsVerificationManager(SmsVerificationManager smsVerificationManager) {
-        this.smsVerificationManager = smsVerificationManager;
+    public void setSmsVerificationManager(VerificationCodeManager verificationCodeManager) {
+        this.verificationCodeManager = verificationCodeManager;
     }
 
     @Autowired

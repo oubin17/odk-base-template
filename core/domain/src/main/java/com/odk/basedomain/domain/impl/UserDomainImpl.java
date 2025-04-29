@@ -10,7 +10,6 @@ import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
 import com.odk.basedomain.dataobject.user.UserBaseDO;
 import com.odk.basedomain.dataobject.user.UserIdentificationDO;
 import com.odk.basedomain.dataobject.user.UserProfileDO;
-import com.odk.basedomain.domain.PasswordDomain;
 import com.odk.basedomain.domain.UserDomain;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
@@ -54,10 +53,7 @@ public class UserDomainImpl implements UserDomain {
 
     private UserProfileRepository userProfileRepository;
 
-    private PasswordDomain passwordDomain;
-
     private TransactionTemplate transactionTemplate;
-
 
     private IDecrypt iDecrypt;
 
@@ -181,11 +177,6 @@ public class UserDomainImpl implements UserDomain {
     @Autowired
     public void setIdentificationRepository(UserIdentificationRepository identificationRepository) {
         this.identificationRepository = identificationRepository;
-    }
-
-    @Autowired
-    public void setPasswordDomain(PasswordDomain passwordDomain) {
-        this.passwordDomain = passwordDomain;
     }
 
     @Autowired

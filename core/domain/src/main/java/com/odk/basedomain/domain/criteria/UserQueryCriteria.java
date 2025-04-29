@@ -16,7 +16,7 @@ import lombok.Getter;
 public class UserQueryCriteria {
 
     /**
-     * 查询类型
+     * 查询类型:不为空
      */
     private UserQueryTypeEnum queryType;
 

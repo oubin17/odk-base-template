@@ -30,6 +30,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.odk</groupId>
+            <artifactId>redis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
