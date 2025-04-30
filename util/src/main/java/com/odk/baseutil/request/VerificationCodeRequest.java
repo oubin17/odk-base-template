@@ -48,4 +48,9 @@ public class VerificationCodeRequest extends BaseRequest {
      * 验证码
      */
     private String verifyCode;
+
+    /**
+     * 唯一标识
+     */
+    private String uniqueId;
 }

@@ -1,5 +1,7 @@
 package com.odk.baseservice.impl.verificationcode;
 
+import com.odk.base.exception.AssertUtil;
+import com.odk.base.exception.BizErrorCode;
 import com.odk.base.util.JacksonUtil;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
@@ -48,7 +50,7 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
             @Override
             protected VerificationCodeEntity doProcess(Object args) {
                 VerificationCodeDTO verificationCodeDTO = (VerificationCodeDTO) args;
-                return verificationCodeManager.generateCode(verificationCodeDTO);
+                return verificationCodeManager.generate(verificationCodeDTO);
             }
 
             @Override
@@ -63,6 +65,11 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
         return super.strictBizProcess(BizScene.VERIFICATION_CODE_COMPARE, codeRequest, new StrictApiCallBack<Boolean, Boolean>() {
 
             @Override
+            protected void checkParams(BaseRequest request) {
+                AssertUtil.notNull(codeRequest.getUniqueId(), BizErrorCode.VERIFY_CODE_UNIQUE_ERROR);
+            }
+
+            @Override
             protected Object convert(BaseRequest request) {
                 return verificationCodeMapper.toDTO(codeRequest);
             }
@@ -70,7 +77,7 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
             @Override
             protected Boolean doProcess(Object args) {
                 VerificationCodeDTO verificationCodeDTO = (VerificationCodeDTO) args;
-                return verificationCodeManager.checkVerificationCode(verificationCodeDTO);
+                return verificationCodeManager.compareAndIncr(verificationCodeDTO);
             }
 
             @Override
