@@ -1,5 +1,6 @@
 package com.odk.baseweb.verificationcode;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.verificationcode.VerificationCodeApi;
 import com.odk.baseutil.entity.VerificationCodeEntity;
@@ -30,6 +31,7 @@ public class VerificationCodeController {
      * @param codeRequest
      * @return
      */
+    @SaIgnore
     @PostMapping("/generate")
     ServiceResponse<VerificationCodeEntity> generate(@RequestBody @Valid VerificationCodeRequest codeRequest) {
         return this.verificationCodeApi.generateCode(codeRequest);
@@ -43,6 +45,7 @@ public class VerificationCodeController {
      * @param codeRequest
      * @return
      */
+    @SaIgnore
     @PostMapping("/compare")
     ServiceResponse<Boolean> compare(@RequestBody @Valid VerificationCodeRequest codeRequest) {
         return this.verificationCodeApi.compare(codeRequest);

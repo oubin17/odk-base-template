@@ -34,4 +34,9 @@ public class VerificationCodeDTO extends DTO {
      * 验证码
      */
     private String verifyCode;
+
+    /**
+     * 验证码唯一 ID
+     */
+    private String uniqueId;
 }

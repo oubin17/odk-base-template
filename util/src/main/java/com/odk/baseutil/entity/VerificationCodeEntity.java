@@ -45,4 +45,9 @@ public class VerificationCodeEntity implements Serializable {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime  createTime;
 
+    /**
+     * 验证码唯一 ID
+     */
+    private String uniqueId;
+
 }

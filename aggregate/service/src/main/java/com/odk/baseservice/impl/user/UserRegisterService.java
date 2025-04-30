@@ -9,7 +9,9 @@ import com.odk.basemanager.deal.user.UserRegisterManager;
 import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
+import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.enums.VerifySceneEnum;
 import com.odk.baseutil.mapper.UserRegisterMapper;
 import com.odk.baseutil.request.UserRegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +39,13 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
 
             @Override
             protected void beforeProcess(BaseRequest request) {
-                //检查验证码是否有效
-                UserRegisterRequest registerRequest = (UserRegisterRequest) request;
-                AssertUtil.isTrue(verificationCodeManager.verifySms(registerRequest.getVerificationCode()), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
+
+                VerificationCodeDTO dto = userRegisterRequest.getVerificationCode();
+                //检查验证码是否有效:这里因为有 uniqueId 的原因，可以直接比较，如果没有 uniqueId，使用接口攻击会有风险
+                dto.setVerifyKey(userRegisterRequest.getLoginId());
+                dto.setVerifyType(userRegisterRequest.getLoginType());
+                dto.setVerifyScene(VerifySceneEnum.REGISTER.getCode());
+                AssertUtil.isTrue(verificationCodeManager.compareAndIncr(dto), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
             }
 
             @Override

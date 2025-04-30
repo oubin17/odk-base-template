@@ -20,22 +20,28 @@ public class VerificationCodeManager {
 
     private IVerificationGenerate verificationGenerate;
 
+    public VerificationCodeEntity generate(VerificationCodeDTO verificationCodeDTO) {
+        return verificationGenerate.generate(verificationCodeDTO);
+    }
+
     /**
-     * 验证手机验证码是否匹配
+     * 只对比
      *
-     * @param code
+     * @param verificationCodeDTO
      * @return
      */
-    public boolean verifySms(String code) {
-        return true;
+    public boolean compare(VerificationCodeDTO verificationCodeDTO) {
+        return verificationGenerate.compare(verificationCodeDTO);
     }
 
-    public VerificationCodeEntity generateCode(VerificationCodeDTO verificationCodeDTO) {
-        return verificationGenerate.generateVerificationCode(verificationCodeDTO);
-    }
-
-    public boolean checkVerificationCode(VerificationCodeDTO verificationCodeDTO) {
-        return verificationGenerate.checkVerificationCode(verificationCodeDTO);
+    /**
+     * 对比并校验
+     *
+     * @param verificationCodeDTO
+     * @return
+     */
+    public boolean compareAndIncr(VerificationCodeDTO verificationCodeDTO) {
+        return verificationGenerate.compareAndIncr(verificationCodeDTO);
     }
 
     @Autowired

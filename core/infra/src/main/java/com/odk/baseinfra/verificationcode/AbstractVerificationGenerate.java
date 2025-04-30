@@ -3,6 +3,7 @@ package com.odk.baseinfra.verificationcode;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
+import com.odk.base.util.JacksonUtil;
 import com.odk.baseutil.context.ServiceContextHolder;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.entity.VerificationCodeEntity;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,36 +31,57 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
     /**
      * 过期时间：秒
      */
-    private static final int EXPIRE_TIME = 3 * 60;
+    private static final int EXPIRE_TIME = 118;
 
+    /**
+     * 单个验证码最大校验次数
+     */
     private static final int MAX_VERIFY_TIMES = 3;
+
+    /**
+     * 验证码最大发送次数
+     */
+    private static final int MAX_VERIFY_TIMES_PER_DAY = 10;
 
     private RedisUtil redisUtil;
 
     private DistributedLockService lockService;
 
     @Override
-    public VerificationCodeEntity generateVerificationCode(VerificationCodeDTO verificationCodeDTO) {
+    public VerificationCodeEntity generate(VerificationCodeDTO verificationCodeDTO) {
         String key = generateKey(verificationCodeDTO);
         VerificationCodeEntity entity = (VerificationCodeEntity) redisUtil.get(key);
         AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED, "验证码已发送，请稍后重试。");
 
         String lockKey = "lock_" + key;
         //这里需要防止并发调用
-        boolean acquired = lockService.tryLock(lockKey, 2, 10);
+        boolean acquired = lockService.tryLock(lockKey, 1, 10);
         if (acquired) {
             try {
                 entity = (VerificationCodeEntity) redisUtil.get(key);
                 AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED, "验证码已发送，请稍后重试。");
+                //判断24小时内，验证码发送次数是否达到上限
+                String maxVerifyTimesKey = "max_verify_times_" + key;
+                if (redisUtil.exists(maxVerifyTimesKey)) {
+                    int maxVerifyTimes = (int) redisUtil.get(maxVerifyTimesKey);
+                    if (maxVerifyTimes > MAX_VERIFY_TIMES_PER_DAY) {
+                        throw new BizException(BizErrorCode.VERIFY_CODE_SEND_MAX_TIMES);
+                    }
+                    redisUtil.incrBy(maxVerifyTimesKey, 1);
+               } else {
+                    redisUtil.set(maxVerifyTimesKey, 1, 24, TimeUnit.HOURS);
+
+                }
                 VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity();
                 if (redisUtil.setIfAbsent(key, verificationCodeEntity, EXPIRE_TIME, TimeUnit.SECONDS)) {
+                    log.info("验证码生成成功：key:{}, value:{}", key, JacksonUtil.toJsonString(entity));
                     return verificationCodeEntity;
                 }
             } finally {
                 lockService.unlock(lockKey);
             }
         } else {
-            log.error("获取锁失败 {} [thread: {}]", lockKey, Thread.currentThread().getName());
+            log.error("生成验证码获取锁失败 {} [thread: {}]", lockKey, Thread.currentThread().getName());
             throw new BizException(BizErrorCode.CONCURRENT_REQUEST);
         }
         return null;
@@ -66,12 +89,20 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
 
 
     @Override
-    public boolean checkVerificationCode(VerificationCodeDTO verificationCodeDTO) {
+    public boolean compare(VerificationCodeDTO verificationCodeDTO) {
+        VerificationCodeEntity entity = getCodeOrThrow(generateKey(verificationCodeDTO), false);
+        AssertUtil.equal(entity.getUniqueId(), verificationCodeDTO.getUniqueId(), BizErrorCode.VERIFY_CODE_UNIQUE_ERROR);
+        return StringUtils.equals(verificationCodeDTO.getVerifyCode(), entity.getCode());
+    }
+
+    @Override
+    public boolean compareAndIncr(VerificationCodeDTO verificationCodeDTO) {
         String key = generateKey(verificationCodeDTO);
-        VerificationCodeEntity entity = (VerificationCodeEntity) redisUtil.get(key);
-        AssertUtil.notNull(entity, BizErrorCode.VERIFY_CODE_EXPIRED);
+        VerificationCodeEntity entity = getCodeOrThrow(generateKey(verificationCodeDTO), false);
+        AssertUtil.equal(entity.getUniqueId(), verificationCodeDTO.getUniqueId(), BizErrorCode.VERIFY_CODE_UNIQUE_ERROR, "验证码唯一键不匹配");
         if (StringUtils.equals(verificationCodeDTO.getVerifyCode(), entity.getCode())) {
             //验证成功
+            log.info("验证码验证成功：key:{}, value:{}", key, JacksonUtil.toJsonString(entity));
             redisUtil.delete(key);
             return true;
         }
@@ -80,7 +111,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         if (entity.getVerifyTimes() >= MAX_VERIFY_TIMES) {
             //超过最大验证次数
             redisUtil.delete(key);
-            throw new BizException(BizErrorCode.VERIFY_CODE_MAX_TIMES, "验证码已超过最大次数，请重新获取。");
+            throw new BizException(BizErrorCode.VERIFY_CODE_COMPARE_MAX_TIMES, "验证码已超过最大验证次数，请重新获取。");
         }
         //计算剩余时间
         int leftSeconds = leftSeconds(entity.getCreateTime());
@@ -95,6 +126,23 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
      * @return
      */
     abstract protected String generateVerificationCode();
+
+
+    /**
+     * 从缓存中获取验证码
+     *
+     * @param key
+     * @param nullAllowed
+     * @return
+     */
+    private VerificationCodeEntity getCodeOrThrow(String key, boolean nullAllowed) {
+
+        VerificationCodeEntity entity = (VerificationCodeEntity) redisUtil.get(key);
+        if (!nullAllowed) {
+            AssertUtil.notNull(entity, BizErrorCode.VERIFY_CODE_NOT_EXIST);
+        }
+        return entity;
+    }
 
     /**
      * 生成缓存 key
@@ -118,6 +166,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         verificationCodeEntity.setVerifyTimes(0);
         verificationCodeEntity.setExpireTime(EXPIRE_TIME);
         verificationCodeEntity.setCreateTime(LocalDateTime.now());
+        verificationCodeEntity.setUniqueId(UUID.randomUUID().toString());
         return verificationCodeEntity;
     }
 
