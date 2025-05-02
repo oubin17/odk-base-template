@@ -3,6 +3,7 @@ package com.odk.baseutil.request;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.vo.request.BaseRequest;
+import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.validate.EnumValue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -51,6 +52,10 @@ public class UserLoginRequest extends BaseRequest {
     /**
      * 密码
      */
-    @NotBlank(message = "identifyValue不能为空")
     private String identifyValue;
+
+    /**
+     * 验证相关信息
+     */
+    private VerificationCodeDTO verificationCode;
 }

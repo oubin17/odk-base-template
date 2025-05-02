@@ -66,7 +66,7 @@ public class UserRegisterRequest extends BaseRequest {
     /**
      * 验证相关信息
      */
-    @NotNull
+    @NotNull(message = "认证信息不能为空")
     private VerificationCodeDTO verificationCode;
 
 }
