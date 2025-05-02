@@ -1,6 +1,8 @@
 package com.odk.baseservice.impl.user;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.odk.base.enums.user.IdentificationTypeEnum;
+import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.base.vo.request.BaseRequest;
@@ -12,6 +14,7 @@ import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.enums.VerifySceneEnum;
 import com.odk.baseutil.mapper.UserLoginMapper;
 import com.odk.baseutil.request.UserLoginRequest;
 import com.odk.baseutil.response.UserLoginResponse;
@@ -38,6 +41,26 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
         return super.strictBizProcess(BizScene.USER_LOGIN, userLoginRequest, new StrictApiCallBack<UserLoginResponse, UserLoginResponse>() {
+
+            @Override
+            protected void checkParams(BaseRequest request) {
+                String identifyType = userLoginRequest.getIdentifyType();
+                if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
+                    AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "密码不为空");
+                } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
+                    AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL, "验证码不为空");
+                }
+            }
+
+            @Override
+            protected void beforeProcess(BaseRequest request) {
+                if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(userLoginRequest.getIdentifyType())) {
+                    userLoginRequest.getVerificationCode().setVerifyScene(VerifySceneEnum.LOGIN.getCode());
+                    userLoginRequest.getVerificationCode().setVerifyKey(userLoginRequest.getLoginId());
+                    userLoginRequest.getVerificationCode().setVerifyType(userLoginRequest.getLoginType());
+                }
+
+            }
 
             @Override
             protected Object convert(BaseRequest request) {

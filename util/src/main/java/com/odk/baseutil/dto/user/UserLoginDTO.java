@@ -1,6 +1,7 @@
 package com.odk.baseutil.dto.user;
 
 import com.odk.base.dto.DTO;
+import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,4 +35,10 @@ public class UserLoginDTO extends DTO {
      * 密码
      */
     private String identifyValue;
+
+    /**
+     * 验证相关信息
+     */
+    private VerificationCodeDTO verificationCode;
+
 }

@@ -19,12 +19,10 @@ import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.baseinfra.security.IDecrypt;
 import com.odk.baseinfra.security.IEncrypt;
-import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
-import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -105,10 +103,6 @@ public class UserDomainImpl implements UserDomain {
 
         String decrypt = iDecrypt.decrypt(userLoginDTO.getIdentifyValue());
         AssertUtil.isTrue(iEncrypt.matches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
-        //设置登录session
-        SessionContext.createLoginSession(userEntity.getUserId());
-        //缓存当前用户信息
-        SessionContext.setSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER, userEntity);
         return userEntity;
     }
 
