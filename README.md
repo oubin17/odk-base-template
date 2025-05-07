@@ -52,8 +52,9 @@
   - ElasticSearch（倒排索引）
 - **消息队列**：
   - RabbitMQ / Kafka（可选）
-- **安全**：
+- **安全框架**：
   - Sa-Token（单点登录、权限认证）
+  - 验证码注册、登录
 - **构建工具**：
   - Maven
 - **其他**：
@@ -102,11 +103,6 @@
 4. 推送到分支：`git push origin feature/your-feature-name`
 5. 提交 Pull Request。
 
----
-
-## 📜 许可证
-
-本项目采用 [MIT 许可证](LICENSE)，详情请查看 LICENSE 文件。
 
 ---
 
