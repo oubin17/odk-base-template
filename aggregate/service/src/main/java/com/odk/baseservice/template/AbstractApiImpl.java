@@ -49,7 +49,7 @@ public class AbstractApiImpl extends AbstractApi {
             Object args = callBack.convert(object);
             //4.对象转换：核心处理
             T apiResponse = callBack.doProcess(args);
-            //5.出参转换：dto -> response,执行到这里，默认系统处理成功，无异常，如果异常，doProcess 直接抛出
+            //5.出参转换：dto -> ServiceResponse,无特殊处理，无需转换，除非需要对 doProcess 的结果进行业务处理
             response = callBack.assembleResult(apiResponse);
             log.info(buildDigestLog(bizScene, response, "RESPONSE"));
         } catch (BizException exception) {
@@ -320,11 +320,20 @@ public class AbstractApiImpl extends AbstractApi {
         return generateBaseResult(e);
     }
 
+    /**
+     * 构建摘要日志
+     *
+     * @param bizScene
+     * @param object
+     * @param logType
+     * @return
+     */
     private String buildDigestLog(BizScene bizScene, Object object, String logType) {
-        return "[" + bizScene.getCode() + "," +
-                SessionContext.getLoginIdOrDefault("-") + "," +
-                logType + "," + StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-") + "]";
-
+        return String.format("[%s,%s,%s,%s]",
+                bizScene.getCode(),
+                SessionContext.getLoginIdOrDefault("-"),
+                logType,
+                StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-"));
     }
 
     /**
@@ -336,9 +345,12 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private String buildSummaryDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime) {
-        return "[" + bizScene.getCode() + "," +
-                SessionContext.getLoginIdOrDefault("-") + "," + String.valueOf(isSuccess).toUpperCase() + "," +
-                StringUtils.defaultIfBlank(resultCode, "-") + "]" + "(" + executeTime + "ms)";
 
+        return String.format("[%s,%s,%s,%s](%dms)",
+                bizScene.getCode(),
+                SessionContext.getLoginIdOrDefault("-"),
+                isSuccess ? "SUCCESS" : "FAIL",
+                StringUtils.defaultIfBlank(resultCode, "-"),
+                executeTime);
     }
 }
