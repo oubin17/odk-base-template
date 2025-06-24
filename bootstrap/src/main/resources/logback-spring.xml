@@ -139,29 +139,43 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
 
     </logger>
 
-    <!-- 指定打印到某个目录 -->
-    <logger name="com.odk.baseservice.template" level="INFO" additivity="true">
+    <!--
+     1.logger主要用于存放日志对象，也可以定义日志类型、级别
+     2.name：表示匹配的logger类型前缀，也就是包的前半部分
+     3.level：要记录的日志级别，包括 TRACE < DEBUG < INFO < WARN < ERROR
+     1. 通过将 additivity 设置为 false，可以防止日志消息传递到根日志记录器 (root)，从而避免重复记录日志。这是控制日志输出路径的关键配置点。
+     -->
+
+    <!-- 指定打印到某个目录 AbstractApiImpl 类使用到 -->
+    <logger name="com.odk.baseservice.template" level="INFO" additivity="false">
         <appender-ref ref="SERVICE-DIGEST-APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
+
+    <!-- 指定日志主题 参考 ScheduleConfig 类配置-->
+    <logger name="topic-log" level="INFO" additivity="false">
+        <appender-ref ref="TOPIC-DIGEST-APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
 
     <!-- 为Hibernate SQL日志单独设置logger，使用SQL_FILE appender -->
     <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
         <appender-ref ref="SQL-DIGEST-APPENDER" />
+        <appender-ref ref="CONSOLE"/>
     </logger>
 
     <logger name="org.hibernate.type.descriptor.sql" level="TRACE" additivity="false">
         <appender-ref ref="SQL-DIGEST-APPENDER" />
+        <appender-ref ref="CONSOLE"/>
     </logger>
 
     <!-- 设置Hibernate事务日志级别 -->
     <logger name="org.hibernate.transaction" level="DEBUG" additivity="false">
         <appender-ref ref="SQL-DIGEST-APPENDER" />
+        <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <!-- 指定日志主题 -->
-    <logger name="topic-log" level="INFO" additivity="true">
-        <appender-ref ref="TOPIC-DIGEST-APPENDER"/>
-    </logger>
 
     <!--
     root与logger是父子关系，没有特别定义则默认为root，任何一个类只会和一个logger对应，
