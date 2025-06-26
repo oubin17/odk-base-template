@@ -53,6 +53,12 @@
             <artifactId>sa-token-redis-jackson</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
     </dependencies>
 
 </project>
