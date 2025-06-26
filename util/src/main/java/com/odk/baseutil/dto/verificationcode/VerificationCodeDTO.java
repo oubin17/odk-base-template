@@ -1,6 +1,7 @@
 package com.odk.baseutil.dto.verificationcode;
 
 import com.odk.base.dto.DTO;
+import com.odk.baseutil.enums.VerifySceneEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,7 +29,7 @@ public class VerificationCodeDTO extends DTO {
     /**
      * 验证码场景：登录、注册、找回密码等
      */
-    private String verifyScene;
+    private VerifySceneEnum verifyScene;
 
     /**
      * 验证码

@@ -44,7 +44,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
                 //检查验证码是否有效:这里因为有 uniqueId 的原因，可以直接比较，如果没有 uniqueId，使用接口攻击会有风险
                 dto.setVerifyKey(userRegisterRequest.getLoginId());
                 dto.setVerifyType(userRegisterRequest.getLoginType());
-                dto.setVerifyScene(VerifySceneEnum.REGISTER.getCode());
+                dto.setVerifyScene(VerifySceneEnum.REGISTER);
                 AssertUtil.isTrue(verificationCodeManager.compareAndIncr(dto), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
             }
 
