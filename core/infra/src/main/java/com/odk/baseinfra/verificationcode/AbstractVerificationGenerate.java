@@ -123,7 +123,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         int leftSeconds = leftSeconds(entity.getCreateTime(), verificationCodeDTO.getVerifyScene());
         redisUtil.set(key, entity, leftSeconds, TimeUnit.SECONDS);
         entity.setCode(null);
-        ServiceContextHolder.setServiceContext(entity);
+        ServiceContextHolder.setErrorContext(entity);
         throw new BizException(BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码错误，请重新输入。");
     }
 

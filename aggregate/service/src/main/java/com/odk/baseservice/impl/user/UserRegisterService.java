@@ -1,7 +1,5 @@
 package com.odk.baseservice.impl.user;
 
-import com.odk.base.exception.AssertUtil;
-import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
@@ -45,7 +43,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
                 dto.setVerifyKey(userRegisterRequest.getLoginId());
                 dto.setVerifyType(userRegisterRequest.getLoginType());
                 dto.setVerifyScene(VerifySceneEnum.REGISTER);
-                AssertUtil.isTrue(verificationCodeManager.compareAndIncr(dto), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
+                verificationCodeManager.compareAndIncr(dto);
             }
 
             @Override

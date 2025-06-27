@@ -1,7 +1,11 @@
 package com.odk.baseutil.context;
 
 
+import com.odk.base.util.JacksonUtil;
 import com.odk.baseutil.enums.BizScene;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 /**
  * ServiceContextHolder
@@ -10,6 +14,7 @@ import com.odk.baseutil.enums.BizScene;
  * @version: 1.0
  * @author: oubin on 2023/11/11
  */
+@Slf4j
 public class ServiceContextHolder {
 
     /**
@@ -22,8 +27,10 @@ public class ServiceContextHolder {
      */
     private static final ThreadLocal<Object> SERVICE_CONTEXT = new ThreadLocal<>();
 
-    private static final ThreadLocal<String> USER_ID_CONTEXT = new ThreadLocal<>();
-
+    /**
+     * 报错上下文，需要是json格式
+     */
+    private static final ThreadLocal<Map<String, Object>> ERROR_CONTEXT = new ThreadLocal<>();
 
     /**
      * 设置场景上下文
@@ -32,6 +39,15 @@ public class ServiceContextHolder {
      */
     public static void setSceneCode(BizScene bizScene) {
         ServiceContextHolder.SCENE_CODE.set(bizScene);
+    }
+
+    /**
+     * 获取场景上下文
+     *
+     * @return
+     */
+    public static BizScene getSceneCode() {
+        return ServiceContextHolder.SCENE_CODE.get();
     }
 
     /**
@@ -52,45 +68,36 @@ public class ServiceContextHolder {
         return SERVICE_CONTEXT.get();
     }
 
-//    public static void setUserId(String userId) {
-//        ServiceContext context = SERVICE_CONTEXT.get();
-//        if (null == context) {
-//            context = new ServiceContext();
-//            SERVICE_CONTEXT.set(context);
-//        }
-//        context.setUserId(userId);
-//    }
+    /**
+     * 设置报错上下文，需要保证对象是json格式
+     *
+     * @param obj
+     */
+    public static void setErrorContext(Object obj) {
+        String jsonString = JacksonUtil.toJsonString(obj);
+        try {
+            ERROR_CONTEXT.set(JacksonUtil.parseObject(jsonString, Map.class));
+        } catch (Exception e) {
+            log.error("对象转 json 报错:", e);
+        }
+    }
 
     /**
-     * 获取用户ID
+     * 获取报错上下文
      *
      * @return
      */
-//    public static String getUserId() {
-//        ServiceContext sc = SERVICE_CONTEXT.get();
-//        if (null == sc) {
-//            return null;
-//        }
-//        return sc.getUserId();
-//    }
+    public static Map<String, Object> getErrorContext() {
+        return ERROR_CONTEXT.get();
+    }
 
     /**
-     * 获取租户ID
-     *
-     * @return
+     * 清空上下文
      */
-//    public static String getTntInstId() {
-//        ServiceContext sc = SERVICE_CONTEXT.get();
-//        if (null == sc) {
-//            return ServiceConstants.TENANT_ID;
-//        }
-//        return sc.getTenantId();
-//    }
-
     public static void clear() {
         SCENE_CODE.remove();
         SERVICE_CONTEXT.remove();
-        USER_ID_CONTEXT.remove();
+        ERROR_CONTEXT.remove();
     }
 
 }

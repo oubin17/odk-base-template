@@ -13,7 +13,6 @@ import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -39,7 +38,7 @@ public class AbstractApiImpl extends AbstractApi {
      */
     protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, Object object, ApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
-        log.info(buildDigestLog(bizScene, object, "REQUEST"));
+        log.info(buildRequestDigestLog(object));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -52,7 +51,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //5.出参转换：dto -> ServiceResponse,无特殊处理，无需转换，除非需要对 doProcess 的结果进行业务处理
             response = callBack.assembleResult(apiResponse);
-            log.info(buildDigestLog(bizScene, response, "RESPONSE"));
+            log.info(buildResponseDigestLog(response));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -61,7 +60,7 @@ public class AbstractApiImpl extends AbstractApi {
             long executeTime = System.currentTimeMillis() - startTime;
             callBack.afterProcess(response);
             if (null != response) {
-                log.info(buildSummaryDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime));
+                log.info(buildSummaryDigestLog(response.isSuccess(), response.getErrorCode(), executeTime));
             }
             clearContext();
         }
@@ -84,7 +83,7 @@ public class AbstractApiImpl extends AbstractApi {
         long startTime = System.currentTimeMillis();
         ServiceResponse<R> response = null;
         try {
-            log.info(buildDigestLog(bizScene, request, "REQUEST"));
+            log.info(buildRequestDigestLog(request));
             //1. 初始化上下文
             initContext(bizScene);
             //2.简单参数校验
@@ -98,7 +97,7 @@ public class AbstractApiImpl extends AbstractApi {
             T apiResponse = callBack.doProcess(args);
             //6.出参转换：dto -> response
             response = callBack.assembleResult(apiResponse);
-            log.info(buildDigestLog(bizScene, response, "RESPONSE"));
+            log.info(buildResponseDigestLog(response));
         } catch (BizException exception) {
             response = handleBizException(exception);
         } catch (Throwable t) {
@@ -107,7 +106,7 @@ public class AbstractApiImpl extends AbstractApi {
             long executeTime = System.currentTimeMillis() - startTime;
             callBack.afterProcess(response);
             if (null != response) {
-                log.info(buildSummaryDigestLog(bizScene, response.isSuccess(), response.getErrorCode(), executeTime));
+                log.info(buildSummaryDigestLog(response.isSuccess(), response.getErrorCode(), executeTime));
             }
             clearContext();
         }
@@ -299,26 +298,12 @@ public class AbstractApiImpl extends AbstractApi {
         } else {
             errorCode = BizErrorCode.SYSTEM_ERROR;
         }
-
         try {
-            Map<String, Object> extendInfo = null;
-            //如果校验失败
-            if (null != ServiceContextHolder.getServiceContext()) {
-                String jsonString = JacksonUtil.toJsonString(ServiceContextHolder.getServiceContext());
-                extendInfo = JacksonUtil.parseObject(jsonString, Map.class);
-            }
-            if (extendInfo != null) {
-                return ServiceResponse.valueOfError(
-                        Objects.requireNonNull(errorCode).getErrorType(),
-                        Objects.requireNonNull(errorCode).getErrorCode(),
-                        errorMsg == null ? errorCode.getErrorContext() : errorMsg,
-                        extendInfo);
-            } else {
-                return ServiceResponse.valueOfError(
-                        Objects.requireNonNull(errorCode).getErrorType(),
-                        Objects.requireNonNull(errorCode).getErrorCode(),
-                        errorMsg == null ? errorCode.getErrorContext() : errorMsg);
-            }
+            return ServiceResponse.valueOfError(
+                    Objects.requireNonNull(errorCode).getErrorType(),
+                    Objects.requireNonNull(errorCode).getErrorCode(),
+                    errorMsg == null ? errorCode.getErrorContext() : errorMsg,
+                    ServiceContextHolder.getErrorContext());
         } catch (Throwable t) {
             log.error("new system exception occurred, error message: {}", t.getMessage());
             return null;
@@ -337,18 +322,30 @@ public class AbstractApiImpl extends AbstractApi {
     }
 
     /**
-     * 构建摘要日志
+     * 请求摘要日志
      *
-     * @param bizScene
      * @param object
-     * @param logType
      * @return
      */
-    private String buildDigestLog(BizScene bizScene, Object object, String logType) {
+    private String buildRequestDigestLog(Object object) {
         return String.format("[%s,%s,%s,%s]",
-                bizScene.getCode(),
+                ServiceContextHolder.getSceneCode().getCode(),
                 SessionContext.getLoginIdOrDefault("-"),
-                logType,
+                "REQUEST",
+                StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-"));
+    }
+
+    /**
+     * 响应摘要日志
+     *
+     * @param object
+     * @return
+     */
+    private String buildResponseDigestLog(Object object) {
+        return String.format("[%s,%s,%s,%s]",
+                ServiceContextHolder.getSceneCode().getCode(),
+                SessionContext.getLoginIdOrDefault("-"),
+                "RESPONSE",
                 StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-"));
     }
 
@@ -360,10 +357,10 @@ public class AbstractApiImpl extends AbstractApi {
      * @param executeTime
      * @return
      */
-    private String buildSummaryDigestLog(BizScene bizScene, boolean isSuccess, String resultCode, long executeTime) {
+    private String buildSummaryDigestLog(boolean isSuccess, String resultCode, long executeTime) {
 
         return String.format("[%s,%s,%s,%s](%dms)",
-                bizScene.getCode(),
+                ServiceContextHolder.getSceneCode().getCode(),
                 SessionContext.getLoginIdOrDefault("-"),
                 isSuccess ? "SUCCESS" : "FAIL",
                 StringUtils.defaultIfBlank(resultCode, "-"),

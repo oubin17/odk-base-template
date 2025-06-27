@@ -2,13 +2,11 @@ package com.odk.baseservice.impl.verificationcode;
 
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.base.util.JacksonUtil;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.verificationcode.VerificationCodeApi;
 import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
-import com.odk.baseutil.context.ServiceContextHolder;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.entity.VerificationCodeEntity;
 import com.odk.baseutil.enums.BizScene;
@@ -18,8 +16,6 @@ import com.odk.redisspringbootstarter.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * VerificationCodeService
@@ -83,17 +79,6 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
             @Override
             protected Boolean convertResult(Boolean apiResult) {
                 return apiResult;
-            }
-
-            @Override
-            protected ServiceResponse<Boolean> assembleResult(Boolean apiResult) throws Throwable {
-                ServiceResponse<Boolean> response = super.assembleResult(apiResult);
-                if (!apiResult) {
-                    //如果校验失败
-                    String jsonString = JacksonUtil.toJsonString(ServiceContextHolder.getServiceContext());
-                    response.setExtendInfo(JacksonUtil.parseObject(jsonString, Map.class));
-                }
-                return response;
             }
 
         });
