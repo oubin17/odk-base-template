@@ -13,6 +13,7 @@ import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -291,18 +292,33 @@ public class AbstractApiImpl extends AbstractApi {
         String errorMsg = null;
         if (throwable instanceof BizException exception) {
             errorCode = exception.getErrorCode();
-            if (errorCode == BizErrorCode.PARAM_ILLEGAL) {
-                errorMsg = throwable.getMessage();
-            }
+            errorMsg = throwable.getMessage();
+//            if (errorCode == BizErrorCode.PARAM_ILLEGAL) {
+//                errorMsg = throwable.getMessage();
+//            }
         } else {
             errorCode = BizErrorCode.SYSTEM_ERROR;
         }
 
         try {
-            return ServiceResponse.valueOfError(
-                    Objects.requireNonNull(errorCode).getErrorType(),
-                    Objects.requireNonNull(errorCode).getErrorCode(),
-                    errorMsg == null ? errorCode.getErrorContext() : errorMsg);
+            Map<String, Object> extendInfo = null;
+            //如果校验失败
+            if (null != ServiceContextHolder.getServiceContext()) {
+                String jsonString = JacksonUtil.toJsonString(ServiceContextHolder.getServiceContext());
+                extendInfo = JacksonUtil.parseObject(jsonString, Map.class);
+            }
+            if (extendInfo != null) {
+                return ServiceResponse.valueOfError(
+                        Objects.requireNonNull(errorCode).getErrorType(),
+                        Objects.requireNonNull(errorCode).getErrorCode(),
+                        errorMsg == null ? errorCode.getErrorContext() : errorMsg,
+                        extendInfo);
+            } else {
+                return ServiceResponse.valueOfError(
+                        Objects.requireNonNull(errorCode).getErrorType(),
+                        Objects.requireNonNull(errorCode).getErrorCode(),
+                        errorMsg == null ? errorCode.getErrorContext() : errorMsg);
+            }
         } catch (Throwable t) {
             log.error("new system exception occurred, error message: {}", t.getMessage());
             return null;

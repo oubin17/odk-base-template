@@ -49,7 +49,7 @@ public class UserLoginManager {
         if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
             userEntity = this.userDomain.userLogin(userLoginDTO);
         } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
-            AssertUtil.isTrue(verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode()), BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码不匹配，请重新输入");
+            verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode());
             UserQueryCriteria build = UserQueryCriteria.builder()
                     .queryType(UserQueryTypeEnum.LOGIN_ID)
                     .loginId(userLoginDTO.getLoginId())

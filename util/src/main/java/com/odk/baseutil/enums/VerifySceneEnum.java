@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 public enum VerifySceneEnum implements IEnum {
 
-    LOGIN("LOGIN", 120, 3, 5, "登录"),
+    LOGIN("LOGIN", 1200, 3, 10, "登录"),
 
     REGISTER("REGISTER", 180, 3, 10, "注册"),
 

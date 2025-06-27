@@ -34,9 +34,11 @@ public class VerificationCodeEntity implements Serializable {
     private int expireTime;
 
     /**
-     * 验证次数
+     * 单个验证码最大验证次数
      */
     private int verifyTimes;
+
+    private int maxVerifyTimes;
 
     /**
      * 验证码生成时间

@@ -77,10 +77,13 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                 VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity(verifyScene);
                 if (redisUtil.setIfAbsent(key, verificationCodeEntity, verifyScene.getExpireTime(), TimeUnit.SECONDS)) {
                     log.info("验证码生成成功：key:{}, value:{}", key, JacksonUtil.toJsonString(entity));
-                    //需要保存发送记录到数据库中
+                    verificationCodeEntity.setCode(null);
                     return verificationCodeEntity;
                 }
-            } finally {
+            } catch (Exception e) {
+                log.error("生成验证码发生未知异常，异常信息:", e);
+            }
+            finally {
                 lockService.unlock(lockKey);
             }
         } else {
@@ -119,8 +122,9 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         //计算剩余时间
         int leftSeconds = leftSeconds(entity.getCreateTime(), verificationCodeDTO.getVerifyScene());
         redisUtil.set(key, entity, leftSeconds, TimeUnit.SECONDS);
+        entity.setCode(null);
         ServiceContextHolder.setServiceContext(entity);
-        return false;
+        throw new BizException(BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码错误，请重新输入。");
     }
 
     /**
@@ -167,6 +171,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         VerificationCodeEntity verificationCodeEntity = new VerificationCodeEntity();
         verificationCodeEntity.setCode(code);
         verificationCodeEntity.setVerifyTimes(0);
+        verificationCodeEntity.setMaxVerifyTimes(verifyScene.getMaxVerifyTimes());
         verificationCodeEntity.setExpireTime(verifyScene.getExpireTime());
         verificationCodeEntity.setCreateTime(LocalDateTime.now());
         verificationCodeEntity.setUniqueId(UUID.randomUUID().toString());

@@ -53,10 +53,11 @@ public class VerificationCodeDO extends BaseDO {
     private int verifyTimes;
 
     /**
-     * 验证结果：0-未验证，1-验证成功，2-验证失败
+     * 验证结果：
+     * {@link com.odk.baseutil.enums.VerificationCodeStatusEnum}
      */
-    @Column(name = "result")
-    private int result;
+    @Column(name = "status")
+    private String status;
 
     /**
      * 唯一标识
