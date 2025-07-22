@@ -38,7 +38,7 @@ public class AbstractApiImpl extends AbstractApi {
      */
     protected <T, R> ServiceResponse<R> bizProcess(BizScene bizScene, Object object, ApiCallBack<T, R> callBack) {
         long startTime = System.currentTimeMillis();
-        log.info(buildRequestDigestLog(object));
+        log.info(buildRequestDigestLog(object, bizScene));
         ServiceResponse<R> response = null;
         try {
             //1. 初始化上下文
@@ -83,7 +83,7 @@ public class AbstractApiImpl extends AbstractApi {
         long startTime = System.currentTimeMillis();
         ServiceResponse<R> response = null;
         try {
-            log.info(buildRequestDigestLog(request));
+            log.info(buildRequestDigestLog(request, bizScene));
             //1. 初始化上下文
             initContext(bizScene);
             //2.简单参数校验
@@ -327,9 +327,9 @@ public class AbstractApiImpl extends AbstractApi {
      * @param object
      * @return
      */
-    private String buildRequestDigestLog(Object object) {
+    private String buildRequestDigestLog(Object object, BizScene bizScene) {
         return String.format("[%s,%s,%s,%s]",
-                ServiceContextHolder.getSceneCode().getCode(),
+                bizScene.getCode(),
                 SessionContext.getLoginIdOrDefault("-"),
                 "REQUEST",
                 StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-"));

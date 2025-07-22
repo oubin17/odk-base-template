@@ -96,7 +96,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
 
     @Override
     public boolean compare(VerificationCodeDTO verificationCodeDTO) {
-        VerificationCodeEntity entity = getCodeOrThrow(generateKey(verificationCodeDTO), false);
+        VerificationCodeEntity entity = getCodeOrThrow(generateKey(verificationCodeDTO));
         AssertUtil.equal(entity.getUniqueId(), verificationCodeDTO.getUniqueId(), BizErrorCode.VERIFY_CODE_UNIQUE_ERROR);
         return StringUtils.equals(verificationCodeDTO.getVerifyCode(), entity.getCode());
     }
@@ -104,7 +104,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
     @Override
     public boolean compareAndIncr(VerificationCodeDTO verificationCodeDTO) {
         String key = generateKey(verificationCodeDTO);
-        VerificationCodeEntity entity = getCodeOrThrow(generateKey(verificationCodeDTO), false);
+        VerificationCodeEntity entity = getCodeOrThrow(key);
         AssertUtil.equal(entity.getUniqueId(), verificationCodeDTO.getUniqueId(), BizErrorCode.VERIFY_CODE_UNIQUE_ERROR, "验证码唯一键不匹配");
         if (StringUtils.equals(verificationCodeDTO.getVerifyCode(), entity.getCode())) {
             //验证成功
@@ -139,15 +139,12 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
      * 从缓存中获取验证码
      *
      * @param key
-     * @param nullAllowed
      * @return
      */
-    private VerificationCodeEntity getCodeOrThrow(String key, boolean nullAllowed) {
+    private VerificationCodeEntity getCodeOrThrow(String key) {
 
         VerificationCodeEntity entity = (VerificationCodeEntity) redisUtil.get(key);
-        if (!nullAllowed) {
-            AssertUtil.notNull(entity, BizErrorCode.VERIFY_CODE_NOT_EXIST);
-        }
+        AssertUtil.notNull(entity, BizErrorCode.VERIFY_CODE_NOT_EXIST);
         return entity;
     }
 
