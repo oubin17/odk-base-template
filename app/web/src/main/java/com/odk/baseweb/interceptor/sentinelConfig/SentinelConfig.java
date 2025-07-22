@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.odk.baseweb.interceptor.sentinelConfig.SentinelResourceConstants.TEST_RESOURCE;
+
 /**
  * SentinelConfig
  *
@@ -25,10 +27,6 @@ import java.util.List;
  */
 @Component
 public class SentinelConfig {
-
-
-    private static final String SENTINEL_RESOURCE = "permissionResource";
-
 
     @Bean
     public SentinelResourceAspect sentinelResourceAspect() {
@@ -47,11 +45,11 @@ public class SentinelConfig {
     @PostConstruct
     public void initRole(){
         //熔断
-        initDegradeRule();
+        initDegradeRule(TEST_RESOURCE);
         //通用限流
-        initFlowQpsRule(SENTINEL_RESOURCE);
+        initFlowQpsRule(TEST_RESOURCE);
         //热点参数限流
-//        initParamFlowRule(SENTINEL_RESOURCE, 0);
+//        initParamFlowRule(TEST_RESOURCE, 0);
     }
 
     /**
@@ -66,9 +64,9 @@ public class SentinelConfig {
      * 下一次请求进来时，如果熔断器处于打开状态（OPEN），则会直接走 fallback，不执行原方法体。
      * ⚠️ 所以你现象是：前几次请求仍会执行方法体，直到熔断器真正打开（OPEN）之后，才会“跳过”方法体直接走 fallback。
      */
-    private void initDegradeRule() {
+    private void initDegradeRule(String resourceName) {
         List<DegradeRule> rules=new ArrayList<>();
-        DegradeRule rule=new DegradeRule(SENTINEL_RESOURCE);
+        DegradeRule rule=new DegradeRule(resourceName);
         rule.setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT);
         rule.setCount(2);
         rule.setTimeWindow(10);
@@ -83,11 +81,10 @@ public class SentinelConfig {
     private void initFlowQpsRule(String resourceName) {
         List<FlowRule> rules = new ArrayList<>();
         FlowRule rule = new FlowRule(resourceName);
-        rule.setCount(1);
+        rule.setCount(2);
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
 //        rule.setLimitApp("default");
         rules.add(rule);
-
 
         FlowRuleManager.loadRules(rules);
 

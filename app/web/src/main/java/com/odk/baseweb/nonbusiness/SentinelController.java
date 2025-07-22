@@ -2,6 +2,7 @@ package com.odk.baseweb.nonbusiness;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.odk.baseweb.interceptor.sentinelConfig.SentinelResourceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class SentinelController {
     private final AtomicInteger atomicInteger = new AtomicInteger(0);
 
 
-    @SentinelResource(value = "permissionResource", blockHandler = "blockHandler", fallback = "fallback")
+    @SentinelResource(value = SentinelResourceConstants.TEST_RESOURCE, blockHandler = "blockHandler", fallback = "fallback")
     @GetMapping("/test")
     public Integer unionDataTest() {
 

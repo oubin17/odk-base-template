@@ -28,6 +28,8 @@ public class SentinelAuthRateLimitAspect {
     /**
      * 切面 {@link SentinelResource}注解的方法
      *
+     * 这里会针对所有带有SentinelResource注解的方法生效，如果只是需要对部分资源限流，则可以判断 resourceName 是否是固定的 resourceName。
+     *
      * @param pjp
      * @param sentinelResource
      * @return
