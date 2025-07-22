@@ -45,6 +45,7 @@
   - [Spring Boot 3](https://spring.io/projects/spring-boot)
   - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
   - [Sa-Token](https://sa-token.cc/index.html)
+  - [Sentinel](https://sentinelguard.io/zh-cn/index.html)
   - Spring Boot 全家桶，如 Spring MVC、 Redis Starter等。
 - **数据库**：
   - MySQL / Oracle
