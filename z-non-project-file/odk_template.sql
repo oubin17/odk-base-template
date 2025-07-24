@@ -49,7 +49,7 @@ CREATE TABLE `t_user_access_token` (
   `token_value` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `user_id` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_type_id` (`token_value`,`token_type`),
+  UNIQUE KEY `idx_type_id` (`token_value`,`token_type`,`tenant_id`),
   UNIQUE KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 

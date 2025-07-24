@@ -1,5 +1,6 @@
 package com.odk.basemanager.deal.user;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.baseutil.entity.UserEntity;
@@ -62,7 +63,7 @@ public class UserQueryManager {
      */
     public UserEntity queryByAccessToken(String tokenType, String tokenValue) {
 
-        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(tokenType, tokenValue);
+        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(tokenType, tokenValue, TenantIdContext.getTenantId());
         if (null == userAccessTokenDO) {
             return null;
         }

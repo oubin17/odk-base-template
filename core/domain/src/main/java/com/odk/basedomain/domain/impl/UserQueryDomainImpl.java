@@ -1,5 +1,6 @@
 package com.odk.basedomain.domain.impl;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
@@ -93,7 +94,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue) {
-        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(tokenType, tokenValue);
+        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(tokenType, tokenValue,  TenantIdContext.getTenantId());
         if (null == userAccessTokenDO) {
             return null;
         }
@@ -164,7 +165,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity getUserInfo(String userId) {
-        Optional<UserBaseDO> userBaseDOOptional = userBaseRepository.findById(userId);
+        Optional<UserBaseDO> userBaseDOOptional = userBaseRepository.findByIdAndTenantId(userId, TenantIdContext.getTenantId());
         if (userBaseDOOptional.isEmpty()) {
             log.error("找不到用户，用户ID={}", userId);
             return null;
@@ -173,11 +174,11 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         UserEntity userEntity = this.userDomainMapper.toEntity(userBaseDOOptional.get());
 
         //2.账号信息
-        UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserId(userId);
+        UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
         userEntity.setAccessToken(this.userDomainMapper.toEntity(accessTokenDO));
 
         //3.用户画像
-        UserProfileDO userProfileDO = userProfileRepository.findByUserId(userId);
+        UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
         if (null != userProfileDO) {
             userEntity.setUserProfile(this.userDomainMapper.toEntity(userProfileDO));
         }
