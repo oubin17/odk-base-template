@@ -1,5 +1,6 @@
 package com.odk.baseinfra.verificationcode;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
@@ -155,7 +156,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
      * @return
      */
     private String generateKey(VerificationCodeDTO verificationCodeDTO) {
-        return verificationCodeDTO.getVerifyScene().getCode() + "_" + verificationCodeDTO.getVerifyType() + "_" + verificationCodeDTO.getVerifyKey();
+        return verificationCodeDTO.getVerifyScene().getCode() + "_" + verificationCodeDTO.getVerifyType() + "_" + verificationCodeDTO.getVerifyKey() + "_" + TenantIdContext.getTenantId();
     }
 
     /**

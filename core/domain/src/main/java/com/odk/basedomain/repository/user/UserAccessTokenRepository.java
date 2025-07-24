@@ -17,15 +17,17 @@ public interface UserAccessTokenRepository extends JpaRepository<UserAccessToken
      *
      * @param tokenType
      * @param tokenValue
+     * @param tenantId
      * @return
      */
-    UserAccessTokenDO findByTokenTypeAndTokenValue(String tokenType, String tokenValue);
+    UserAccessTokenDO findByTokenTypeAndTokenValueAndTenantId(String tokenType, String tokenValue, String tenantId);
 
     /**
      * 根据用户id查询
      *
      * @param userId
+     * @param tenantId
      * @return
      */
-    UserAccessTokenDO findByUserId(String userId);
+    UserAccessTokenDO findByUserIdAndTenantId(String userId, String tenantId);
 }

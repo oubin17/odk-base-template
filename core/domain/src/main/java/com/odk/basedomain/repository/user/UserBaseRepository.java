@@ -3,6 +3,8 @@ package com.odk.basedomain.repository.user;
 import com.odk.basedomain.dataobject.user.UserBaseDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /**
  * UserBaseRepository
  /**
@@ -70,4 +72,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserBaseRepository extends JpaRepository<UserBaseDO, String> {
 
+    Optional<UserBaseDO> findByIdAndTenantId(String id, String tenantId);
 }

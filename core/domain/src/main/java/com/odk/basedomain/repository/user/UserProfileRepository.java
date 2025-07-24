@@ -16,7 +16,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfileDO, Stri
      * 根据用户id查询
      *
      * @param userId
+     * @param tenantId
      * @return
      */
-    UserProfileDO findByUserId(String userId);
+    UserProfileDO findByUserIdAndTenantId(String userId, String tenantId);
 }

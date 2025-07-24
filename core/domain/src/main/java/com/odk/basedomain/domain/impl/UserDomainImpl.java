@@ -1,5 +1,6 @@
 package com.odk.basedomain.domain.impl;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.enums.user.UserTypeEnum;
 import com.odk.base.exception.AssertUtil;
@@ -59,7 +60,7 @@ public class UserDomainImpl implements UserDomain {
 
     @Override
     public String registerUser(UserRegisterDTO userRegisterDTO) {
-        UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValue(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId());
+        UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId(), TenantIdContext.getTenantId());
         AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, "用户已经存在，类型：" + userRegisterDTO.getLoginType() + "，登录ID：" + userRegisterDTO.getLoginId());
         String userId;
         try {
@@ -99,7 +100,7 @@ public class UserDomainImpl implements UserDomain {
                 .loginType(userLoginDTO.getLoginType())
                 .build();
         UserEntity userEntity = userQueryDomain.queryUser(build);
-        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), userLoginDTO.getIdentifyType());
+        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), userLoginDTO.getIdentifyType(), TenantIdContext.getTenantId());
 
         String decrypt = iDecrypt.decrypt(userLoginDTO.getIdentifyValue());
         AssertUtil.isTrue(iEncrypt.matches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);

@@ -23,9 +23,10 @@ public interface UserIdentificationRepository extends JpaRepository<UserIdentifi
      *
      * @param userId
      * @param identifyType
+     * @param tenantId
      * @return
      */
-    UserIdentificationDO findByUserIdAndIdentifyType(String userId, String identifyType);
+    UserIdentificationDO findByUserIdAndIdentifyTypeAndTenantId(String userId, String identifyType, String tenantId);
 
     /**
      * 更新密码

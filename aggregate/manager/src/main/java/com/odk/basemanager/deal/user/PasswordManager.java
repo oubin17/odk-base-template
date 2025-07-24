@@ -1,5 +1,6 @@
 package com.odk.basemanager.deal.user;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.basedomain.dataobject.user.UserIdentificationDO;
@@ -51,7 +52,7 @@ public class PasswordManager {
         AssertUtil.notEqual(oldPassword, newPassword, BizErrorCode.IDENTIFICATION_SAME);
         //3.比对旧密码
         UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.SESSION).build());
-        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyType(userEntity.getUserId(), passwordUpdateDTO.getIdentifyType());
+        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), passwordUpdateDTO.getIdentifyType(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(iEncrypt.matches(oldPassword, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         //4.新密码加密
         String encode = iEncrypt.encrypt(newPassword);

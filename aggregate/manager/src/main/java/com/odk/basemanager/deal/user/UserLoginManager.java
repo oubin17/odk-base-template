@@ -1,5 +1,6 @@
 package com.odk.basemanager.deal.user;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
@@ -67,7 +68,7 @@ public class UserLoginManager {
     }
 
     public Boolean userLogout() {
-        Optional<UserBaseDO> byUserId = baseRepository.findById(SessionContext.getLoginIdWithCheck());
+        Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
         SessionContext.logOut();
         return true;
