@@ -20,5 +20,5 @@ public interface UserRoleRelRepository extends JpaRepository<UserRoleRelDO, Stri
      * @param roleId
      * @return
      */
-    UserRoleRelDO findByUserIdAndRoleId(String userId, String roleId);
+    UserRoleRelDO findByUserIdAndRoleIdAndTenantId(String userId, String roleId, String tenantId);
 }

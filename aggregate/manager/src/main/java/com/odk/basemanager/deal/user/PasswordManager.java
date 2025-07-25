@@ -57,7 +57,7 @@ public class PasswordManager {
         //4.新密码加密
         String encode = iEncrypt.encrypt(newPassword);
         //5.设置新密码
-        int count = this.identificationRepository.updatePassword(userIdentificationDO.getId(), passwordUpdateDTO.getIdentifyType(), encode, userEntity.getUserId(), LocalDateTime.now());
+        int count = this.identificationRepository.updatePassword(userIdentificationDO.getId(), passwordUpdateDTO.getIdentifyType(), encode, userEntity.getUserId(), LocalDateTime.now(), TenantIdContext.getTenantId());
         return count > 0;
 
     }

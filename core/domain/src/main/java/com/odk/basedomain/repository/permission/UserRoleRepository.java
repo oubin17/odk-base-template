@@ -16,8 +16,8 @@ import java.util.List;
  */
 public interface UserRoleRepository extends JpaRepository<UserRoleDO, String> {
 
-    @Query(value = "select * from t_user_role where id IN ( SELECT role_id FROM t_user_role_rel WHERE user_id = :userId ) AND STATUS = '0'", nativeQuery = true)
-    List<UserRoleDO> findAllUserRole(@Param("userId") String userId);
+    @Query(value = "select * from t_user_role where id IN ( SELECT role_id FROM t_user_role_rel WHERE user_id = :userId and tenant_id = :tenantId ) AND STATUS = '0'", nativeQuery = true)
+    List<UserRoleDO> findAllUserRole(@Param("userId") String userId, @Param("tenantId")String tenantId);
 
     /**
      * 根据状态查询
@@ -25,7 +25,7 @@ public interface UserRoleRepository extends JpaRepository<UserRoleDO, String> {
      * @param status
      * @return
      */
-    List<UserRoleDO> findByStatus(String status);
+    List<UserRoleDO> findByStatusAndTenantId(String status, String tenantId);
 
     /**
      * 根据角色码查询角色
@@ -33,6 +33,6 @@ public interface UserRoleRepository extends JpaRepository<UserRoleDO, String> {
      * @param roleCode
      * @return
      */
-    UserRoleDO findByRoleCode(String roleCode);
+    UserRoleDO findByRoleCodeAndTenantId(String roleCode, String tenantId);
 
 }

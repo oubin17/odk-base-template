@@ -1,6 +1,7 @@
 package com.odk.basedomain.domain.impl;
 
 import com.google.common.collect.Lists;
+import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.dataobject.permission.PermissionDO;
 import com.odk.basedomain.dataobject.permission.UserRoleDO;
 import com.odk.basedomain.domain.PermissionDomain;
@@ -39,12 +40,12 @@ public class PermissionDomainImpl implements PermissionDomain {
 
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setUserId(userId);
-        List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId);
+        List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId, TenantIdContext.getTenantId());
         List<UserRoleDTO> userRoleDTOS = Lists.newArrayList();
         for (UserRoleDO userRoleDO : userRoleDOS) {
             UserRoleDTO userRoleDTO = convert(userRoleDO);
             userRoleDTOS.add(userRoleDTO);
-            List<PermissionDO> permissionDOS = permissionRepository.findRolePermissionByRoleId(userRoleDTO.getId());
+            List<PermissionDO> permissionDOS = permissionRepository.findRolePermissionByRoleId(userRoleDTO.getId(), TenantIdContext.getTenantId());
             List<PermissionDTO> permissionDTOS = Lists.newArrayList();
             for (PermissionDO permissionDO : permissionDOS) {
                 PermissionDTO permissionDTO = convert(permissionDO);

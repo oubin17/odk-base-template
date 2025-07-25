@@ -19,8 +19,8 @@ import java.io.Serial;
 @Data
 @Entity
 @Table(name = "t_user_access_token", indexes = {
-        @Index(name = "idx_type_id", columnList = "token_value,token_type", unique = true),
-        @Index(name = "idx_user_id", columnList = "user_id", unique = true)
+        @Index(name = "idx_type_id", columnList = "token_value,token_type,tenant_id", unique = true),
+        @Index(name = "idx_user_id", columnList = "user_id,tenant_id", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
 public class UserAccessTokenDO extends BaseDO {

@@ -20,7 +20,7 @@ import java.io.Serial;
 @Data
 @Entity
 @Table(name = "t_user_profile", indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id", unique = true)
+        @Index(name = "idx_user_id", columnList = "user_id,tenant_id", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
 public class UserProfileDO extends BaseDO {

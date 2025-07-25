@@ -19,7 +19,7 @@ import java.io.Serial;
 @Data
 @Entity
 @Table(name = "t_role_permission_rel", indexes = {
-        @Index(name = "idx_permission_id", columnList = "role_id,permission_id", unique = true)
+        @Index(name = "idx_permission_id", columnList = "role_id,permission_id,tenant_id", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
 public class RolePermissionRelDO extends BaseDO {

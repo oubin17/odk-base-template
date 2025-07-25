@@ -1,5 +1,6 @@
 package com.odk.basemanager.deal.permission;
 
+import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.dataobject.permission.PermissionDO;
 import com.odk.basedomain.mapper.PermissionDomainMapper;
 import com.odk.basedomain.repository.permission.PermissionRepository;
@@ -43,7 +44,7 @@ public class PermissionManager {
             Page<PermissionDO> all = permissionRepository.findAll(pageable);
             allRolePermission = all.toList();
         } else {
-            allRolePermission = permissionRepository.findRolePermissionByRoleId(queryRequest.getRoleId());
+            allRolePermission = permissionRepository.findRolePermissionByRoleId(queryRequest.getRoleId(), TenantIdContext.getTenantId());
         }
         return permissionDomainMapper.toDTO(allRolePermission);
     }
