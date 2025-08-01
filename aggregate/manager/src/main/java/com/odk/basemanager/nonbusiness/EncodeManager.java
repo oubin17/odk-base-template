@@ -1,4 +1,4 @@
-package com.odk.basemanager.deal.nonbusiness;
+package com.odk.basemanager.nonbusiness;
 
 import com.odk.baseinfra.security.IDecrypt;
 import lombok.AllArgsConstructor;

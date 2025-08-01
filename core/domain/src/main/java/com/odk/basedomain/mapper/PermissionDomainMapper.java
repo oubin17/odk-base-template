@@ -1,6 +1,6 @@
 package com.odk.basedomain.mapper;
 
-import com.odk.basedomain.dataobject.permission.PermissionDO;
+import com.odk.basedomain.model.permission.PermissionDO;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import org.mapstruct.Mapper;
 

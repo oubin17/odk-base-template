@@ -2,7 +2,7 @@ package com.odk.baseservice.impl.nonbusiness;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.nonbusiness.RedissonLockApi;
-import com.odk.basemanager.deal.nonbusiness.RedissonLockManager;
+import com.odk.basemanager.nonbusiness.RedissonLockManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.threadpool.AsyncConfig;

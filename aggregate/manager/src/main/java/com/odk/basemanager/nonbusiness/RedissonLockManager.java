@@ -1,4 +1,4 @@
-package com.odk.basemanager.deal.nonbusiness;
+package com.odk.basemanager.nonbusiness;
 
 import com.odk.redisspringbootstarter.DistributedLockService;
 import lombok.extern.slf4j.Slf4j;

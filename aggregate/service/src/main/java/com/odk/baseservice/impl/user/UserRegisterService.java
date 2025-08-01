@@ -3,7 +3,7 @@ package com.odk.baseservice.impl.user;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
-import com.odk.basemanager.deal.user.UserRegisterManager;
+import com.odk.basemanager.api.user.IUserRegisterManager;
 import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
@@ -27,7 +27,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
 
     private VerificationCodeManager verificationCodeManager;
 
-    private UserRegisterManager userRegisterManager;
+    private IUserRegisterManager userRegisterManager;;
 
     private UserRegisterMapper userRegisterMapper;
 
@@ -66,17 +66,17 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     }
 
     @Autowired
-    public void setUserRegisterManager(UserRegisterManager userRegisterManager) {
-        this.userRegisterManager = userRegisterManager;
-    }
-
-    @Autowired
-    public void setSmsVerificationManager(VerificationCodeManager verificationCodeManager) {
+    public void setVerificationCodeManager(VerificationCodeManager verificationCodeManager) {
         this.verificationCodeManager = verificationCodeManager;
     }
 
     @Autowired
     public void setUserRegisterMapper(UserRegisterMapper userRegisterMapper) {
         this.userRegisterMapper = userRegisterMapper;
+    }
+
+    @Autowired
+    public void setUserRegisterManager(IUserRegisterManager userRegisterManager) {
+        this.userRegisterManager = userRegisterManager;
     }
 }

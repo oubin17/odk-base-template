@@ -1,6 +1,6 @@
 package com.odk.basedomain.repository.verificationcode;
 
-import com.odk.basedomain.dataobject.verificationcode.VerificationCodeDO;
+import com.odk.basedomain.model.verificationcode.VerificationCodeDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

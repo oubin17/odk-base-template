@@ -2,8 +2,8 @@ package com.odk.basedomain.domain.impl;
 
 import com.google.common.collect.Lists;
 import com.odk.base.context.TenantIdContext;
-import com.odk.basedomain.dataobject.permission.PermissionDO;
-import com.odk.basedomain.dataobject.permission.UserRoleDO;
+import com.odk.basedomain.model.permission.PermissionDO;
+import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.domain.PermissionDomain;
 import com.odk.basedomain.mapper.PermissionDomainMapper;
 import com.odk.basedomain.mapper.UserDomainMapper;

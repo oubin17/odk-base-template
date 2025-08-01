@@ -1,6 +1,6 @@
 package com.odk.basedomain.repository.user;
 
-import com.odk.basedomain.dataobject.user.UserBaseDO;
+import com.odk.basedomain.model.user.UserBaseDO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

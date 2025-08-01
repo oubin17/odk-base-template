@@ -9,7 +9,7 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserLoginApi;
-import com.odk.basemanager.deal.user.UserLoginManager;
+import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
-    private UserLoginManager userLoginManager;
+    private IUserLoginManager userLoginManager;
 
     private UserLoginMapper userLoginMapper;
 
@@ -137,7 +137,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
     }
 
     @Autowired
-    public void setUserLoginManager(UserLoginManager userLoginManager) {
+    public void setUserLoginManager(IUserLoginManager userLoginManager) {
         this.userLoginManager = userLoginManager;
     }
 

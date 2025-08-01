@@ -1,15 +1,17 @@
 package com.odk.basemanager.deal.permission;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.basedomain.dataobject.permission.PermissionDO;
 import com.odk.basedomain.mapper.PermissionDomainMapper;
+import com.odk.basedomain.model.permission.PermissionDO;
 import com.odk.basedomain.repository.permission.PermissionRepository;
+import com.odk.basemanager.api.permission.IPermissionManager;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.request.role.PermissionAddRequest;
 import com.odk.baseutil.request.role.PermissionQueryRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,16 +28,18 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class PermissionManager {
+public class PermissionManager implements IPermissionManager {
 
     private PermissionRepository permissionRepository;
 
     private PermissionDomainMapper permissionDomainMapper;
 
+    @Override
     public Boolean addPermission(PermissionAddRequest permissionAddRequest) {
         return false;
     }
 
+    @Override
     public List<PermissionDTO> permissionList(PermissionQueryRequest queryRequest) {
         List<PermissionDO> allRolePermission;
         if (StringUtils.isBlank(queryRequest.getRoleId())) {
@@ -49,5 +53,8 @@ public class PermissionManager {
         return permissionDomainMapper.toDTO(allRolePermission);
     }
 
-
+    @Autowired
+    public void setPermissionRepository(PermissionRepository permissionRepository) {
+        this.permissionRepository = permissionRepository;
+    }
 }

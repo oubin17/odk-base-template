@@ -1,6 +1,6 @@
 package com.odk.basedomain.entitymanager;
 
-import com.odk.basedomain.dataobject.permission.UserRoleDO;
+import com.odk.basedomain.model.permission.UserRoleDO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;

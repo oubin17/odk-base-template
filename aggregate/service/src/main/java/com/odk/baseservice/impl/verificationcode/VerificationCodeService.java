@@ -32,8 +32,6 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
 
     private VerificationCodeMapper verificationCodeMapper;
 
-    private RedisUtil redisUtil;
-
     @Override
     public ServiceResponse<VerificationCodeEntity> generateCode(VerificationCodeRequest codeRequest) {
         return super.strictBizProcess(BizScene.VERIFICATION_CODE_GENERATE, codeRequest, new StrictApiCallBack<VerificationCodeEntity, VerificationCodeEntity>() {
@@ -94,8 +92,4 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
         this.verificationCodeMapper = verificationCodeMapper;
     }
 
-    @Autowired
-    public void setRedisUtil(RedisUtil redisUtil) {
-        this.redisUtil = redisUtil;
-    }
 }

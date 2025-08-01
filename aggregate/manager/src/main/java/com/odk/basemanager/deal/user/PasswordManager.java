@@ -3,12 +3,13 @@ package com.odk.basemanager.deal.user;
 import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.dataobject.user.UserIdentificationDO;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
+import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseinfra.security.IDecrypt;
 import com.odk.baseinfra.security.IEncrypt;
+import com.odk.basemanager.api.user.IPasswordManager;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class PasswordManager {
+public class PasswordManager implements IPasswordManager {
 
     private IDecrypt decrypt;
 
@@ -43,6 +44,7 @@ public class PasswordManager {
      *
      * @return
      */
+    @Override
     public boolean updatePassword(PasswordUpdateDTO passwordUpdateDTO) {
         //1.判断密码是否通过公钥加密
         String oldPassword = decrypt.decrypt(passwordUpdateDTO.getOldIdentifyValue());

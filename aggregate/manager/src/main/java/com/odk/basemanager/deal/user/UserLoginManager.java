@@ -4,11 +4,15 @@ import com.odk.base.context.TenantIdContext;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.dataobject.user.UserBaseDO;
-import com.odk.basedomain.domain.UserDomain;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
+import com.odk.basedomain.model.user.UserBaseDO;
+import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserBaseRepository;
+import com.odk.basedomain.repository.user.UserIdentificationRepository;
+import com.odk.baseinfra.security.IDecrypt;
+import com.odk.baseinfra.security.IEncrypt;
+import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
 import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.dto.user.UserLoginDTO;
@@ -28,15 +32,19 @@ import java.util.Optional;
  * @author: oubin on 2024/11/5
  */
 @Service
-public class UserLoginManager {
+public class UserLoginManager implements IUserLoginManager {
 
     private UserBaseRepository baseRepository;
-
-    private UserDomain userDomain;
 
     private VerificationCodeManager verificationCodeManager;
 
     private UserQueryDomain userQueryDomain;
+
+    private UserIdentificationRepository identificationRepository;
+
+    private IDecrypt iDecrypt;
+
+    private IEncrypt iEncrypt;
 
     /**
      * 用户登录
@@ -44,11 +52,21 @@ public class UserLoginManager {
      * @param userLoginDTO
      * @return
      */
+    @Override
     public UserEntity userLogin(UserLoginDTO userLoginDTO) {
         UserEntity userEntity = null;
         String identifyType = userLoginDTO.getIdentifyType();
         if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
-            userEntity = this.userDomain.userLogin(userLoginDTO);
+            UserQueryCriteria build = UserQueryCriteria.builder()
+                    .queryType(UserQueryTypeEnum.LOGIN_ID)
+                    .loginId(userLoginDTO.getLoginId())
+                    .loginType(userLoginDTO.getLoginType())
+                    .build();
+            userEntity = userQueryDomain.queryUser(build);
+            UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), userLoginDTO.getIdentifyType(), TenantIdContext.getTenantId());
+
+            String decrypt = iDecrypt.decrypt(userLoginDTO.getIdentifyValue());
+            AssertUtil.isTrue(iEncrypt.matches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
             verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode());
             UserQueryCriteria build = UserQueryCriteria.builder()
@@ -67,6 +85,7 @@ public class UserLoginManager {
         return userEntity;
     }
 
+    @Override
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
@@ -81,11 +100,6 @@ public class UserLoginManager {
     }
 
     @Autowired
-    public void setUserDomain(UserDomain userDomain) {
-        this.userDomain = userDomain;
-    }
-
-    @Autowired
     public void setVerificationCodeManager(VerificationCodeManager verificationCodeManager) {
         this.verificationCodeManager = verificationCodeManager;
     }
@@ -93,5 +107,20 @@ public class UserLoginManager {
     @Autowired
     public void setUserQueryDomain(UserQueryDomain userQueryDomain) {
         this.userQueryDomain = userQueryDomain;
+    }
+
+    @Autowired
+    public void setIdentificationRepository(UserIdentificationRepository identificationRepository) {
+        this.identificationRepository = identificationRepository;
+    }
+
+    @Autowired
+    public void setiDecrypt(IDecrypt iDecrypt) {
+        this.iDecrypt = iDecrypt;
+    }
+
+    @Autowired
+    public void setiEncrypt(IEncrypt iEncrypt) {
+        this.iEncrypt = iEncrypt;
     }
 }

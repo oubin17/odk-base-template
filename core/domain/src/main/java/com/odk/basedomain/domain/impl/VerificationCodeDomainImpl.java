@@ -1,6 +1,6 @@
 package com.odk.basedomain.domain.impl;
 
-import com.odk.basedomain.dataobject.verificationcode.VerificationCodeDO;
+import com.odk.basedomain.model.verificationcode.VerificationCodeDO;
 import com.odk.basedomain.domain.VerificationCodeDomain;
 import com.odk.basedomain.repository.verificationcode.VerificationCodeRepository;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;

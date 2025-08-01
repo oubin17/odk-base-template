@@ -4,11 +4,11 @@ import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
-import com.odk.baseutil.request.UserQueryRequest;
-import com.odk.basemanager.deal.user.UserQueryManager;
+import com.odk.basemanager.api.user.IUserQueryManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
-    private UserQueryManager userQueryManager;
+    private IUserQueryManager userQueryManager;
 
     @Override
     public ServiceResponse<UserEntity> queryUserByUserId(String userId) {
@@ -89,7 +89,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
     }
 
     @Autowired
-    public void setUserQueryManager(UserQueryManager userQueryManager) {
+    public void setUserQueryManager(IUserQueryManager userQueryManager) {
         this.userQueryManager = userQueryManager;
     }
 }

@@ -3,7 +3,7 @@ package com.odk.baseservice.impl.permission;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
-import com.odk.basemanager.deal.permission.PermissionManager;
+import com.odk.basemanager.api.permission.IPermissionManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.enums.BizScene;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class PermissionService extends AbstractApiImpl implements PermissionApi {
 
-    private PermissionManager permissionManager;
+    private IPermissionManager permissionManager;
 
     @Override
     public ServiceResponse<Boolean> addPermission(PermissionAddRequest permissionAddRequest) {
@@ -66,7 +66,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
     }
 
     @Autowired
-    public void setPermissionManager(PermissionManager permissionManager) {
+    public void setPermissionManager(IPermissionManager permissionManager) {
         this.permissionManager = permissionManager;
     }
 }

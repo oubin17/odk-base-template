@@ -4,7 +4,7 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.PasswordApi;
-import com.odk.basemanager.deal.user.PasswordManager;
+import com.odk.basemanager.api.user.IPasswordManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
 import com.odk.baseutil.enums.BizScene;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PasswordService extends AbstractApiImpl implements PasswordApi {
 
-    private PasswordManager passwordManager;
+    private IPasswordManager passwordManager;
 
     private PasswordMapper passwordMapper;
 
@@ -64,7 +64,7 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
     }
 
     @Autowired
-    public void setPasswordManager(PasswordManager passwordManager) {
+    public void setPasswordManager(IPasswordManager passwordManager) {
         this.passwordManager = passwordManager;
     }
 

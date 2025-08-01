@@ -1,9 +1,9 @@
 package com.odk.basedomain.mapper;
 
-import com.odk.basedomain.dataobject.permission.UserRoleDO;
-import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
-import com.odk.basedomain.dataobject.user.UserBaseDO;
-import com.odk.basedomain.dataobject.user.UserProfileDO;
+import com.odk.basedomain.model.permission.UserRoleDO;
+import com.odk.basedomain.model.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserBaseDO;
+import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.AccessTokenEntity;
 import com.odk.baseutil.entity.UserEntity;

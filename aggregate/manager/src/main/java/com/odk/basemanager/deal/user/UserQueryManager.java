@@ -3,8 +3,9 @@ package com.odk.basemanager.deal.user;
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
+import com.odk.basemanager.api.user.IUserQueryManager;
 import com.odk.baseutil.entity.UserEntity;
-import com.odk.basedomain.dataobject.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class UserQueryManager {
+public class UserQueryManager implements IUserQueryManager {
 
     private UserAccessTokenRepository accessTokenRepository;
 
@@ -32,6 +33,7 @@ public class UserQueryManager {
      * @param userId
      * @return
      */
+    @Override
     public UserEntity queryByUserId(String userId) {
         return this.userQueryDomain.queryUser(
                 UserQueryCriteria.builder()
@@ -46,6 +48,7 @@ public class UserQueryManager {
      *
      * @return
      */
+    @Override
     public UserEntity queryBySession() {
         return this.userQueryDomain.queryUser(
                 UserQueryCriteria.builder()
@@ -61,6 +64,7 @@ public class UserQueryManager {
      * @param tokenValue
      * @return
      */
+    @Override
     public UserEntity queryByAccessToken(String tokenType, String tokenValue) {
 
         UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(tokenType, tokenValue, TenantIdContext.getTenantId());

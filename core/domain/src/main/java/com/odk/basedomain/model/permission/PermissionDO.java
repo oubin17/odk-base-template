@@ -1,4 +1,4 @@
-package com.odk.basedomain.dataobject.permission;
+package com.odk.basedomain.model.permission;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;

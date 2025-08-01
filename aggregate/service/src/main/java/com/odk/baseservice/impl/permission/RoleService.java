@@ -6,15 +6,15 @@ import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.RoleApi;
-import com.odk.baseutil.request.role.RoleAddRequest;
-import com.odk.baseutil.request.role.UserRoleRelaRequest;
-import com.odk.baseutil.response.PermissionQueryResponse;
-import com.odk.basemanager.deal.permission.RoleManager;
+import com.odk.basemanager.api.permission.IRoleManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.request.role.RoleAddRequest;
+import com.odk.baseutil.request.role.UserRoleRelaRequest;
+import com.odk.baseutil.response.PermissionQueryResponse;
 import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ import java.util.Set;
 @Service
 public class RoleService extends AbstractApiImpl implements RoleApi {
 
-    private RoleManager permissionManager;
+    private IRoleManager roleManager;
 
     @Override
     public ServiceResponse<PermissionQueryResponse> userRoles(String userId) {
@@ -46,7 +46,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
 
             @Override
             protected PermissionEntity doProcess(Object args) {
-                return permissionManager.getAllPermissions((String) args);
+                return roleManager.getAllPermissions((String) args);
             }
 
             @Override
@@ -90,7 +90,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
             @Override
             protected String doProcess(Object args) {
                 String[] args1 = (String[]) args;
-                return permissionManager.addRole(args1[0], args1[1]);
+                return roleManager.addRole(args1[0], args1[1]);
             }
 
             @Override
@@ -110,7 +110,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
             }
             @Override
             protected Boolean doProcess(Object args) {
-                return permissionManager.deleteRole(roleId);
+                return roleManager.deleteRole(roleId);
             }
             @Override
             protected Boolean convertResult(Boolean result) {
@@ -124,7 +124,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
         return super.bizProcess(BizScene.ROLE_LIST, null, new ApiCallBack<List<UserRoleDTO>, List<UserRoleDTO>>() {
             @Override
             protected List<UserRoleDTO> doProcess(Object args) {
-                return permissionManager.roleList();
+                return roleManager.roleList();
             }
             @Override
             protected List<UserRoleDTO> convertResult(List<UserRoleDTO> result) {
@@ -140,7 +140,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
             @Override
             protected String doProcess(Object args) {
                 UserRoleRelaRequest roleRelaRequest = (UserRoleRelaRequest) args;
-                return permissionManager.addUserRoleRela(roleRelaRequest.getRoleId(), roleRelaRequest.getUserId());
+                return roleManager.addUserRoleRela(roleRelaRequest.getRoleId(), roleRelaRequest.getUserId());
             }
 
             @Override
@@ -157,7 +157,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
 
             @Override
             protected Boolean doProcess(Object args) {
-                return permissionManager.deleteUserRoleRela(relaRequest.getRoleId(), relaRequest.getUserId());
+                return roleManager.deleteUserRoleRela(relaRequest.getRoleId(), relaRequest.getUserId());
             }
 
             @Override
@@ -168,10 +168,8 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
         });
     }
 
-
-
     @Autowired
-    public void setPermissionManager(RoleManager roleManager) {
-        this.permissionManager = roleManager;
+    public void setRoleManager(IRoleManager roleManager) {
+        this.roleManager = roleManager;
     }
 }

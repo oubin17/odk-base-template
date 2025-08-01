@@ -2,7 +2,7 @@ package com.odk.baseservice.impl.nonbusiness;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.nonbusiness.EncodeApi;
-import com.odk.basemanager.deal.nonbusiness.EncodeManager;
+import com.odk.basemanager.nonbusiness.EncodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.enums.BizScene;
 import org.springframework.beans.factory.annotation.Autowired;

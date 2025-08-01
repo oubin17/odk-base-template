@@ -1,4 +1,4 @@
-package com.odk.basedomain.dataobject.verificationcode;
+package com.odk.basedomain.model.verificationcode;
 
 import com.odk.base.dos.BaseDO;
 import jakarta.persistence.*;

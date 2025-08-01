@@ -4,6 +4,7 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.VerificationCodeDomain;
 import com.odk.baseinfra.verificationcode.IVerificationGenerate;
+import com.odk.basemanager.api.verificationcode.IVerificationCodeManager;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.entity.VerificationCodeEntity;
 import com.odk.baseutil.enums.VerificationCodeStatusEnum;
@@ -20,12 +21,13 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class VerificationCodeManager {
+public class VerificationCodeManager implements IVerificationCodeManager {
 
     private IVerificationGenerate verificationGenerate;
 
     private VerificationCodeDomain verificationCodeDomain;
 
+    @Override
     public VerificationCodeEntity generate(VerificationCodeDTO verificationCodeDTO) {
         VerificationCodeEntity generate = verificationGenerate.generate(verificationCodeDTO);
         if (null == generate) {
@@ -36,12 +38,6 @@ public class VerificationCodeManager {
         return generate;
     }
 
-    /**
-     *
-     *
-     * @param verificationCodeDTO
-     * @return
-     */
     @Deprecated
     public boolean compare(VerificationCodeDTO verificationCodeDTO) {
         return verificationGenerate.compare(verificationCodeDTO);
@@ -53,6 +49,7 @@ public class VerificationCodeManager {
      * @param verificationCodeDTO
      * @return
      */
+    @Override
     public boolean compareAndIncr(VerificationCodeDTO verificationCodeDTO) {
         try {
             boolean result = verificationGenerate.compareAndIncr(verificationCodeDTO);
