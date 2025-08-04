@@ -1,6 +1,6 @@
 package com.odk.basemanager.nonbusiness;
 
-import com.odk.baseinfra.security.IDecrypt;
+import com.odk.baseinfra.security.IEncryption;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class EncodeManager {
 
-    private final IDecrypt iDecrypt;
+    private final IEncryption encryption;
 
     public String encode(String rawData) {
-        return iDecrypt.encrypt(rawData);
+        return encryption.rsaEncode(rawData);
     }
 }

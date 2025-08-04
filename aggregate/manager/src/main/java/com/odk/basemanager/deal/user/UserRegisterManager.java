@@ -15,8 +15,7 @@ import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
-import com.odk.baseinfra.security.IDecrypt;
-import com.odk.baseinfra.security.IEncrypt;
+import com.odk.baseinfra.security.IEncryption;
 import com.odk.basemanager.api.user.IUserRegisterManager;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import lombok.AllArgsConstructor;
@@ -39,9 +38,7 @@ import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 @AllArgsConstructor
 public class UserRegisterManager implements IUserRegisterManager {
 
-    private IDecrypt iDecrypt;
-
-    private IEncrypt iEncrypt;
+    private IEncryption encryptionService;
 
     private TransactionTemplate transactionTemplate;
 
@@ -63,8 +60,8 @@ public class UserRegisterManager implements IUserRegisterManager {
     @Override
     public String registerUser(UserRegisterDTO userRegisterDTO) {
         String password = userRegisterDTO.getIdentifyValue();
-        String decrypt = iDecrypt.decrypt(password);
-        userRegisterDTO.setIdentifyValue(iEncrypt.encrypt(decrypt));
+        String decrypt = encryptionService.rsaDecode(password);
+        userRegisterDTO.setIdentifyValue(encryptionService.bcryptEncode(decrypt));
 
         UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId(), TenantIdContext.getTenantId());
         AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, "用户已经存在，类型：" + userRegisterDTO.getLoginType() + "，登录ID：" + userRegisterDTO.getLoginId());
@@ -148,16 +145,6 @@ public class UserRegisterManager implements IUserRegisterManager {
         userProfileDO.setUserId(userId);
         userProfileDO.setUserName(userName);
         userProfileRepository.save(userProfileDO);
-    }
-
-    @Autowired
-    public void setiDecrypt(IDecrypt iDecrypt) {
-        this.iDecrypt = iDecrypt;
-    }
-
-    @Autowired
-    public void setiEncrypt(IEncrypt iEncrypt) {
-        this.iEncrypt = iEncrypt;
     }
 
     @Autowired

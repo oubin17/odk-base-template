@@ -2,8 +2,10 @@ package com.odk.baseinfra.security;
 
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
+import com.odk.base.security.BCryptPasswordEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +24,21 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 /**
- * RsaDecrypt
+ * EncryptionService 加解密类
+ * 整体的加解密流程是：前端先通过公钥加密，将密文传给后端，后端调用 {@link IEncryption#rsaDecode(String)} 接口进行解密
+ * 解密成功后，后端再通过 {@link IEncryption#bcryptEncode(String)} 接口进行二次加密，保存到数据库中
+ * 特殊情况下，在公钥加密前，可以再通过 hash 加密，防止服务端拿到明文密码，但是这样会降低密码的熵值。
+ * 公私钥生产环境不要存储在本地，可以使用第三方服务，如阿里云，AWS 等。
  *
  * @description:
  * @version: 1.0
- * @author: oubin on 2025/4/24
+ * @author: oubin on 2025/8/4
  */
 @Slf4j
 @Service
-public class RsaDecrypt implements InitializingBean, IDecrypt {
+public class EncryptionService implements InitializingBean, IEncryption {
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Value("${security.public-key-path}")
     private String publicKeyPath;
@@ -42,8 +50,19 @@ public class RsaDecrypt implements InitializingBean, IDecrypt {
 
     private PrivateKey privateKey;
 
+
     @Override
-    public String encrypt(String rawData) {
+    public String bcryptEncode(String rawData) {
+        return bCryptPasswordEncoder.encode(rawData);
+    }
+
+    @Override
+    public boolean bcryptMatches(String rawData, String encodedData) {
+        return bCryptPasswordEncoder.matches(rawData, encodedData);
+    }
+
+    @Override
+    public String rsaEncode(String rawData) {
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -63,12 +82,12 @@ public class RsaDecrypt implements InitializingBean, IDecrypt {
     }
 
     @Override
-    public String decrypt(String encryptedBase64) {
+    public String rsaDecode(String encodedData) {
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            byte[] encryptedData = Base64.getDecoder().decode(encryptedBase64);
+            byte[] encryptedData = Base64.getDecoder().decode(encodedData);
             return new String(cipher.doFinal(encryptedData), "UTF-8");
 
         } catch (IllegalBlockSizeException e) {
@@ -85,6 +104,12 @@ public class RsaDecrypt implements InitializingBean, IDecrypt {
             throw new BizException(BizErrorCode.SYSTEM_ERROR, "系统级错误");
         }
     }
+
+    @Autowired
+    public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
 
     // 新增公钥加载方法
     private PublicKey loadPublicKey(String keyPath) throws Exception {
@@ -125,6 +150,4 @@ public class RsaDecrypt implements InitializingBean, IDecrypt {
         publicKey = loadPublicKey(publicKeyPath);
         privateKey = loadPrivateKey(privateKeyPath);
     }
-
-
 }

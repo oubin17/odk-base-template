@@ -10,8 +10,7 @@ import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
-import com.odk.baseinfra.security.IDecrypt;
-import com.odk.baseinfra.security.IEncrypt;
+import com.odk.baseinfra.security.IEncryption;
 import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
 import com.odk.baseutil.constants.UserInfoConstants;
@@ -42,9 +41,7 @@ public class UserLoginManager implements IUserLoginManager {
 
     private UserIdentificationRepository identificationRepository;
 
-    private IDecrypt iDecrypt;
-
-    private IEncrypt iEncrypt;
+    private IEncryption encryption;
 
     /**
      * 用户登录
@@ -65,8 +62,8 @@ public class UserLoginManager implements IUserLoginManager {
             userEntity = userQueryDomain.queryUser(build);
             UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), userLoginDTO.getIdentifyType(), TenantIdContext.getTenantId());
 
-            String decrypt = iDecrypt.decrypt(userLoginDTO.getIdentifyValue());
-            AssertUtil.isTrue(iEncrypt.matches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
+            String decrypt = encryption.rsaDecode(userLoginDTO.getIdentifyValue());
+            AssertUtil.isTrue(encryption.bcryptMatches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
             verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode());
             UserQueryCriteria build = UserQueryCriteria.builder()
@@ -115,12 +112,7 @@ public class UserLoginManager implements IUserLoginManager {
     }
 
     @Autowired
-    public void setiDecrypt(IDecrypt iDecrypt) {
-        this.iDecrypt = iDecrypt;
-    }
-
-    @Autowired
-    public void setiEncrypt(IEncrypt iEncrypt) {
-        this.iEncrypt = iEncrypt;
+    public void setEncryption(IEncryption encryption) {
+        this.encryption = encryption;
     }
 }

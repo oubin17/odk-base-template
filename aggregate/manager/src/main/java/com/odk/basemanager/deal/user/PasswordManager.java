@@ -7,8 +7,7 @@ import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
-import com.odk.baseinfra.security.IDecrypt;
-import com.odk.baseinfra.security.IEncrypt;
+import com.odk.baseinfra.security.IEncryption;
 import com.odk.basemanager.api.user.IPasswordManager;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
 import com.odk.baseutil.entity.UserEntity;
@@ -31,9 +30,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PasswordManager implements IPasswordManager {
 
-    private IDecrypt decrypt;
-
-    private IEncrypt iEncrypt;
+    private IEncryption encryption;
 
     private UserQueryDomain userQueryDomain;
 
@@ -47,17 +44,17 @@ public class PasswordManager implements IPasswordManager {
     @Override
     public boolean updatePassword(PasswordUpdateDTO passwordUpdateDTO) {
         //1.判断密码是否通过公钥加密
-        String oldPassword = decrypt.decrypt(passwordUpdateDTO.getOldIdentifyValue());
-        String newPassword = decrypt.decrypt(passwordUpdateDTO.getNewIdentifyValue());
+        String oldPassword = encryption.rsaDecode(passwordUpdateDTO.getOldIdentifyValue());
+        String newPassword = encryption.rsaDecode(passwordUpdateDTO.getNewIdentifyValue());
 
         //2.新旧密码不一致
         AssertUtil.notEqual(oldPassword, newPassword, BizErrorCode.IDENTIFICATION_SAME);
         //3.比对旧密码
         UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.SESSION).build());
         UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), passwordUpdateDTO.getIdentifyType(), TenantIdContext.getTenantId());
-        AssertUtil.isTrue(iEncrypt.matches(oldPassword, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
+        AssertUtil.isTrue(encryption.bcryptMatches(oldPassword, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
         //4.新密码加密
-        String encode = iEncrypt.encrypt(newPassword);
+        String encode = encryption.bcryptEncode(newPassword);
         //5.设置新密码
         int count = this.identificationRepository.updatePassword(userIdentificationDO.getId(), passwordUpdateDTO.getIdentifyType(), encode, userEntity.getUserId(), LocalDateTime.now(), TenantIdContext.getTenantId());
         return count > 0;
