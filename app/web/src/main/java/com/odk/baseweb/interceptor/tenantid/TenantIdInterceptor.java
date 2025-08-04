@@ -15,11 +15,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 public class TenantIdInterceptor implements HandlerInterceptor {
 
-    private static final String HEADER_TRACE_ID = "X-TENANT-ID";
+    private static final String HEADER_TENANT_ID = "X-TENANT-ID";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String tenantId = request.getHeader(HEADER_TRACE_ID);
+        String tenantId = request.getHeader(HEADER_TENANT_ID);
         TenantIdContext.setTenantId(tenantId);
         return true;
     }
