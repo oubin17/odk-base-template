@@ -1,6 +1,7 @@
 package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
+import com.odk.base.enums.cache.CacheActionEnum;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
@@ -12,11 +13,13 @@ import com.odk.basedomain.model.user.UserIdentificationDO;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseinfra.security.IEncryption;
+import com.odk.basemanager.api.common.IEventPublish;
 import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
+import com.odk.baseutil.event.UserCacheCleanEvent;
 import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,8 @@ public class UserLoginManager implements IUserLoginManager {
     private IEncryption encryption;
 
     private UserCache userCache;
+
+    private IEventPublish eventPublish;
 
     /**
      * 用户登录
@@ -78,8 +83,6 @@ public class UserLoginManager implements IUserLoginManager {
         if (userEntity != null) {
             //设置登录session
             SessionContext.createLoginSession(userEntity.getUserId());
-            //缓存当前用户信息
-            userCache.putUserToCache(userEntity);
         }
         return userEntity;
     }
@@ -88,7 +91,7 @@ public class UserLoginManager implements IUserLoginManager {
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
-        userCache.evictUserFromCache(byUserId.get().getId());
+        eventPublish.publish(new UserCacheCleanEvent(byUserId.get().getId(), CacheActionEnum.DELETE));
         SessionContext.logOut();
         return true;
     }
@@ -122,5 +125,10 @@ public class UserLoginManager implements IUserLoginManager {
     @Autowired
     public void setUserCache(UserCache userCache) {
         this.userCache = userCache;
+    }
+
+    @Autowired
+    public void setEventPublish(IEventPublish eventPublish) {
+        this.eventPublish = eventPublish;
     }
 }
