@@ -1,9 +1,10 @@
-package com.odk.basemanager.deal.user;
+package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.basedomain.cache.UserCache;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.model.user.UserBaseDO;
@@ -12,8 +13,7 @@ import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseinfra.security.IEncryption;
 import com.odk.basemanager.api.user.IUserLoginManager;
-import com.odk.basemanager.deal.verificationcode.VerificationCodeManager;
-import com.odk.baseutil.constants.UserInfoConstants;
+import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
@@ -42,6 +42,8 @@ public class UserLoginManager implements IUserLoginManager {
     private UserIdentificationRepository identificationRepository;
 
     private IEncryption encryption;
+
+    private UserCache userCache;
 
     /**
      * 用户登录
@@ -77,7 +79,7 @@ public class UserLoginManager implements IUserLoginManager {
             //设置登录session
             SessionContext.createLoginSession(userEntity.getUserId());
             //缓存当前用户信息
-            SessionContext.setSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER, userEntity);
+            userCache.putUserToCache(userEntity);
         }
         return userEntity;
     }
@@ -86,6 +88,7 @@ public class UserLoginManager implements IUserLoginManager {
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
+        userCache.evictUserFromCache(byUserId.get().getId());
         SessionContext.logOut();
         return true;
     }
@@ -114,5 +117,10 @@ public class UserLoginManager implements IUserLoginManager {
     @Autowired
     public void setEncryption(IEncryption encryption) {
         this.encryption = encryption;
+    }
+
+    @Autowired
+    public void setUserCache(UserCache userCache) {
+        this.userCache = userCache;
     }
 }

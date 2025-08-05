@@ -3,17 +3,17 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.model.user.UserAccessTokenDO;
-import com.odk.basedomain.model.user.UserBaseDO;
-import com.odk.basedomain.model.user.UserProfileDO;
+import com.odk.basedomain.cache.UserCache;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.mapper.UserDomainMapper;
+import com.odk.basedomain.model.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserBaseDO;
+import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
-import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +44,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     private UserDomainMapper userDomainMapper;
 
+    private UserCache userCache;
 
     @Override
     public UserEntity queryUser(UserQueryCriteria criteria) {
@@ -107,56 +108,8 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity queryBySession() {
-        return (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
+        return getUserInfo(SessionContext.getLoginIdWithCheck());
     }
-
-
-//    /**
-//     * 根据userId查找用户
-//     *
-//     * @param userId
-//     * @return
-//     */
-//    @Override
-//    public UserEntity queryByUserId(String userId) {
-//      return getUserInfo(userId);
-//    }
-//
-//
-//    @Override
-//    public UserEntity queryBySession() {
-//        return (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
-//    }
-//
-//    /**
-//     * 检查用户状态
-//     *
-//     * @param userId
-//     * @return
-//     */
-//    @Override
-//    public UserEntity queryByUserIdAndCheck(String userId) {
-//        UserEntity userInfo = getUserInfo(userId);
-//        AssertUtil.notNull(userInfo, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + userId);
-//        AssertUtil.equal(UserStatusEnum.NORMAL.getCode(), userInfo.getUserStatus(), BizErrorCode.USER_STATUS_ERROR, "用户状态异常，用户ID:" + userId);
-//        return userInfo;
-//    }
-//
-//    @Override
-//    public UserEntity queryBySessionAndCheck() {
-//        UserEntity sessionValue = (UserEntity) SessionContext.getSessionValue(UserInfoConstants.ACCOUNT_SESSION_USER);
-//        AssertUtil.notNull(sessionValue, BizErrorCode.USER_NOT_EXIST, "用户不存在，用户ID:" + sessionValue.getUserId());
-//        return sessionValue;
-//    }
-//
-//    @Override
-//    public UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue) {
-//        UserAccessTokenDO userAccessTokenDO = accessTokenRepository.findByTokenTypeAndTokenValue(tokenType, tokenValue);
-//        if (null == userAccessTokenDO) {
-//            return null;
-//        }
-//        return queryByUserIdAndCheck(userAccessTokenDO.getUserId());
-//    }
 
     /**
      * 通用获取用户信息方法
@@ -165,6 +118,12 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity getUserInfo(String userId) {
+
+        UserEntity userInfoFromCache = userCache.getUserFromCache(userId);
+        if (null != userInfoFromCache) {
+            return userInfoFromCache;
+        }
+
         Optional<UserBaseDO> userBaseDOOptional = userBaseRepository.findByIdAndTenantId(userId, TenantIdContext.getTenantId());
         if (userBaseDOOptional.isEmpty()) {
             log.error("找不到用户，用户ID={}", userId);
@@ -182,6 +141,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         if (null != userProfileDO) {
             userEntity.setUserProfile(this.userDomainMapper.toEntity(userProfileDO));
         }
+        userCache.putUserToCache(userEntity);
         return userEntity;
     }
 
@@ -204,5 +164,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Autowired
     public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
         this.userDomainMapper = userDomainMapper;
+    }
+
+    @Autowired
+    public void setUserCache(UserCache userCache) {
+        this.userCache = userCache;
     }
 }

@@ -53,6 +53,11 @@
             <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.odk</groupId>
+            <artifactId>redis-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

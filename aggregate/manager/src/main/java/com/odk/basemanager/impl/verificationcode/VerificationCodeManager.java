@@ -1,4 +1,4 @@
-package com.odk.basemanager.deal.verificationcode;
+package com.odk.basemanager.impl.verificationcode;
 
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;

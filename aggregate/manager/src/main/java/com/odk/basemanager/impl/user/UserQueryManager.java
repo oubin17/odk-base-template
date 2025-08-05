@@ -1,4 +1,4 @@
-package com.odk.basemanager.deal.user;
+package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.domain.UserQueryDomain;

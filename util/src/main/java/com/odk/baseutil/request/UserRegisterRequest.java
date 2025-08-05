@@ -6,7 +6,6 @@ import com.odk.base.vo.request.BaseRequest;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.validate.EnumValue;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -66,7 +65,7 @@ public class UserRegisterRequest extends BaseRequest {
     /**
      * 验证相关信息
      */
-    @NotNull(message = "认证信息不能为空")
+//    @NotNull(message = "认证信息不能为空")
     private VerificationCodeDTO verificationCode;
 
 }

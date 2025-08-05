@@ -4,6 +4,7 @@ import com.odk.base.enums.user.UserGenderEnum;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.baseutil.validate.EnumValue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -43,5 +44,6 @@ public class UserProfileRequest extends BaseRequest {
      */
     @NotBlank(message = "birthDay不能为空")
     @Size(min = 1, max = 20, message = "birthDay长度必须在1-20之间")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$", message = "birthDay格式不正确")
     private String birthDay;
 }

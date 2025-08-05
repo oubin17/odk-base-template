@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.base.exception.BizException;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
@@ -123,7 +122,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             protected Boolean doProcess(Object args) {
                 if (!SessionContext.isLogin()) {
                     log.error("当前用户非登录态，登录注销失败！");
-                    throw new BizException(BizErrorCode.PARAM_ILLEGAL, "用户非登录态，登出异常");
+//                    throw new BizException(BizErrorCode.PARAM_ILLEGAL, "用户非登录态，登出异常");
                 }
                 return userLoginManager.userLogout();
 

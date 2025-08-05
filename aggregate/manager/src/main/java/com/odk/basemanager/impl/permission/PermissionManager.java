@@ -1,4 +1,4 @@
-package com.odk.basemanager.deal.permission;
+package com.odk.basemanager.impl.permission;
 
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.mapper.PermissionDomainMapper;
