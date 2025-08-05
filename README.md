@@ -61,12 +61,15 @@
 - **其他**：
   - 多租户支持（核心注册登录功能支持多租户，无需部署多服务）
   - 统一异常处理和日志打印
-  - Lombok（简化代码）
-  - Snowflake ID 生成器（分布式唯一 ID 生成）
+  - Lombok (简化代码)
+  - Snowflake ID 生成器 (分布式唯一 ID 生成)
   - Tracer (链路追踪)
-  - MapStruct（对象映射）
-  - Jackson（JSON 处理）
-  - Redisson（分布式锁）
+  - MapStruct (对象映射)
+  - Jackson (JSON 处理)
+  - Redisson (分布式锁)
+  - EventListener (事件监听)
+  - UserCache (缓存框架)
+  - ...
 
 ---
 
