@@ -14,8 +14,10 @@ import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
+import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.userinfo.SessionContext;
+import com.odk.redisspringbootstarter.DistributedLockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,8 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     private UserDomainMapper userDomainMapper;
 
     private UserCache userCache;
+
+    private DistributedLockService distributedLockService;
 
     @Override
     public UserEntity queryUser(UserQueryCriteria criteria) {
@@ -119,30 +123,78 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      */
     private UserEntity getUserInfo(String userId) {
 
+        // 1. 首先尝试从缓存中获取用户信息
         UserEntity userInfoFromCache = userCache.getUserFromCache(userId);
         if (null != userInfoFromCache) {
             return userInfoFromCache;
         }
 
-        Optional<UserBaseDO> userBaseDOOptional = userBaseRepository.findByIdAndTenantId(userId, TenantIdContext.getTenantId());
-        if (userBaseDOOptional.isEmpty()) {
-            log.error("找不到用户，用户ID={}", userId);
-            return null;
-        }
-        //1.用户id
-        UserEntity userEntity = this.userDomainMapper.toEntity(userBaseDOOptional.get());
+        // 2. 使用带重试机制的分布式锁
+        String lockKey = UserInfoConstants.USER_LOCK_PREFIX + userId;
+        int maxRetries = 3;
+        int retryCount = 0;
 
-        //2.账号信息
-        UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
-        userEntity.setAccessToken(this.userDomainMapper.toEntity(accessTokenDO));
-
-        //3.用户画像
-        UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
-        if (null != userProfileDO) {
-            userEntity.setUserProfile(this.userDomainMapper.toEntity(userProfileDO));
+        while (retryCount < maxRetries) {
+            boolean acquired = distributedLockService.tryLock(lockKey, 1, 3); // 等待1秒，持有3秒
+            if (acquired) {
+                try {
+                    // 双重检查缓存
+                    userInfoFromCache = userCache.getUserFromCache(userId);
+                    if (null != userInfoFromCache) {
+                        return userInfoFromCache;
+                    }
+                    // 查询数据库
+                    return queryUserFromDatabase(userId);
+                } finally {
+                    distributedLockService.unlock(lockKey);
+                }
+            } else {
+                retryCount++;
+                if (retryCount < maxRetries) {
+                    // 短暂等待后重试
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }
         }
-        userCache.putUserToCache(userEntity);
-        return userEntity;
+
+        // 所有重试都失败了，降级处理
+        log.warn("获取用户信息失败，userId={}, retryCount={}", userId, retryCount);
+        return queryUserFromDatabase(userId); // 直接查询数据库，接受缓存击穿风险
+    }
+
+    private UserEntity queryUserFromDatabase(String userId) {
+        try {
+            Optional<UserBaseDO> userBaseDOOptional = userBaseRepository.findByIdAndTenantId(userId, TenantIdContext.getTenantId());
+            if (userBaseDOOptional.isEmpty()) {
+                log.error("找不到用户，用户ID={}", userId);
+                return null;
+            }
+
+            // 构建UserEntity对象
+            UserEntity userEntity = this.userDomainMapper.toEntity(userBaseDOOptional.get());
+
+            // 查询并设置账号信息
+            UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
+            userEntity.setAccessToken(this.userDomainMapper.toEntity(accessTokenDO));
+
+            // 查询并设置用户画像信息
+            UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
+            if (null != userProfileDO) {
+                userEntity.setUserProfile(this.userDomainMapper.toEntity(userProfileDO));
+            }
+
+            // 存入缓存
+            userCache.putUserToCache(userEntity);
+            return userEntity;
+        } catch (Exception e) {
+            log.error("查询用户信息失败，userId={}", userId, e);
+            throw new RuntimeException("查询用户信息失败", e);
+        }
     }
 
     @Autowired
@@ -169,5 +221,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Autowired
     public void setUserCache(UserCache userCache) {
         this.userCache = userCache;
+    }
+
+    @Autowired
+    public void setDistributedLockService(DistributedLockService distributedLockService) {
+        this.distributedLockService = distributedLockService;
     }
 }
