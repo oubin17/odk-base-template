@@ -5,7 +5,6 @@ import com.odk.base.enums.cache.CacheActionEnum;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.basedomain.cache.UserCache;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.model.user.UserBaseDO;
@@ -45,8 +44,6 @@ public class UserLoginManager implements IUserLoginManager {
     private UserIdentificationRepository identificationRepository;
 
     private IEncryption encryption;
-
-    private UserCache userCache;
 
     private IEventPublish eventPublish;
 
@@ -120,11 +117,6 @@ public class UserLoginManager implements IUserLoginManager {
     @Autowired
     public void setEncryption(IEncryption encryption) {
         this.encryption = encryption;
-    }
-
-    @Autowired
-    public void setUserCache(UserCache userCache) {
-        this.userCache = userCache;
     }
 
     @Autowired
