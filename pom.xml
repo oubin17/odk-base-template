@@ -8,11 +8,11 @@
         <version>3.0.2</version>
         <relativePath/>
     </parent>
-    <groupId>com.odk</groupId>
-    <artifactId>base-template</artifactId>
+    <groupId>com.odk.base</groupId>
+    <artifactId>template</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>base-template</name>
+    <name>odk-base-template</name>
     <description>Template demo project for Spring Boot3</description>
     <properties>
 
@@ -24,7 +24,7 @@
 
         <!-- odk版本 -->
         <parent-odk-version>1.0-SNAPSHOT</parent-odk-version>
-        <base-template>1.0-SNAPSHOT</base-template>
+        <odk-base-template-version>1.0-SNAPSHOT</odk-base-template-version>
         <odk-common-util-base>3.0.2-SNAPSHOT</odk-common-util-base>
         <database-spring-boot-starter>3.0.1-SNAPSHOT</database-spring-boot-starter>
         <redis-spring-boot-starter>3.0.2-SNAPSHOT</redis-spring-boot-starter>
@@ -96,57 +96,57 @@
 
             <!-- module dependency -->
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-web</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>web</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-rpc</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>rpc</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-bootstrap</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-api</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>api</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-domain</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>domain</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-infra</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>infra</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-util</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>util</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-service</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>service</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.odk</groupId>
-                <artifactId>base-manager</artifactId>
-                <version>${base-template}</version>
+                <groupId>com.odk.base</groupId>
+                <artifactId>manager</artifactId>
+                <version>${odk-base-template-version}</version>
             </dependency>
 
             <!--            开发工具包-->

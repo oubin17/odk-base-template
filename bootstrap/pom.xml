@@ -2,57 +2,57 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>base-bootstrap</artifactId>
-    <version>${base-template}</version>
+    <artifactId>bootstrap</artifactId>
+    <version>${odk-base-template-version}</version>
     <name>bootstrap</name>
     <description>bootstrap</description>
 
     <parent>
-        <groupId>com.odk</groupId>
-        <artifactId>base-template</artifactId>
+        <groupId>com.odk.base</groupId>
+        <artifactId>template</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-rpc</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>rpc</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-web</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-api</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-service</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>service</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-manager</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>manager</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-domain</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>domain</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-infra</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>infra</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-util</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>util</artifactId>
         </dependency>
 
     </dependencies>

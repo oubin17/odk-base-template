@@ -2,14 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.odk</groupId>
-    <artifactId>base-api</artifactId>
-    <version>${base-template}</version>
+    <artifactId>api</artifactId>
+    <version>${odk-base-template-version}</version>
     <name>api</name>
     <description>api</description>
     <parent>
-        <groupId>com.odk</groupId>
-        <artifactId>base-template</artifactId>
+        <groupId>com.odk.base</groupId>
+        <artifactId>template</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
@@ -26,8 +25,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.odk</groupId>
-            <artifactId>base-util</artifactId>
+            <groupId>com.odk.base</groupId>
+            <artifactId>util</artifactId>
         </dependency>
 
         <dependency>
