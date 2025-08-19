@@ -5,6 +5,7 @@ import cn.dev33.satoken.router.SaRouter;
 import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.userinfo.RoleContext;
 import com.odk.baseutil.userinfo.SessionContext;
+import com.odk.baseweb.interceptor.tenantid.SupportTenantIdInterceptor;
 import com.odk.baseweb.interceptor.tenantid.TenantIdInterceptor;
 import com.odk.baseweb.interceptor.tracer.TracerIdInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +49,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 设置租户
         registry.addInterceptor(new TenantIdInterceptor());
+        registry.addInterceptor(new SupportTenantIdInterceptor());
         //trace id
         registry.addInterceptor(new TracerIdInterceptor());
         //注册 Sa-Token 拦截器，打开注解式鉴权功能

@@ -1,10 +1,13 @@
 package com.odk.baseutil.userinfo;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.odk.base.context.TenantIdContext;
 
 /**
  * SessionContext
  * 用户登录 Session 管理器，核心依赖 SaToken 接口能力
+ *
+ * important: 这里的 loginId，添加了租户信息，以支持多租户，但是对外无感知。数据库存储的 key 样式：userId:tenantId
  *
  * @description:
  * @version: 1.0
@@ -15,6 +18,9 @@ public class SessionContext {
     private SessionContext() {}
 
     /**
+     *
+     * important 登录 ID 样式： userId:tenantId
+     *
      * 创建登录session，这时候会生成token
      * token格式： key: okd-token:login:token:{token} value: loginId
      *
@@ -22,7 +28,7 @@ public class SessionContext {
      * @param loginId
      */
     public static void createLoginSession(Object loginId) {
-        StpUtil.login(loginId);
+        StpUtil.login(loginId + ":" + TenantIdContext.getTenantId());
     }
 
     /**
@@ -48,10 +54,20 @@ public class SessionContext {
     /**
      * 获取当前用户登录ID，如果用户未登录，抛异常NotLoginException
      *
+     *
      * @return
      */
     public static String getLoginIdWithCheck() {
-        return StpUtil.getLoginIdAsString();
+        return StpUtil.getLoginIdAsString().split(":")[0];
+    }
+
+    /**
+     * 获取当前登录的用户租户 id
+     *
+     * @return
+     */
+    public static String getTenantIdWithCheck() {
+        return StpUtil.getLoginIdAsString().split(":")[1];
     }
 
     /**
@@ -85,5 +101,14 @@ public class SessionContext {
      */
     public static void checkLogin() {
         StpUtil.checkLogin();
+    }
+
+    /**
+     * 获取登录 token
+     *
+     * @return
+     */
+    public static String getToken() {
+        return StpUtil.getTokenInfo().getTokenValue();
     }
 }

@@ -63,7 +63,7 @@ public class RoleManager implements IRoleManager {
     public Boolean deleteRole(String roleId) {
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
         AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
-        AssertUtil.equal(userRoleDO.get().getTenantId(), TenantIdContext.getTenantId(), BizErrorCode.TENANT_ILLEGAL);
+        AssertUtil.equal(userRoleDO.get().getTenantId(), TenantIdContext.getTenantId(), BizErrorCode.PARAM_ILLEGAL);
         UserRoleDO updateUserRoleDO = userRoleDO.get();
         updateUserRoleDO.setStatus(CommonStatusEnum.DELETE.getCode());
         userRoleRepository.save(userRoleDO.get());
@@ -91,7 +91,7 @@ public class RoleManager implements IRoleManager {
 
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
         AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
-        AssertUtil.equal(userRoleDO.get().getTenantId(), TenantIdContext.getTenantId(), BizErrorCode.TENANT_ILLEGAL);
+        AssertUtil.equal(userRoleDO.get().getTenantId(), TenantIdContext.getTenantId(), BizErrorCode.PARAM_ILLEGAL);
         UserRoleRelDO roleRelDO = new UserRoleRelDO();
         roleRelDO.setUserId(userId);
         roleRelDO.setRoleId(roleId);

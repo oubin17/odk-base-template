@@ -37,9 +37,14 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BizException.class)
     public ResponseEntity<ServiceResponse<Void>> handleBizException(BizException e) {
-        log.error("业务异常", e);
+        log.error("发生预期外异常", e);
         // 处理校验异常，可以根据需要返回适当的响应
-        return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        if (e.getErrorCode() == null) {
+            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode(), e.getMessage()), HttpStatus.BAD_REQUEST);
+
+        }
     }
 
     /**

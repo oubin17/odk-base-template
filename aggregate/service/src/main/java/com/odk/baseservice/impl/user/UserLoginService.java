@@ -1,6 +1,5 @@
 package com.odk.baseservice.impl.user;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
@@ -108,7 +107,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             protected void afterProcess(BaseResponse response) {
                 if (response.isSuccess()) {
                     ServiceResponse<UserLoginResponse> userLoginResponseServiceResponse = (ServiceResponse<UserLoginResponse>) response;
-                    userLoginResponseServiceResponse.getData().setToken(StpUtil.getTokenInfo().getTokenValue());
+                    userLoginResponseServiceResponse.getData().setToken(SessionContext.getToken());
                 }
             }
         });
