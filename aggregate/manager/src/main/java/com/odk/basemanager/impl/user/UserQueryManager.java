@@ -1,6 +1,8 @@
 package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
+import com.odk.base.vo.request.PageParamRequest;
+import com.odk.base.vo.response.PageResponse;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basemanager.api.user.IUserQueryManager;
@@ -76,6 +78,11 @@ public class UserQueryManager implements IUserQueryManager {
                 .userId(userAccessTokenDO.getUserId())
                 .build();
         return this.userQueryDomain.queryUser(build);
+    }
+
+    @Override
+    public PageResponse<UserEntity> queryUserList(PageParamRequest pageRequest) {
+        return this.userQueryDomain.queryUserList(pageRequest);
     }
 
     @Autowired

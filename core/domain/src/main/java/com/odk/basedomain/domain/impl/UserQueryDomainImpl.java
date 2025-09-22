@@ -3,6 +3,9 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.base.util.PageUtil;
+import com.odk.base.vo.request.PageParamRequest;
+import com.odk.base.vo.response.PageResponse;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
@@ -19,11 +22,14 @@ import com.odk.baseutil.userinfo.SessionContext;
 import com.odk.redisspringbootstarter.CacheableDataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -88,6 +94,18 @@ public class UserQueryDomainImpl implements UserQueryDomain {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PageResponse<UserEntity> queryUserList(PageParamRequest pageParamRequest) {
+        Pageable pageable = PageUtil.convertToPageRequest(pageParamRequest);
+        Page<UserBaseDO> byTenantId = userBaseRepository.findByTenantId(TenantIdContext.getTenantId(), pageable);
+        List<UserEntity> userEntities = byTenantId.getContent().stream()
+                .map(UserBaseDO::getId)
+                .map(this::getUserInfo)
+                .collect(Collectors.toList());
+        return PageResponse.of(userEntities, (int) byTenantId.getTotalElements());
+    }
+
+
     /**
      * 根据tokenType和tokenValue查找用户
      *
@@ -119,8 +137,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity getUserInfo(String userId) {
-        return cacheableDataService.getOrCreateWithExpireTime(
+        return cacheableDataService.getOrCreate(
                 UserInfoConstants.USER_CACHE_KEY_PREFIX + userId,
+                7,
+                TimeUnit.DAYS,
                 UserInfoConstants.USER_LOCK_PREFIX + userId,
                 userId,
                 this::queryUserFromDatabase);

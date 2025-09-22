@@ -1,6 +1,8 @@
 package com.odk.basedomain.repository.user;
 
 import com.odk.basedomain.model.user.UserBaseDO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -73,4 +75,13 @@ import java.util.Optional;
 public interface UserBaseRepository extends JpaRepository<UserBaseDO, String> {
 
     Optional<UserBaseDO> findByIdAndTenantId(String id, String tenantId);
+
+    /**
+     * 分页查找
+     *
+     * @param tenantId
+     * @param pageable
+     * @return
+     */
+    Page<UserBaseDO> findByTenantId(String tenantId, Pageable pageable);
 }

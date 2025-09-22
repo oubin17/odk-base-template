@@ -18,6 +18,8 @@ public enum BizScene {
 
     USER_QUERY("USER_QUERY", "用户查询"),
 
+    USER_LIST_QUERY("USER_LIST_QUERY", "用户列表查询"),
+
     USER_PROFILE_UPDATE("USER_PROFILE_UPDATE", "用户信息更新"),
 
     USER_PERMISSION_QUERY("USER_PERMISSION_QUERY", "用户权限查询"),
