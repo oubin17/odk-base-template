@@ -1,6 +1,6 @@
 package com.odk.baseutil.request.role;
 
-import com.odk.base.vo.request.PageRequest;
+import com.odk.base.vo.request.PageParamRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +15,7 @@ import java.io.Serial;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PermissionQueryRequest extends PageRequest {
+public class PermissionQueryRequest extends PageParamRequest {
 
     @Serial
     private static final long serialVersionUID = 8724274869827098577L;

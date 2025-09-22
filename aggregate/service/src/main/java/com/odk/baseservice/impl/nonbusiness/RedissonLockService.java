@@ -23,7 +23,7 @@ public class RedissonLockService extends AbstractApiImpl implements RedissonLock
 
     @Override
     public ServiceResponse<Boolean> lock(String lockKey) {
-        return super.bizProcess(BizScene.USER_QUERY, lockKey, new AbstractApiImpl.ApiCallBack<Boolean, Boolean>() {
+        return super.bizProcess(BizScene.REDISSON_LOCK_LOCK, lockKey, new AbstractApiImpl.ApiCallBack<Boolean, Boolean>() {
 
             @Override
             protected Boolean doProcess(Object args) {

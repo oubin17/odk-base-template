@@ -44,7 +44,7 @@ public class PermissionManager implements IPermissionManager {
         List<PermissionDO> allRolePermission;
         if (StringUtils.isBlank(queryRequest.getRoleId())) {
             //分页查全部
-            Pageable pageable = Pageable.ofSize(queryRequest.getPageSize()).withPage(queryRequest.getPageNo() - 1);
+            Pageable pageable = Pageable.ofSize(queryRequest.getSize()).withPage(queryRequest.getPage() - 1);
             Page<PermissionDO> all = permissionRepository.findAll(pageable);
             allRolePermission = all.toList();
         } else {

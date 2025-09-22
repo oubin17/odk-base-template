@@ -45,7 +45,9 @@ public enum BizScene {
 
     VERIFICATION_CODE_COMPARE("VERIFICATION_CODE_COMPARE", "验证码校验"),
 
+    EXCEL_UPLOAD("EXCEL_UPLOAD", "上传Excel"),
 
+    REDISSON_LOCK_LOCK("REDISSON_LOCK_LOCK", "分布式锁"),
 
 
     ;
