@@ -1,9 +1,6 @@
 package com.odk.basedomain.domain;
 
 import com.odk.baseutil.entity.PermissionEntity;
-import com.odk.baseutil.entity.RoleEntity;
-
-import java.util.List;
 
 /**
  * PermissionDomain

@@ -19,8 +19,11 @@ public class UserCacheCleanEvent {
     /**
      * 用户 ID
      */
-    private String userId;
+    private String key;
 
+    /**
+     * 更新场景
+     */
     private UserCacheSceneEnum cacheScene;
 
     /**

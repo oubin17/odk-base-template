@@ -3,6 +3,7 @@ package com.odk.basedomain.cache.impl;
 import com.odk.basedomain.cache.CacheProcess;
 import com.odk.baseutil.enums.UserCacheSceneEnum;
 import com.odk.redisspringbootstarter.CacheableDataService;
+import com.odk.redisspringbootstarter.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,16 @@ public abstract class AbstractCacheProcess<T> implements CacheProcess<T> {
 
     protected CacheableDataService cacheableDataService;
 
+    protected RedisUtil redisUtil;
+
     @Override
     public T getCache(String key) {
         return cacheableDataService.getOrCreate(UserCacheSceneEnum.generateCacheKey(getCacheScene(), key), UserCacheSceneEnum.generateLockKey(getCacheScene(), key), getCacheTimeout(), () -> getDbData(key));
+    }
+
+    @Override
+    public void evictCache(String key) {
+        redisUtil.delete(UserCacheSceneEnum.generateCacheKey(getCacheScene(), key));
     }
 
     /**
@@ -37,5 +45,10 @@ public abstract class AbstractCacheProcess<T> implements CacheProcess<T> {
     @Autowired
     public void setCacheableDataService(CacheableDataService cacheableDataService) {
         this.cacheableDataService = cacheableDataService;
+    }
+
+    @Autowired
+    public void setRedisUtil(RedisUtil redisUtil) {
+        this.redisUtil = redisUtil;
     }
 }

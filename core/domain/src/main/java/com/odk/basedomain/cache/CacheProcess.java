@@ -3,7 +3,7 @@ package com.odk.basedomain.cache;
 import com.odk.baseutil.enums.UserCacheSceneEnum;
 
 /**
- * CacheManager
+ * 用于用户相关的缓存管理，需要在{@link UserCacheSceneEnum} 中维护缓存场景
  *
  * @description:
  * @version: 1.0
@@ -18,6 +18,13 @@ public interface CacheProcess<T> {
      * @return
      */
     T getCache(String key);
+
+    /**
+     * 删除缓存数据
+     *
+     * @param key
+     */
+    void evictCache(String key);
 
     /**
      * 当缓存未空时，获取数据库数据

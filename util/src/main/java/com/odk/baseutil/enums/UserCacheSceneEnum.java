@@ -11,10 +11,12 @@ import com.odk.base.enums.IEnum;
  */
 public enum UserCacheSceneEnum implements IEnum {
 
-    USER_BASIC("basic", "用户信息"),
-    USER_PROFILE("profile", "用户信息"),
+    USER_BASIC("basic", "用户基本信息"),
+
+    USER_ACCESS_TOKEN("accessToken", "用户账号"),
+    USER_PROFILE("profile", "用户画像"),
     USER_ROLE("role", "用户角色"),
-    USER_PERMISSION("permission", "用户权限"),
+//    USER_PERMISSION("permission", "用户权限"),
     ;
 
     private final String code;

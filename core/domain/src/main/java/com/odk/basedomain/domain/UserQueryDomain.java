@@ -33,7 +33,6 @@ public interface UserQueryDomain {
      */
     List<UserEntity> queryUserList(UserListQueryCriteria criteria);
 
-
     /**
      * 分页查找
      *
@@ -41,40 +40,5 @@ public interface UserQueryDomain {
      * @return
      */
     PageResponse<UserEntity> queryUserList(PageParamRequest pageParamRequest);
-
-//    /**
-//     * 根据用户id查找
-//     *
-//     * @param userId
-//     * @return
-//     */
-//    UserEntity queryByUserId(String userId);
-//
-//    /**
-//     * 根据用户id查找，如果不存在，抛异常
-//     *
-//     * @param userId
-//     * @return
-//     */
-//    UserEntity queryByUserIdAndCheck(String userId);
-//
-//    /**
-//     * 从 session 中获取用户信息
-//     *
-//     * @return
-//     */
-//    UserEntity queryBySession();
-//
-//
-//    UserEntity queryBySessionAndCheck();
-//
-//    /**
-//     * 根据登录id查找
-//     *
-//     * @param
-//     * @param tokenValue
-//     * @return
-//     */
-//    UserEntity queryByLoginTypeAndLoginId(String tokenType, String tokenValue);
 
 }

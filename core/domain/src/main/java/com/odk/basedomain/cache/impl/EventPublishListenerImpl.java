@@ -1,13 +1,11 @@
 package com.odk.basedomain.cache.impl;
 
 import com.odk.basedomain.cache.EventPublishListener;
-import com.odk.basedomain.domain.UserQueryDomain;
-import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.baseutil.enums.UserCacheSceneEnum;
-import com.odk.baseutil.enums.UserQueryTypeEnum;
 import com.odk.baseutil.event.UserCacheCleanEvent;
 import com.odk.redisspringbootstarter.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +18,25 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+
 public class EventPublishListenerImpl implements EventPublishListener {
 
-    private final RedisUtil redisUtil;
-    private final UserQueryDomain userQueryDomain;
+    private RedisUtil redisUtil;
 
-    public EventPublishListenerImpl(RedisUtil redisUtil, UserQueryDomain userQueryDomain) {
-        this.redisUtil = redisUtil;
-        this.userQueryDomain = userQueryDomain;
-    }
-
+    /**
+     * 这里不管是什么场景，都直接删除缓存
+     * 获取缓存的场景都加了分布式锁，不会有缓存击穿问题
+     *
+     * @param event
+     */
     @EventListener
     @Override
     public void handleEvent(UserCacheCleanEvent event) {
-        redisUtil.delete(UserCacheSceneEnum.generateCacheKey(event.getCacheScene(), event.getUserId()));
-        switch (event.getAction()) {
-            case ADD, UPDATE -> userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(event.getUserId()).build());
-            case DELETE -> {
-            }
-        }
+        redisUtil.delete(UserCacheSceneEnum.generateCacheKey(event.getCacheScene(), event.getKey()));
+    }
+
+    @Autowired
+    public void setRedisUtil(RedisUtil redisUtil) {
+        this.redisUtil = redisUtil;
     }
 }

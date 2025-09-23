@@ -12,8 +12,6 @@ import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
-import com.odk.baseutil.entity.RoleEntity;
-import com.odk.redisspringbootstarter.CacheableDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
