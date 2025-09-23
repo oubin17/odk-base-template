@@ -3,7 +3,7 @@ package com.odk.basedomain.cache.impl;
 import com.odk.basedomain.cache.EventPublishListener;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
-import com.odk.baseutil.constants.UserInfoConstants;
+import com.odk.baseutil.enums.UserCacheSceneEnum;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
 import com.odk.baseutil.event.UserCacheCleanEvent;
 import com.odk.redisspringbootstarter.RedisUtil;
@@ -33,7 +33,7 @@ public class EventPublishListenerImpl implements EventPublishListener {
     @EventListener
     @Override
     public void handleEvent(UserCacheCleanEvent event) {
-        redisUtil.delete(UserInfoConstants.USER_CACHE_KEY_PREFIX + event.getUserId());
+        redisUtil.delete(UserCacheSceneEnum.generateCacheKey(event.getCacheScene(), event.getUserId()));
         switch (event.getAction()) {
             case ADD, UPDATE -> userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(event.getUserId()).build());
             case DELETE -> {

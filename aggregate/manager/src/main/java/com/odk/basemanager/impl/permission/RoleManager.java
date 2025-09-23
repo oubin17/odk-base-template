@@ -1,7 +1,6 @@
 package com.odk.basemanager.impl.permission;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.base.enums.cache.CacheActionEnum;
 import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
@@ -17,7 +16,6 @@ import com.odk.basemanager.api.permission.IRoleManager;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
-import com.odk.baseutil.event.UserCacheCleanEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +99,6 @@ public class RoleManager implements IRoleManager {
         roleRelDO.setUserId(userId);
         roleRelDO.setRoleId(roleId);
         UserRoleRelDO save = relRepository.save(roleRelDO);
-        eventPublish.publish(new UserCacheCleanEvent(userId, CacheActionEnum.UPDATE));
 
         return save.getId();
     }

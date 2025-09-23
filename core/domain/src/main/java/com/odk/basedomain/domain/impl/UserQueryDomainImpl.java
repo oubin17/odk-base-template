@@ -6,19 +6,19 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.util.PageUtil;
 import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
-import com.odk.basedomain.domain.PermissionDomain;
+import com.odk.basedomain.cache.impl.AbstractCacheProcess;
+import com.odk.basedomain.domain.RoleDomain;
+import com.odk.basedomain.domain.UserProfileDomain;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.mapper.UserDomainMapper;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.model.user.UserBaseDO;
-import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
-import com.odk.basedomain.repository.user.UserProfileRepository;
-import com.odk.baseutil.constants.UserInfoConstants;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.enums.UserCacheSceneEnum;
 import com.odk.baseutil.userinfo.SessionContext;
 import com.odk.redisspringbootstarter.CacheableDataService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -42,19 +41,17 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class UserQueryDomainImpl implements UserQueryDomain {
+public class UserQueryDomainImpl extends AbstractCacheProcess<UserEntity> implements UserQueryDomain {
 
     private UserBaseRepository userBaseRepository;
 
     private UserAccessTokenRepository accessTokenRepository;
 
-    private UserProfileRepository userProfileRepository;
-
     private UserDomainMapper userDomainMapper;
 
-    private CacheableDataService cacheableDataService;
+    private RoleDomain roleDomain;
 
-    private PermissionDomain permissionDomain;
+    private UserProfileDomain userProfileDomain;
 
     @Override
     public UserEntity queryUser(UserQueryCriteria criteria) {
@@ -140,18 +137,35 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity getUserInfo(String userId) {
-        UserEntity userEntity = cacheableDataService.getOrCreate(
-                UserInfoConstants.USER_CACHE_KEY_PREFIX + userId,
-                7,
-                TimeUnit.DAYS,
-                UserInfoConstants.USER_LOCK_PREFIX + userId,
-                userId,
-                this::queryUserFromDatabase);
-        if (userEntity != null) {
-            userEntity.setRoles(permissionDomain.getRoleListByUserId(userId));
+        UserEntity cache = getCache(userId);
+        if (cache != null) {
+            cache.setRoles(roleDomain.getRoleListByUserId(userId));
+            cache.setUserProfile(userProfileDomain.getUserProfileByUserId(userId));
         }
-        return userEntity;
+        return cache;
 
+    }
+
+    @Override
+    public UserEntity getDbData(String key) {
+        Optional<UserBaseDO> userBaseDOOptional = userBaseRepository.findByIdAndTenantId(key, TenantIdContext.getTenantId());
+        if (userBaseDOOptional.isEmpty()) {
+            log.error("找不到用户，用户ID={}", key);
+            return null;
+        }
+        // 构建UserEntity对象
+        UserEntity userEntity = this.userDomainMapper.toEntity(userBaseDOOptional.get());
+
+        // 查询并设置账号信息
+        UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserIdAndTenantId(key, TenantIdContext.getTenantId());
+        userEntity.setAccessToken(this.userDomainMapper.toEntity(accessTokenDO));
+
+        return userEntity;
+    }
+
+    @Override
+    public UserCacheSceneEnum getCacheScene() {
+        return UserCacheSceneEnum.USER_BASIC;
     }
 
     /**
@@ -173,11 +187,6 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
         userEntity.setAccessToken(this.userDomainMapper.toEntity(accessTokenDO));
 
-        // 查询并设置用户画像信息
-        UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
-        if (null != userProfileDO) {
-            userEntity.setUserProfile(this.userDomainMapper.toEntity(userProfileDO));
-        }
         return userEntity;
     }
 
@@ -192,11 +201,6 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     }
 
     @Autowired
-    public void setUserProfileRepository(UserProfileRepository userProfileRepository) {
-        this.userProfileRepository = userProfileRepository;
-    }
-
-    @Autowired
     public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
         this.userDomainMapper = userDomainMapper;
     }
@@ -206,8 +210,14 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         this.cacheableDataService = cacheableDataService;
     }
 
+
     @Autowired
-    public void setPermissionDomain(PermissionDomain permissionDomain) {
-        this.permissionDomain = permissionDomain;
+    public void setUserProfileDomain(UserProfileDomain userProfileDomain) {
+        this.userProfileDomain = userProfileDomain;
+    }
+
+    @Autowired
+    public void setRoleDomain(RoleDomain roleDomain) {
+        this.roleDomain = roleDomain;
     }
 }

@@ -22,11 +22,4 @@ public interface PermissionDomain {
      */
     PermissionEntity getPermissionByUserId(String userId);
 
-    /**
-     * 根据用户 id 查找角色（不包含权限）
-     *
-     * @param userId
-     * @return
-     */
-    List<RoleEntity> getRoleListByUserId(String userId);
 }

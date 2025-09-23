@@ -60,11 +60,6 @@ public class PermissionDomainImpl implements PermissionDomain {
 
     }
 
-    @Override
-    public List<RoleEntity> getRoleListByUserId(String userId) {
-        List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId, TenantIdContext.getTenantId());
-        return userDomainMapper.toRoleEntities(userRoleDOS);
-    }
 
     /**
      * DO -> DTO

@@ -16,9 +16,13 @@ public final class UserInfoConstants {
 
 
     //缓存 key 相关 ---------------------------------------------------------------------------------------------------------
-    public static final String USER_CACHE_KEY_PREFIX = "user:info:";
+    public static final String USER_CACHE_KEY_PREFIX = "user:basic:info:";
 
-    public static final String USER_LOCK_PREFIX = "user:lock:";
+    public static final String USER_PROFILE_CACHE_KEY_PREFIX = "user:profile:info";
+
+    public static final String USER_LOCK_PREFIX = "user:basic:lock:";
+
+    public static final String USER_PROFILE_LOCK_PREFIX = "user:profile:lock:";
 
 
 

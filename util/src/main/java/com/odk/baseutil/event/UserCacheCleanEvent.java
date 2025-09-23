@@ -1,6 +1,7 @@
 package com.odk.baseutil.event;
 
 import com.odk.base.enums.cache.CacheActionEnum;
+import com.odk.baseutil.enums.UserCacheSceneEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,6 +20,8 @@ public class UserCacheCleanEvent {
      * 用户 ID
      */
     private String userId;
+
+    private UserCacheSceneEnum cacheScene;
 
     /**
      * 缓存事件

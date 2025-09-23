@@ -17,6 +17,7 @@ import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.enums.UserCacheSceneEnum;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
 import com.odk.baseutil.event.UserCacheCleanEvent;
 import com.odk.baseutil.userinfo.SessionContext;
@@ -88,7 +89,7 @@ public class UserLoginManager implements IUserLoginManager {
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
-        eventPublish.publish(new UserCacheCleanEvent(byUserId.get().getId(), CacheActionEnum.DELETE));
+        eventPublish.publish(new UserCacheCleanEvent(byUserId.get().getId(), UserCacheSceneEnum.USER_BASIC, CacheActionEnum.DELETE));
         SessionContext.logOut();
         return true;
     }

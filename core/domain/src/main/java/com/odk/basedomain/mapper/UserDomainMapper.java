@@ -31,6 +31,8 @@ public interface UserDomainMapper {
 
     UserProfileEntity toEntity(UserProfileDO userProfileDO);
 
+    RoleEntity toEntity(UserRoleDO userRoleDO);
+
     UserRoleDTO toDTO(UserRoleDO userRoleDO);
 
     List<RoleEntity> toRoleEntities(List<UserRoleDO> userRoleDOS);

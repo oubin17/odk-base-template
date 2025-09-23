@@ -8,6 +8,7 @@ import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.basemanager.api.common.IEventPublish;
 import com.odk.basemanager.api.user.IUserProfileManager;
 import com.odk.baseutil.dto.user.UserProfileDTO;
+import com.odk.baseutil.enums.UserCacheSceneEnum;
 import com.odk.baseutil.event.UserCacheCleanEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UserProfileManager implements IUserProfileManager {
         UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userProfileDTO.getUserId(), TenantIdContext.getTenantId());
         userProfileMapper.merge(userProfileDTO, userProfileDO);
         userProfileRepository.save(userProfileDO);
-        eventPublish.publish(new UserCacheCleanEvent(userProfileDTO.getUserId(), CacheActionEnum.UPDATE));
+        eventPublish.publish(new UserCacheCleanEvent(userProfileDTO.getUserId(), UserCacheSceneEnum.USER_PROFILE, CacheActionEnum.UPDATE));
 
         return true;
     }
