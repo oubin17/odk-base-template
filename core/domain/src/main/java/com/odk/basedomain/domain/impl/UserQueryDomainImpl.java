@@ -6,6 +6,7 @@ import com.odk.base.exception.BizErrorCode;
 import com.odk.base.util.PageUtil;
 import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
+import com.odk.basedomain.domain.PermissionDomain;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
@@ -52,6 +53,8 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     private UserDomainMapper userDomainMapper;
 
     private CacheableDataService cacheableDataService;
+
+    private PermissionDomain permissionDomain;
 
     @Override
     public UserEntity queryUser(UserQueryCriteria criteria) {
@@ -137,13 +140,17 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return
      */
     private UserEntity getUserInfo(String userId) {
-        return cacheableDataService.getOrCreate(
+        UserEntity userEntity = cacheableDataService.getOrCreate(
                 UserInfoConstants.USER_CACHE_KEY_PREFIX + userId,
                 7,
                 TimeUnit.DAYS,
                 UserInfoConstants.USER_LOCK_PREFIX + userId,
                 userId,
                 this::queryUserFromDatabase);
+        if (userEntity != null) {
+            userEntity.setRoles(permissionDomain.getRoleListByUserId(userId));
+        }
+        return userEntity;
 
     }
 
@@ -197,5 +204,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Autowired
     public void setCacheableDataService(CacheableDataService cacheableDataService) {
         this.cacheableDataService = cacheableDataService;
+    }
+
+    @Autowired
+    public void setPermissionDomain(PermissionDomain permissionDomain) {
+        this.permissionDomain = permissionDomain;
     }
 }

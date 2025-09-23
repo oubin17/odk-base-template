@@ -2,16 +2,18 @@ package com.odk.basedomain.domain.impl;
 
 import com.google.common.collect.Lists;
 import com.odk.base.context.TenantIdContext;
-import com.odk.basedomain.model.permission.PermissionDO;
-import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.domain.PermissionDomain;
 import com.odk.basedomain.mapper.PermissionDomainMapper;
 import com.odk.basedomain.mapper.UserDomainMapper;
+import com.odk.basedomain.model.permission.PermissionDO;
+import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.repository.permission.PermissionRepository;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.baseutil.dto.permission.PermissionDTO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
+import com.odk.baseutil.entity.RoleEntity;
+import com.odk.redisspringbootstarter.CacheableDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,12 @@ public class PermissionDomainImpl implements PermissionDomain {
 
     }
 
+    @Override
+    public List<RoleEntity> getRoleListByUserId(String userId) {
+        List<UserRoleDO> userRoleDOS = userRoleRepository.findAllUserRole(userId, TenantIdContext.getTenantId());
+        return userDomainMapper.toRoleEntities(userRoleDOS);
+    }
+
     /**
      * DO -> DTO
      *
@@ -97,4 +105,5 @@ public class PermissionDomainImpl implements PermissionDomain {
     public void setPermissionDomainMapper(PermissionDomainMapper permissionDomainMapper) {
         this.permissionDomainMapper = permissionDomainMapper;
     }
+
 }

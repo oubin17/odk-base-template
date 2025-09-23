@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * UserEntity
@@ -38,6 +39,11 @@ public class UserEntity implements Serializable {
      * 登录账号
      */
     private AccessTokenEntity accessToken;
+
+    /**
+     * 用户角色
+     */
+    private List<RoleEntity> roles;
 
     /**
      * 用户画像

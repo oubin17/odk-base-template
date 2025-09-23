@@ -6,10 +6,13 @@ import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.AccessTokenEntity;
+import com.odk.baseutil.entity.RoleEntity;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.entity.UserProfileEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
 
 /**
  * UserDomainMapper
@@ -29,4 +32,6 @@ public interface UserDomainMapper {
     UserProfileEntity toEntity(UserProfileDO userProfileDO);
 
     UserRoleDTO toDTO(UserRoleDO userRoleDO);
+
+    List<RoleEntity> toRoleEntities(List<UserRoleDO> userRoleDOS);
 }
