@@ -39,6 +39,6 @@ public interface UserQueryDomain {
      * @param pageParamRequest
      * @return
      */
-    PageResponse<UserEntity> queryUserList(PageParamRequest pageParamRequest);
+    PageResponse<UserEntity> queryUserPageList(PageParamRequest pageParamRequest);
 
 }

@@ -47,6 +47,6 @@ public interface UserQueryApi {
      * @param pageRequest
      * @return
      */
-    ServiceResponse<PageResponse<UserEntity>> queryUserByUserId(PageParamRequest pageRequest);
+    ServiceResponse<PageResponse<UserEntity>> queryUserPageList(PageParamRequest pageRequest);
 
 }

@@ -91,12 +91,12 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
     }
 
     @Override
-    public ServiceResponse<PageResponse<UserEntity>> queryUserByUserId(PageParamRequest pageRequest) {
+    public ServiceResponse<PageResponse<UserEntity>> queryUserPageList(PageParamRequest pageRequest) {
         return super.bizProcess(BizScene.USER_LIST_QUERY, pageRequest, new ApiCallBack<PageResponse<UserEntity>, PageResponse<UserEntity>>() {
 
             @Override
             protected PageResponse<UserEntity> doProcess(Object args) {
-                return userQueryManager.queryUserList(pageRequest);
+                return userQueryManager.queryUserPageList(pageRequest);
             }
 
             @Override

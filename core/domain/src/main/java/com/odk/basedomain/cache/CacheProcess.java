@@ -27,7 +27,9 @@ public interface CacheProcess<T> {
     void evictCache(String key);
 
     /**
-     * 当缓存未空时，获取数据库数据
+     * 当缓存未空时，获取数据库数据，对于一对一的场景，id 可以是用户 id，对于一对多的场景，id 是表主键 id
+     * 根据 id 能够从数据库中查到的数据，对于大部分场景来说，id 就是用户 id
+     * 但是对于用户关联的角色而言，id 是角色 id，因为一个用户可以关联多个角色。
      *
      * @param key
      * @return

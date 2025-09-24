@@ -81,8 +81,8 @@ public class UserQueryManager implements IUserQueryManager {
     }
 
     @Override
-    public PageResponse<UserEntity> queryUserList(PageParamRequest pageRequest) {
-        return this.userQueryDomain.queryUserList(pageRequest);
+    public PageResponse<UserEntity> queryUserPageList(PageParamRequest pageRequest) {
+        return this.userQueryDomain.queryUserPageList(pageRequest);
     }
 
     @Autowired

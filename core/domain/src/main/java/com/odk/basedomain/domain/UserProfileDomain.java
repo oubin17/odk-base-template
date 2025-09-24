@@ -11,5 +11,11 @@ import com.odk.baseutil.entity.UserProfileEntity;
  */
 public interface UserProfileDomain {
 
+    /**
+     * 获取用户画像
+     *
+     * @param userId
+     * @return
+     */
     UserProfileEntity getUserProfileByUserId(String userId);
 }

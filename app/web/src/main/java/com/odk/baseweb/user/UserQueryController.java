@@ -1,12 +1,13 @@
 package com.odk.baseweb.user;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
-import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
-import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.request.UserListQueryRequest;
+import com.odk.baseutil.request.UserQueryRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,8 +57,8 @@ public class UserQueryController {
 
     @SaCheckRole(value = {"ADMIN"})
     @PostMapping("/list")
-    public ServiceResponse<PageResponse<UserEntity>> queryUserList(@RequestBody PageParamRequest pageRequest) {
-        return userQueryApi.queryUserByUserId(pageRequest);
+    public ServiceResponse<PageResponse<UserEntity>> queryUserList(@RequestBody @Valid UserListQueryRequest pageRequest) {
+        return userQueryApi.queryUserPageList(pageRequest);
     }
 
 

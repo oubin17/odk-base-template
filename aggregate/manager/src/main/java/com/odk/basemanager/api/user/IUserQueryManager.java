@@ -19,5 +19,5 @@ public interface IUserQueryManager {
 
     UserEntity queryByAccessToken(String tokenType, String tokenValue);
 
-    PageResponse<UserEntity> queryUserList(PageParamRequest pageRequest);
+    PageResponse<UserEntity> queryUserPageList(PageParamRequest pageRequest);
 }
