@@ -3,7 +3,6 @@ package com.odk.baseutil.threadpool;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -19,7 +18,6 @@ import java.util.concurrent.TimeUnit;
  * @author: oubin on 2025/4/22
  */
 @Configuration
-@EnableAsync
 public class AsyncConfig {
 
     public static final Executor COMMON_EXECUTOR = new ThreadPoolExecutor(

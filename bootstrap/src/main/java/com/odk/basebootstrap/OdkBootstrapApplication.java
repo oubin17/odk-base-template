@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {"com.odk"})
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 //开启审计功能，自动添加时间
 @EnableJpaAuditing
 @EnableScheduling
+@EnableAsync
 public class OdkBootstrapApplication {
 
     public static void main(String[] args) {
