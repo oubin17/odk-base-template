@@ -3,6 +3,7 @@ package com.odk.baseapi.inter.nonbusiness;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseutil.request.excel.ExcelUploadRequest;
 import com.odk.baseutil.response.ExcelUploadResponse;
+import org.springframework.core.io.Resource;
 
 /**
  * ExcelApi
@@ -14,5 +15,9 @@ import com.odk.baseutil.response.ExcelUploadResponse;
 public interface ExcelApi {
 
     ServiceResponse<ExcelUploadResponse> upload(ExcelUploadRequest excelUploadRequest);
+
+
+    ServiceResponse<Resource> export();
+
 
 }

@@ -49,6 +49,8 @@ public enum BizScene {
 
     EXCEL_UPLOAD("EXCEL_UPLOAD", "上传Excel"),
 
+    EXCEL_DOWNLOAD("EXCEL_DOWNLOAD", "下载Excel"),
+
     REDISSON_LOCK_LOCK("REDISSON_LOCK_LOCK", "分布式锁"),
 
 

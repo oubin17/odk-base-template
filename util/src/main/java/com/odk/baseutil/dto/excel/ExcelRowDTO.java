@@ -23,16 +23,16 @@ public class ExcelRowDTO extends DTO {
     @ExcelProperty(value = "姓名", index = 0)
     private String name;
 
-    @ExcelProperty(value = "姓名", index = 1)
+    @ExcelProperty(value = "手机号", index = 1)
     private String mobile;
 
-    @ExcelProperty(value = "姓名", index = 2)
+    @ExcelProperty(value = "性别", index = 2)
     private String gender;
 
-    @ExcelProperty(value = "姓名", index = 3)
+    @ExcelProperty(value = "年龄", index = 3)
     private String age;
 
-    @ExcelProperty(value = "姓名", index = 4)
+    @ExcelProperty(value = "身份证", index = 4)
     private String idNo;
 
 

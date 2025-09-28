@@ -6,6 +6,10 @@ import com.odk.baseapi.inter.nonbusiness.ExcelApi;
 import com.odk.baseutil.request.excel.ExcelUploadRequest;
 import com.odk.baseutil.response.ExcelUploadResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +45,22 @@ public class ExcelController {
         uploadRequest.setFileName(file.getOriginalFilename());
         return this.excelApi.upload(uploadRequest);
     }
+
+    @SaIgnore
+    @PostMapping("/export")
+    public ResponseEntity<Resource> export() {
+        ServiceResponse<Resource> export = excelApi.export();
+        Resource resource = export.getData();
+
+        if (resource == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_info.xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
 
     @Autowired
     public void setExcelApi(ExcelApi excelApi) {
