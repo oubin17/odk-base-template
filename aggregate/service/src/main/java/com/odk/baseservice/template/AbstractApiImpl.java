@@ -342,11 +342,29 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private String buildResponseDigestLog(Object object) {
+        String responseStr = "-";
+        if (object != null) {
+            // 检查是否为文件资源类型，避免序列化异常
+            if (object instanceof org.springframework.core.io.Resource ||
+                    object instanceof java.io.InputStream ||
+                    object instanceof java.io.OutputStream ||
+                    object instanceof byte[]) {
+                responseStr = object.getClass().getSimpleName() + "(binary data)";
+            } else {
+                try {
+                    responseStr = StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-");
+                } catch (Exception e) {
+                    // 序列化失败时，使用对象类型信息
+                    responseStr = object.getClass().getSimpleName() + "(serialization failed)";
+                }
+            }
+        }
+
         return String.format("[%s,%s,%s,%s]",
                 ServiceContextHolder.getSceneCode().getCode(),
                 SessionContext.getLoginIdOrDefault("-"),
                 "RESPONSE",
-                StringUtils.defaultIfBlank(JacksonUtil.toJsonString(object), "-"));
+                responseStr);
     }
 
     /**
