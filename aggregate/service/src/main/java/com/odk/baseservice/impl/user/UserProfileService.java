@@ -36,15 +36,13 @@ public class UserProfileService extends AbstractApiImpl implements UserProfileAp
             @Override
             protected Object convert(BaseRequest request) {
                 UserProfileRequest profileRequest = (UserProfileRequest) request;
-                UserProfileDTO dto = userProfileRequestMapper.toDTO(profileRequest);
-                dto.setUserId(SessionContext.getLoginIdWithCheck());
-                return dto;
+                return userProfileRequestMapper.toDTO(profileRequest);
             }
 
             @Override
             protected Boolean doProcess(Object args) {
                 UserProfileDTO profileRequest = (UserProfileDTO) args;
-                return userProfileManager.updateUserProfile(profileRequest);
+                return userProfileManager.updateUserProfile(SessionContext.getLoginIdWithCheck(), profileRequest);
             }
 
             @Override

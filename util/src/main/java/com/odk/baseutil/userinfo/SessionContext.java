@@ -18,6 +18,16 @@ public class SessionContext {
     private SessionContext() {}
 
     /**
+     * 获取转换后的登录 id
+     *
+     * @param loginId
+     * @return
+     */
+    private static String getLoginId(String loginId) {
+        return loginId + ":" + TenantIdContext.getTenantId();
+    }
+
+    /**
      *
      * important 登录 ID 样式： userId:tenantId
      *
@@ -27,8 +37,8 @@ public class SessionContext {
      * session格式：key: odk-token:login:session:{loginId} value: {@link cn.dev33.satoken.session.SaSession}
      * @param loginId
      */
-    public static void createLoginSession(Object loginId) {
-        StpUtil.login(loginId + ":" + TenantIdContext.getTenantId());
+    public static void createLoginSession(String loginId) {
+        StpUtil.login(getLoginId(loginId));
     }
 
     /**
@@ -110,5 +120,14 @@ public class SessionContext {
      */
     public static String getToken() {
         return StpUtil.getTokenInfo().getTokenValue();
+    }
+
+    /**
+     * 踢人下线
+     *
+     * @param loginId
+     */
+    public static void kickOut(String loginId) {
+        StpUtil.kickout(getLoginId(loginId));
     }
 }

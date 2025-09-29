@@ -16,5 +16,5 @@ public interface IUserProfileManager {
      *
      * @param userProfileDTO
      */
-    boolean updateUserProfile(UserProfileDTO userProfileDTO);
+    boolean updateUserProfile(String userId, UserProfileDTO userProfileDTO);
 }

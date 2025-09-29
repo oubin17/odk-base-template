@@ -1,15 +1,13 @@
 package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.base.enums.cache.CacheActionEnum;
+import com.odk.basedomain.cache.pointcut.UserCacheClean;
 import com.odk.basedomain.mapper.UserProfileMapper;
 import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserProfileRepository;
-import com.odk.basemanager.api.common.IEventPublish;
 import com.odk.basemanager.api.user.IUserProfileManager;
 import com.odk.baseutil.dto.user.UserProfileDTO;
 import com.odk.baseutil.enums.UserCacheSceneEnum;
-import com.odk.baseutil.event.UserCacheCleanEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,15 +27,12 @@ public class UserProfileManager implements IUserProfileManager {
 
     private UserProfileMapper userProfileMapper;
 
-    private IEventPublish eventPublish;
-
-
     @Override
-    public boolean updateUserProfile(UserProfileDTO userProfileDTO) {
+    @UserCacheClean(scene = UserCacheSceneEnum.USER_PROFILE)
+    public boolean updateUserProfile(String userId, UserProfileDTO userProfileDTO) {
         UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userProfileDTO.getUserId(), TenantIdContext.getTenantId());
         userProfileMapper.merge(userProfileDTO, userProfileDO);
         userProfileRepository.save(userProfileDO);
-        eventPublish.publish(new UserCacheCleanEvent(userProfileDTO.getUserId(), UserCacheSceneEnum.USER_PROFILE, CacheActionEnum.UPDATE));
 
         return true;
     }
@@ -52,8 +47,4 @@ public class UserProfileManager implements IUserProfileManager {
         this.userProfileMapper = userProfileMapper;
     }
 
-    @Autowired
-    public void setEventPublish(IEventPublish eventPublish) {
-        this.eventPublish = eventPublish;
-    }
 }

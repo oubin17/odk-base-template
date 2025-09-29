@@ -1,10 +1,10 @@
 package com.odk.basemanager.impl.permission;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.base.enums.cache.CacheActionEnum;
 import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.basedomain.cache.pointcut.UserCacheClean;
 import com.odk.basedomain.domain.PermissionDomain;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
@@ -18,7 +18,6 @@ import com.odk.baseutil.dto.permission.UserRoleDTO;
 import com.odk.baseutil.entity.PermissionEntity;
 import com.odk.baseutil.enums.UserCacheSceneEnum;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
-import com.odk.baseutil.event.UserCacheCleanEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,11 +61,12 @@ public class RoleManager implements IRoleManager {
         addRole.setRoleName(roleName);
         addRole.setStatus(CommonStatusEnum.NORMAL.getCode());
         UserRoleDO save = userRoleRepository.save(addRole);
-        eventPublish.publish(new UserCacheCleanEvent(save.getId(), UserCacheSceneEnum.USER_ROLE, CacheActionEnum.ADD));
+//        eventPublish.publish(new UserCacheCleanEvent(save.getId(), UserCacheSceneEnum.USER_ROLE, CacheActionEnum.ADD));
         return save.getId();
     }
 
     @Override
+    @UserCacheClean(scene = UserCacheSceneEnum.USER_ROLE)
     public Boolean deleteRole(String roleId) {
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
         AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
@@ -74,7 +74,6 @@ public class RoleManager implements IRoleManager {
         UserRoleDO updateUserRoleDO = userRoleDO.get();
         updateUserRoleDO.setStatus(CommonStatusEnum.DELETE.getCode());
         userRoleRepository.save(userRoleDO.get());
-        eventPublish.publish(new UserCacheCleanEvent(roleId, UserCacheSceneEnum.USER_ROLE, CacheActionEnum.ADD));
         return true;
     }
 
