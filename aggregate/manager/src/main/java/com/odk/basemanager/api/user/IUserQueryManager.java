@@ -1,8 +1,8 @@
 package com.odk.basemanager.api.user;
 
-import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.request.UserListQueryRequest;
 
 /**
  * IUserQueryManager
@@ -19,5 +19,5 @@ public interface IUserQueryManager {
 
     UserEntity queryByAccessToken(String tokenType, String tokenValue);
 
-    PageResponse<UserEntity> queryUserPageList(PageParamRequest pageRequest);
+    PageResponse<UserEntity> queryUserPageList(UserListQueryRequest pageRequest);
 }

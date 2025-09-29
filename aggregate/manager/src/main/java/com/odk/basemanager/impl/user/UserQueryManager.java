@@ -1,15 +1,15 @@
 package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
-import com.odk.basemanager.api.user.IUserQueryManager;
-import com.odk.baseutil.entity.UserEntity;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
+import com.odk.basemanager.api.user.IUserQueryManager;
+import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
+import com.odk.baseutil.request.UserListQueryRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +81,7 @@ public class UserQueryManager implements IUserQueryManager {
     }
 
     @Override
-    public PageResponse<UserEntity> queryUserPageList(PageParamRequest pageRequest) {
+    public PageResponse<UserEntity> queryUserPageList(UserListQueryRequest pageRequest) {
         return this.userQueryDomain.queryUserPageList(pageRequest);
     }
 

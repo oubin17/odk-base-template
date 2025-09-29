@@ -2,7 +2,6 @@ package com.odk.baseservice.impl.user;
 
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
@@ -10,6 +9,7 @@ import com.odk.basemanager.api.user.IUserQueryManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.request.UserListQueryRequest;
 import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +91,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
     }
 
     @Override
-    public ServiceResponse<PageResponse<UserEntity>> queryUserPageList(PageParamRequest pageRequest) {
+    public ServiceResponse<PageResponse<UserEntity>> queryUserPageList(UserListQueryRequest pageRequest) {
         return super.bizProcess(BizScene.USER_LIST_QUERY, pageRequest, new ApiCallBack<PageResponse<UserEntity>, PageResponse<UserEntity>>() {
 
             @Override

@@ -1,10 +1,10 @@
 package com.odk.baseapi.inter.user;
 
-import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.base.vo.response.ServiceResponse;
-import com.odk.baseutil.request.UserQueryRequest;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.request.UserListQueryRequest;
+import com.odk.baseutil.request.UserQueryRequest;
 
 /**
  * UserQueryApi
@@ -47,6 +47,6 @@ public interface UserQueryApi {
      * @param pageRequest
      * @return
      */
-    ServiceResponse<PageResponse<UserEntity>> queryUserPageList(PageParamRequest pageRequest);
+    ServiceResponse<PageResponse<UserEntity>> queryUserPageList(UserListQueryRequest pageRequest);
 
 }

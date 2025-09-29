@@ -3,17 +3,19 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.base.vo.request.PageParamRequest;
+import com.odk.base.util.PageUtil;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.basedomain.domain.*;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basedomain.entitymanager.UserCustomerRepository;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
+import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.baseutil.entity.UserBaseEntity;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.request.UserListQueryRequest;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,14 +95,19 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     }
 
     @Override
-    public PageResponse<UserEntity> queryUserPageList(PageParamRequest pageParamRequest) {
-        Page<String> strings = customerRepository.queryUserPageList(pageParamRequest);
-        if (strings.isEmpty()) {
-            return PageResponse.ofEmpty();
-        }
-        Page<UserEntity> byTenantId = strings.map(this::getUserInfo);
-        List<UserEntity> userEntities = new ArrayList<>(byTenantId.getContent());
-        return PageResponse.of(userEntities, (int) byTenantId.getTotalElements());
+    public PageResponse<UserEntity> queryUserPageList(UserListQueryRequest pageParamRequest) {
+//        Page<String> strings = customerRepository.queryUserPageList(pageParamRequest);
+//        if (strings.isEmpty()) {
+//            return PageResponse.ofEmpty();
+//        }
+//        Page<UserEntity> byTenantId = strings.map(this::getUserInfo);
+//        List<UserEntity> userEntities = new ArrayList<>(byTenantId.getContent());
+//        return PageResponse.of(userEntities, (int) byTenantId.getTotalElements());
+
+
+        Page<UserBaseDO> pageList = userBaseRepository.findPageList(pageParamRequest, TenantIdContext.getTenantId(), PageUtil.convertToPageRequest(pageParamRequest));
+        List<UserEntity> collect = pageList.stream().map(userBaseDO -> getUserInfo(userBaseDO.getId())).toList();
+        return PageResponse.of(collect, (int) pageList.getTotalElements());
     }
 
 

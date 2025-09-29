@@ -1,10 +1,10 @@
 package com.odk.basedomain.domain;
 
-import com.odk.base.vo.request.PageParamRequest;
 import com.odk.base.vo.response.PageResponse;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.request.UserListQueryRequest;
 
 import java.util.List;
 
@@ -39,6 +39,6 @@ public interface UserQueryDomain {
      * @param pageParamRequest
      * @return
      */
-    PageResponse<UserEntity> queryUserPageList(PageParamRequest pageParamRequest);
+    PageResponse<UserEntity> queryUserPageList(UserListQueryRequest pageParamRequest);
 
 }
