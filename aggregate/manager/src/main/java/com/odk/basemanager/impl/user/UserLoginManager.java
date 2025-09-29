@@ -60,7 +60,7 @@ public class UserLoginManager implements IUserLoginManager {
                     .loginId(userLoginDTO.getLoginId())
                     .loginType(userLoginDTO.getLoginType())
                     .build();
-            userEntity = userQueryDomain.queryUser(build);
+            userEntity = userQueryDomain.queryUserAndCheckStatus(build);
             UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), userLoginDTO.getIdentifyType(), TenantIdContext.getTenantId());
 
             String decrypt = encryption.rsaDecode(userLoginDTO.getIdentifyValue());
@@ -72,7 +72,7 @@ public class UserLoginManager implements IUserLoginManager {
                     .loginId(userLoginDTO.getLoginId())
                     .loginType(userLoginDTO.getLoginType())
                     .build();
-            userEntity = userQueryDomain.queryUser(build);
+            userEntity = userQueryDomain.queryUserAndCheckStatus(build);
         }
         if (userEntity != null) {
             //设置登录session

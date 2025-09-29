@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * EventPublish
+ * 默认同步阻塞
+ * 线程间互不影响
  *
  * @description:
  * @version: 1.0

@@ -1,6 +1,7 @@
 package com.odk.basedomain.domain.impl;
 
 import com.odk.base.context.TenantIdContext;
+import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.util.PageUtil;
@@ -70,6 +71,13 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         if (!criteria.isNullAllowed()) {
             AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
         }
+        return userEntity;
+    }
+
+    @Override
+    public UserEntity queryUserAndCheckStatus(UserQueryCriteria criteria) {
+        UserEntity userEntity = queryUser(criteria);
+        AssertUtil.isTrue(UserStatusEnum.NORMAL.getCode().equals(userEntity.getUserStatus()), BizErrorCode.USER_STATUS_ERROR);
         return userEntity;
     }
 

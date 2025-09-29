@@ -26,6 +26,14 @@ public interface UserQueryDomain {
     UserEntity queryUser(UserQueryCriteria criteria);
 
     /**
+     * 查找用户，并检查用户状态
+     *
+     * @param criteria
+     * @return
+     */
+    UserEntity queryUserAndCheckStatus(UserQueryCriteria criteria);
+
+    /**
      * 批量用户查询接口
      *
      * @param criteria

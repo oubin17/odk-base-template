@@ -24,6 +24,10 @@ public enum BizScene {
 
     USER_PERMISSION_QUERY("USER_PERMISSION_QUERY", "用户权限查询"),
 
+    USER_FREEZE("USER_FREEZE", "用户冻结"),
+
+    USER_UNFREEZE("USER_UNFREEZE", "用户解冻"),
+
 
     ROLE_LIST("ROLE_LIST", "角色列表"),
 
