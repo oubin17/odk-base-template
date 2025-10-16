@@ -9,7 +9,6 @@ import com.odk.base.vo.response.PageResponse;
 import com.odk.basedomain.domain.*;
 import com.odk.basedomain.domain.criteria.UserListQueryCriteria;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
-import com.odk.basedomain.entitymanager.UserCustomerRepository;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
@@ -51,9 +50,6 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     private AccessTokenDomain accessTokenDomain;
 
-    private UserCustomerRepository customerRepository;
-
-
     @Override
     public UserEntity queryUser(UserQueryCriteria criteria) {
 
@@ -70,6 +66,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         };
         if (!criteria.isNullAllowed()) {
             AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
+        }
+        if (criteria.isStatusCheck()) {
+            AssertUtil.notNull(userEntity, BizErrorCode.USER_NOT_EXIST);
+            AssertUtil.isTrue(UserStatusEnum.NORMAL.getCode().equals(userEntity.getUserStatus()), BizErrorCode.USER_STATUS_ERROR);
         }
         return userEntity;
     }

@@ -39,4 +39,9 @@ public class UserQueryCriteria {
      * 是否允许为空: 默认为 false，也就是强制用户存在，不存在报错
      */
     private boolean nullAllowed;
+
+    /**
+     * 是否检查状态: 默认为 true，也就是强制检查用户状态，用户被冻结则报错
+     */
+    private boolean statusCheck;
 }

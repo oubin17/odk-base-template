@@ -52,32 +52,22 @@ public class UserLoginManager implements IUserLoginManager {
      */
     @Override
     public UserEntity userLogin(UserLoginDTO userLoginDTO) {
-        UserEntity userEntity = null;
-        String identifyType = userLoginDTO.getIdentifyType();
-        if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
-            UserQueryCriteria build = UserQueryCriteria.builder()
-                    .queryType(UserQueryTypeEnum.LOGIN_ID)
-                    .loginId(userLoginDTO.getLoginId())
-                    .loginType(userLoginDTO.getLoginType())
-                    .build();
-            userEntity = userQueryDomain.queryUserAndCheckStatus(build);
+        UserQueryCriteria build = UserQueryCriteria.builder()
+                .queryType(UserQueryTypeEnum.LOGIN_ID)
+                .loginId(userLoginDTO.getLoginId())
+                .loginType(userLoginDTO.getLoginType())
+                .statusCheck(true)
+                .build();
+        UserEntity userEntity = userQueryDomain.queryUser(build);
+        if (IdentificationTypeEnum.PASSWORD.getCode().equals(userLoginDTO.getIdentifyType())) {
             UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(userEntity.getUserId(), userLoginDTO.getIdentifyType(), TenantIdContext.getTenantId());
-
             String decrypt = encryption.rsaDecode(userLoginDTO.getIdentifyValue());
             AssertUtil.isTrue(encryption.bcryptMatches(decrypt, userIdentificationDO.getIdentifyValue()), BizErrorCode.IDENTIFICATION_NOT_MATCH);
-        } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
+        } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(userLoginDTO.getIdentifyType())) {
             verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode());
-            UserQueryCriteria build = UserQueryCriteria.builder()
-                    .queryType(UserQueryTypeEnum.LOGIN_ID)
-                    .loginId(userLoginDTO.getLoginId())
-                    .loginType(userLoginDTO.getLoginType())
-                    .build();
-            userEntity = userQueryDomain.queryUserAndCheckStatus(build);
         }
-        if (userEntity != null) {
-            //设置登录session
-            SessionContext.createLoginSession(userEntity.getUserId());
-        }
+        //设置登录session
+        SessionContext.createLoginSession(userEntity.getUserId());
         return userEntity;
     }
 
