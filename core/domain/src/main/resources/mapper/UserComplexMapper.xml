@@ -17,6 +17,14 @@
             <if test="query.loginId != null and query.loginId != ''">
                 AND t3.token_value LIKE CONCAT('%', #{query.loginId}, '%')
             </if>
+        <choose>
+            <when test="query.sortField != null and query.sortField != '' and query.sortDirection != null and query.sortDirection != ''">
+                ORDER BY t1.${query.sortField} ${query.sortDirection}
+            </when>
+            <otherwise>
+                ORDER BY t1.create_time DESC
+            </otherwise>
+        </choose>
     </select>
 
 </mapper>
