@@ -3,7 +3,7 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.impl.AbstractCacheProcess;
 import com.odk.basedomain.domain.RoleDomain;
-import com.odk.basedomain.mapper.UserDomainMapper;
+import com.odk.basedomain.convert.UserDomainMapper;
 import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.baseutil.entity.RoleEntity;

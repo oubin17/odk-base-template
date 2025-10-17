@@ -1,4 +1,4 @@
-package com.odk.basedomain.mapper;
+package com.odk.basedomain.convert;
 
 import com.odk.basedomain.model.permission.PermissionDO;
 import com.odk.baseutil.dto.permission.PermissionDTO;

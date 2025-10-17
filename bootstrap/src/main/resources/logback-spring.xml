@@ -170,9 +170,33 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         <appender-ref ref="CONSOLE"/>
     </logger>
 
+    <!-- Hibernate 参数绑定日志 -->
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
+        <appender-ref ref="SQL-DIGEST-APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
     <!-- 设置Hibernate事务日志级别 -->
     <logger name="org.hibernate.transaction" level="DEBUG" additivity="false">
         <appender-ref ref="SQL-DIGEST-APPENDER" />
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- MyBatis Plus SQL日志 -->
+    <logger name="com.odk.basedomain.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-DIGEST-APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- MyBatis SQL日志 -->
+    <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-DIGEST-APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- JDBC SQL日志 -->
+    <logger name="java.sql" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL-DIGEST-APPENDER"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 

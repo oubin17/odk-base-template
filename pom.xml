@@ -26,7 +26,7 @@
         <parent-odk-version>1.0-SNAPSHOT</parent-odk-version>
         <odk-base-template-version>1.0-SNAPSHOT</odk-base-template-version>
         <odk-common-util-base>3.0.2-SNAPSHOT</odk-common-util-base>
-        <database-spring-boot-starter>3.0.1-SNAPSHOT</database-spring-boot-starter>
+        <database-spring-boot-starter>3.0.2-SNAPSHOT</database-spring-boot-starter>
         <redis-spring-boot-starter>3.0.2-SNAPSHOT</redis-spring-boot-starter>
 
         <!-- 三方包版本 -->
@@ -93,6 +93,8 @@
                 <artifactId>redis-spring-boot-starter</artifactId>
                 <version>${redis-spring-boot-starter}</version>
             </dependency>
+
+
 
             <!-- module dependency -->
             <dependency>

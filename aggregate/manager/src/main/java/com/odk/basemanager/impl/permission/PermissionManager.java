@@ -1,7 +1,7 @@
 package com.odk.basemanager.impl.permission;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.basedomain.mapper.PermissionDomainMapper;
+import com.odk.basedomain.convert.PermissionDomainMapper;
 import com.odk.basedomain.model.permission.PermissionDO;
 import com.odk.basedomain.repository.permission.PermissionRepository;
 import com.odk.basemanager.api.permission.IPermissionManager;

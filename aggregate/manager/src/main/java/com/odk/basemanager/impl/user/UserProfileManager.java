@@ -2,7 +2,7 @@ package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.pointcut.UserCacheClean;
-import com.odk.basedomain.mapper.UserProfileMapper;
+import com.odk.basedomain.convert.UserProfileMapper;
 import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.basemanager.api.user.IUserProfileManager;

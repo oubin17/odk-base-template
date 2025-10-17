@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.odk.basedomain.mapper.UserComplexMapper">
+
+    <select id="selectUserPage" resultType="com.odk.basedomain.model.user.UserBaseDO">
+        SELECT
+            t1.*
+        FROM
+            t_user_base t1
+            JOIN t_user_profile t2 ON t1.id = t2.user_id
+            JOIN t_user_access_token t3 ON t1.id = t3.user_id AND t3.token_type = #{query.loginType}
+        WHERE
+            t1.tenant_id = #{tenantId}
+            <if test="query.userName != null and query.userName != ''">
+                AND t2.user_name LIKE CONCAT('%', #{query.userName}, '%')
+            </if>
+            <if test="query.loginId != null and query.loginId != ''">
+                AND t3.token_value LIKE CONCAT('%', #{query.loginId}, '%')
+            </if>
+    </select>
+
+</mapper>
