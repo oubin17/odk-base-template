@@ -10,7 +10,7 @@ import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.entity.VerificationCodeEntity;
 import com.odk.baseutil.enums.BizScene;
-import com.odk.baseutil.mapper.VerificationCodeMapper;
+import com.odk.baseutil.convert.VerificationCodeConvert;
 import com.odk.baseutil.request.VerificationCodeRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
 
     private VerificationCodeManager verificationCodeManager;
 
-    private VerificationCodeMapper verificationCodeMapper;
+    private VerificationCodeConvert verificationCodeConvert;
 
     @Override
     public ServiceResponse<VerificationCodeEntity> generateCode(VerificationCodeRequest codeRequest) {
@@ -37,7 +37,7 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
 
             @Override
             protected Object convert(BaseRequest request) {
-                return verificationCodeMapper.toDTO(codeRequest);
+                return verificationCodeConvert.toDTO(codeRequest);
             }
 
             @Override
@@ -64,7 +64,7 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
 
             @Override
             protected Object convert(BaseRequest request) {
-                return verificationCodeMapper.toDTO(codeRequest);
+                return verificationCodeConvert.toDTO(codeRequest);
             }
 
             @Override
@@ -87,8 +87,8 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
     }
 
     @Autowired
-    public void setVerificationCodeMapper(VerificationCodeMapper verificationCodeMapper) {
-        this.verificationCodeMapper = verificationCodeMapper;
+    public void setVerificationCodeMapper(VerificationCodeConvert verificationCodeConvert) {
+        this.verificationCodeConvert = verificationCodeConvert;
     }
 
 }

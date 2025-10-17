@@ -1,4 +1,4 @@
-package com.odk.baseutil.mapper;
+package com.odk.baseutil.convert;
 
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
@@ -14,7 +14,7 @@ import org.mapstruct.Mapper;
  * @author: oubin on 2025/3/23
  */
 @Mapper(componentModel = "spring")
-public interface UserLoginMapper {
+public interface UserLoginConvert {
 
     UserLoginDTO toDTO(UserLoginRequest userLoginRequest);
 

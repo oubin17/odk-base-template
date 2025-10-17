@@ -3,7 +3,7 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.impl.AbstractCacheProcess;
 import com.odk.basedomain.domain.AccessTokenDomain;
-import com.odk.basedomain.convert.UserDomainMapper;
+import com.odk.basedomain.convert.UserDomainConvert;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.baseutil.entity.AccessTokenEntity;
@@ -23,13 +23,13 @@ public class AccessTokenDomainImpl extends AbstractCacheProcess<AccessTokenEntit
 
     private UserAccessTokenRepository accessTokenRepository;
 
-    private UserDomainMapper userDomainMapper;
+    private UserDomainConvert userDomainConvert;
 
     @Override
     public AccessTokenEntity getDbData(String key) {
         // 查询并设置账号信息
         UserAccessTokenDO accessTokenDO = accessTokenRepository.findByUserIdAndTenantId(key, TenantIdContext.getTenantId());
-        return this.userDomainMapper.toEntity(accessTokenDO);
+        return this.userDomainConvert.toEntity(accessTokenDO);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class AccessTokenDomainImpl extends AbstractCacheProcess<AccessTokenEntit
     }
 
     @Autowired
-    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
-        this.userDomainMapper = userDomainMapper;
+    public void setUserDomainMapper(UserDomainConvert userDomainConvert) {
+        this.userDomainConvert = userDomainConvert;
     }
 }

@@ -2,9 +2,9 @@ package com.odk.basedomain.domain.impl;
 
 import com.google.common.collect.Lists;
 import com.odk.base.context.TenantIdContext;
+import com.odk.basedomain.convert.UserDomainConvert;
 import com.odk.basedomain.domain.PermissionDomain;
-import com.odk.basedomain.convert.PermissionDomainMapper;
-import com.odk.basedomain.convert.UserDomainMapper;
+import com.odk.basedomain.convert.PermissionDomainConvert;
 import com.odk.basedomain.model.permission.PermissionDO;
 import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.repository.permission.PermissionRepository;
@@ -31,9 +31,9 @@ public class PermissionDomainImpl implements PermissionDomain {
 
     private PermissionRepository permissionRepository;
 
-    private UserDomainMapper userDomainMapper;
+    private UserDomainConvert userDomainConvert;
 
-    private PermissionDomainMapper permissionDomainMapper;
+    private PermissionDomainConvert permissionDomainConvert;
 
     @Override
     public PermissionEntity getPermissionByUserId(String userId) {
@@ -66,7 +66,7 @@ public class PermissionDomainImpl implements PermissionDomain {
      * @return
      */
     private UserRoleDTO convert(UserRoleDO userRoleDO) {
-        return this.userDomainMapper.toDTO(userRoleDO);
+        return this.userDomainConvert.toDTO(userRoleDO);
     }
 
     /**
@@ -76,7 +76,7 @@ public class PermissionDomainImpl implements PermissionDomain {
      * @return
      */
     private PermissionDTO convert(PermissionDO permissionDO) {
-        return this.permissionDomainMapper.toDTO(permissionDO);
+        return this.permissionDomainConvert.toDTO(permissionDO);
     }
 
     @Autowired
@@ -90,13 +90,13 @@ public class PermissionDomainImpl implements PermissionDomain {
     }
 
     @Autowired
-    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
-        this.userDomainMapper = userDomainMapper;
+    public void setUserDomainMapper(UserDomainConvert userDomainConvert) {
+        this.userDomainConvert = userDomainConvert;
     }
 
     @Autowired
-    public void setPermissionDomainMapper(PermissionDomainMapper permissionDomainMapper) {
-        this.permissionDomainMapper = permissionDomainMapper;
+    public void setPermissionDomainMapper(PermissionDomainConvert permissionDomainConvert) {
+        this.permissionDomainConvert = permissionDomainConvert;
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
  * @author: oubin on 2025/3/23
  */
 @Mapper(componentModel = "spring")
-public interface PermissionDomainMapper {
+public interface PermissionDomainConvert {
 
     PermissionDTO toDTO(PermissionDO permissionDO);
 

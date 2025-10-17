@@ -8,7 +8,7 @@ import com.odk.basemanager.api.user.IPasswordManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
 import com.odk.baseutil.enums.BizScene;
-import com.odk.baseutil.mapper.PasswordMapper;
+import com.odk.baseutil.convert.PasswordConvert;
 import com.odk.baseutil.request.password.PasswordUpdateRequest;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
 
     private IPasswordManager passwordManager;
 
-    private PasswordMapper passwordMapper;
+    private PasswordConvert passwordConvert;
 
     @Override
     public ServiceResponse<Boolean> passwordUpdate(PasswordUpdateRequest passwordUpdateRequest) {
@@ -38,7 +38,7 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
             @Override
             protected Object convert(BaseRequest request) {
                 PasswordUpdateRequest updateRequest = (PasswordUpdateRequest) request;
-                return passwordMapper.toDTO(updateRequest);
+                return passwordConvert.toDTO(updateRequest);
             }
 
             @Override
@@ -69,7 +69,7 @@ public class PasswordService extends AbstractApiImpl implements PasswordApi {
     }
 
     @Autowired
-    public void setPasswordMapper(PasswordMapper passwordMapper) {
-        this.passwordMapper = passwordMapper;
+    public void setPasswordMapper(PasswordConvert passwordConvert) {
+        this.passwordConvert = passwordConvert;
     }
 }

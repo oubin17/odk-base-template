@@ -19,7 +19,7 @@ import org.mapstruct.Mapper;
  * @author: oubin on 2025/3/23
  */
 @Mapper(componentModel = "spring")
-public interface UserDomainMapper {
+public interface UserDomainConvert {
 
 //    @Mapping(source = "id", target = "userId")
 //    UserEntity toEntity(UserBaseDO baseDO);

@@ -3,7 +3,7 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.impl.AbstractCacheProcess;
 import com.odk.basedomain.domain.RoleDomain;
-import com.odk.basedomain.convert.UserDomainMapper;
+import com.odk.basedomain.convert.UserDomainConvert;
 import com.odk.basedomain.model.permission.UserRoleDO;
 import com.odk.basedomain.repository.permission.UserRoleRepository;
 import com.odk.baseutil.entity.RoleEntity;
@@ -26,12 +26,12 @@ public class RoleDomainImpl extends AbstractCacheProcess<RoleEntity> implements 
 
     private UserRoleRepository userRoleRepository;
 
-    private UserDomainMapper userDomainMapper;
+    private UserDomainConvert userDomainConvert;
 
     @Override
     public RoleEntity getDbData(String key) {
         UserRoleDO roleDO = userRoleRepository.findById(key).orElse(null);
-        return userDomainMapper.toEntity(roleDO);
+        return userDomainConvert.toEntity(roleDO);
     }
 
     @Override
@@ -53,8 +53,8 @@ public class RoleDomainImpl extends AbstractCacheProcess<RoleEntity> implements 
     }
 
     @Autowired
-    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
-        this.userDomainMapper = userDomainMapper;
+    public void setUserDomainMapper(UserDomainConvert userDomainConvert) {
+        this.userDomainConvert = userDomainConvert;
     }
 
 }

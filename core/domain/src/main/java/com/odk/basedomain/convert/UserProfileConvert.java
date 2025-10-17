@@ -13,7 +13,7 @@ import org.mapstruct.MappingTarget;
  * @author: oubin on 2025/8/4
  */
 @Mapper(componentModel = "spring")
-public interface UserProfileMapper {
+public interface UserProfileConvert {
 
     void merge(UserProfileDTO userProfileDTO, @MappingTarget UserProfileDO userProfileDO);
 

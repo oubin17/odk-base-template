@@ -7,7 +7,7 @@ import com.odk.basemanager.api.user.IUserProfileManager;
 import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.dto.user.UserProfileDTO;
 import com.odk.baseutil.enums.BizScene;
-import com.odk.baseutil.mapper.UserProfileRequestMapper;
+import com.odk.baseutil.convert.UserProfileRequestConvert;
 import com.odk.baseutil.request.UserProfileRequest;
 import com.odk.baseutil.userinfo.SessionContext;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserProfileService extends AbstractApiImpl implements UserProfileApi {
 
-    private UserProfileRequestMapper userProfileRequestMapper;
+    private UserProfileRequestConvert userProfileRequestConvert;
 
     private IUserProfileManager userProfileManager;
 
@@ -36,7 +36,7 @@ public class UserProfileService extends AbstractApiImpl implements UserProfileAp
             @Override
             protected Object convert(BaseRequest request) {
                 UserProfileRequest profileRequest = (UserProfileRequest) request;
-                return userProfileRequestMapper.toDTO(profileRequest);
+                return userProfileRequestConvert.toDTO(profileRequest);
             }
 
             @Override
@@ -54,8 +54,8 @@ public class UserProfileService extends AbstractApiImpl implements UserProfileAp
 
 
     @Autowired
-    public void setUserProfileRequestMapper(UserProfileRequestMapper userProfileRequestMapper) {
-        this.userProfileRequestMapper = userProfileRequestMapper;
+    public void setUserProfileRequestMapper(UserProfileRequestConvert userProfileRequestConvert) {
+        this.userProfileRequestConvert = userProfileRequestConvert;
     }
 
     @Autowired

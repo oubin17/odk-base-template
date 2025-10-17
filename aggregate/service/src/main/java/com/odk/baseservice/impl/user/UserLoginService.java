@@ -13,7 +13,7 @@ import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.enums.VerifySceneEnum;
-import com.odk.baseutil.mapper.UserLoginMapper;
+import com.odk.baseutil.convert.UserLoginConvert;
 import com.odk.baseutil.request.UserLoginRequest;
 import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.baseutil.userinfo.SessionContext;
@@ -34,7 +34,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
 
     private IUserLoginManager userLoginManager;
 
-    private UserLoginMapper userLoginMapper;
+    private UserLoginConvert userLoginConvert;
 
     @Override
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
@@ -87,14 +87,14 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             @Override
             protected Object convert(BaseRequest request) {
                 UserLoginRequest loginRequest = (UserLoginRequest) request;
-                return userLoginMapper.toDTO(loginRequest);
+                return userLoginConvert.toDTO(loginRequest);
             }
 
             @Override
             protected UserLoginResponse doProcess(Object args) {
                 UserLoginDTO userLoginDTO = (UserLoginDTO) args;
                 UserEntity userEntity = userLoginManager.userLogin(userLoginDTO);
-                return userLoginMapper.toResponse(userEntity);
+                return userLoginConvert.toResponse(userEntity);
             }
 
             @Override
@@ -140,7 +140,7 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
     }
 
     @Autowired
-    public void setUserLoginMapper(UserLoginMapper userLoginMapper) {
-        this.userLoginMapper = userLoginMapper;
+    public void setUserLoginMapper(UserLoginConvert userLoginConvert) {
+        this.userLoginConvert = userLoginConvert;
     }
 }

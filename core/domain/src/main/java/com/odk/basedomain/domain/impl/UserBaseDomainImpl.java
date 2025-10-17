@@ -3,7 +3,7 @@ package com.odk.basedomain.domain.impl;
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.impl.AbstractCacheProcess;
 import com.odk.basedomain.domain.UserBaseDomain;
-import com.odk.basedomain.convert.UserDomainMapper;
+import com.odk.basedomain.convert.UserDomainConvert;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.baseutil.entity.UserBaseEntity;
@@ -27,7 +27,7 @@ public class UserBaseDomainImpl extends AbstractCacheProcess<UserBaseEntity> imp
 
     private UserBaseRepository userBaseRepository;
 
-    private UserDomainMapper userDomainMapper;
+    private UserDomainConvert userDomainConvert;
 
     @Override
     public UserBaseEntity getDbData(String key) {
@@ -36,7 +36,7 @@ public class UserBaseDomainImpl extends AbstractCacheProcess<UserBaseEntity> imp
             log.error("找不到用户，用户ID={}", key);
             return null;
         }
-        return userDomainMapper.toEntity(userBaseDOOptional.get());
+        return userDomainConvert.toEntity(userBaseDOOptional.get());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UserBaseDomainImpl extends AbstractCacheProcess<UserBaseEntity> imp
     }
 
     @Autowired
-    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
-        this.userDomainMapper = userDomainMapper;
+    public void setUserDomainMapper(UserDomainConvert userDomainConvert) {
+        this.userDomainConvert = userDomainConvert;
     }
 }

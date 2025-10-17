@@ -1,4 +1,4 @@
-package com.odk.baseutil.mapper;
+package com.odk.baseutil.convert;
 
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.enums.VerifySceneEnum;
@@ -15,7 +15,7 @@ import org.mapstruct.Named;
  * @author: oubin on 2025/4/29
  */
 @Mapper(componentModel = "spring")
-public interface VerificationCodeMapper {
+public interface VerificationCodeConvert {
 
     @Mapping(target = "verifyScene", source = "verifyScene", qualifiedByName = "mapStringToEnum")
     VerificationCodeDTO toDTO(VerificationCodeRequest verificationCodeRequest);

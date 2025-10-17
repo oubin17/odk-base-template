@@ -2,8 +2,8 @@ package com.odk.basedomain.domain.impl;
 
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.impl.AbstractCacheProcess;
+import com.odk.basedomain.convert.UserDomainConvert;
 import com.odk.basedomain.domain.UserProfileDomain;
-import com.odk.basedomain.convert.UserDomainMapper;
 import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.baseutil.entity.UserProfileEntity;
@@ -25,13 +25,13 @@ public class UserProfileDomainImpl extends AbstractCacheProcess<UserProfileEntit
 
     private UserProfileRepository userProfileRepository;
 
-    private UserDomainMapper userDomainMapper;
+    private UserDomainConvert userDomainConvert;
 
     @Override
     public UserProfileEntity getDbData(String key) {
         UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(key, TenantIdContext.getTenantId());
         if (null != userProfileDO) {
-            return this.userDomainMapper.toEntity(userProfileDO);
+            return this.userDomainConvert.toEntity(userProfileDO);
         }
         return null;
     }
@@ -52,7 +52,7 @@ public class UserProfileDomainImpl extends AbstractCacheProcess<UserProfileEntit
     }
 
     @Autowired
-    public void setUserDomainMapper(UserDomainMapper userDomainMapper) {
-        this.userDomainMapper = userDomainMapper;
+    public void setUserDomainMapper(UserDomainConvert userDomainConvert) {
+        this.userDomainConvert = userDomainConvert;
     }
 }

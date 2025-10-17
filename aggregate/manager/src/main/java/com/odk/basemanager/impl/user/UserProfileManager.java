@@ -2,7 +2,7 @@ package com.odk.basemanager.impl.user;
 
 import com.odk.base.context.TenantIdContext;
 import com.odk.basedomain.cache.pointcut.UserCacheClean;
-import com.odk.basedomain.convert.UserProfileMapper;
+import com.odk.basedomain.convert.UserProfileConvert;
 import com.odk.basedomain.model.user.UserProfileDO;
 import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.basemanager.api.user.IUserProfileManager;
@@ -25,14 +25,14 @@ public class UserProfileManager implements IUserProfileManager {
 
     private UserProfileRepository userProfileRepository;
 
-    private UserProfileMapper userProfileMapper;
+    private UserProfileConvert userProfileConvert;
 
     @Override
     @UserCacheClean(scene = UserCacheSceneEnum.USER_PROFILE)
     public boolean updateUserProfile(String userId, UserProfileDTO userProfileDTO) {
         userProfileDTO.setUserId(userId);
         UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
-        userProfileMapper.merge(userProfileDTO, userProfileDO);
+        userProfileConvert.merge(userProfileDTO, userProfileDO);
         userProfileRepository.save(userProfileDO);
 
         return true;
@@ -44,8 +44,8 @@ public class UserProfileManager implements IUserProfileManager {
     }
 
     @Autowired
-    public void setUserProfileMapper(UserProfileMapper userProfileMapper) {
-        this.userProfileMapper = userProfileMapper;
+    public void setUserProfileMapper(UserProfileConvert userProfileConvert) {
+        this.userProfileConvert = userProfileConvert;
     }
 
 }

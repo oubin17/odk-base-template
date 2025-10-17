@@ -1,7 +1,7 @@
 package com.odk.basemanager.impl.permission;
 
 import com.odk.base.context.TenantIdContext;
-import com.odk.basedomain.convert.PermissionDomainMapper;
+import com.odk.basedomain.convert.PermissionDomainConvert;
 import com.odk.basedomain.model.permission.PermissionDO;
 import com.odk.basedomain.repository.permission.PermissionRepository;
 import com.odk.basemanager.api.permission.IPermissionManager;
@@ -32,7 +32,7 @@ public class PermissionManager implements IPermissionManager {
 
     private PermissionRepository permissionRepository;
 
-    private PermissionDomainMapper permissionDomainMapper;
+    private PermissionDomainConvert permissionDomainConvert;
 
     @Override
     public Boolean addPermission(PermissionAddRequest permissionAddRequest) {
@@ -50,7 +50,7 @@ public class PermissionManager implements IPermissionManager {
         } else {
             allRolePermission = permissionRepository.findRolePermissionByRoleId(queryRequest.getRoleId(), TenantIdContext.getTenantId());
         }
-        return permissionDomainMapper.toDTO(allRolePermission);
+        return permissionDomainConvert.toDTO(allRolePermission);
     }
 
     @Autowired

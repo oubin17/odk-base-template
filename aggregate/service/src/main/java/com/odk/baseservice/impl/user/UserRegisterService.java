@@ -12,7 +12,7 @@ import com.odk.baseutil.dto.user.UserRegisterDTO;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.enums.VerifySceneEnum;
-import com.odk.baseutil.mapper.UserRegisterMapper;
+import com.odk.baseutil.convert.UserRegisterConvert;
 import com.odk.baseutil.request.UserRegisterRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -37,7 +37,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
 
     private IUserRegisterManager userRegisterManager;
 
-    private UserRegisterMapper userRegisterMapper;
+    private UserRegisterConvert userRegisterConvert;
 
     @Value("${register.whiteList}")
     private String whiteList;
@@ -66,7 +66,7 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
             @Override
             protected Object convert(BaseRequest request) {
                 UserRegisterRequest registerRequest = (UserRegisterRequest) request;
-                return userRegisterMapper.toDTO(registerRequest);
+                return userRegisterConvert.toDTO(registerRequest);
             }
 
             @Override
@@ -95,8 +95,8 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
     }
 
     @Autowired
-    public void setUserRegisterMapper(UserRegisterMapper userRegisterMapper) {
-        this.userRegisterMapper = userRegisterMapper;
+    public void setUserRegisterMapper(UserRegisterConvert userRegisterConvert) {
+        this.userRegisterConvert = userRegisterConvert;
     }
 
     @Autowired
