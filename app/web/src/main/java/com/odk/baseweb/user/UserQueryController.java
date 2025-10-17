@@ -5,6 +5,7 @@ import com.odk.base.vo.response.PageResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserQueryApi;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.request.UserListQueryRequest;
 import com.odk.baseutil.request.UserQueryRequest;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class UserQueryController {
      * @param userId {@link com.odk.baseutil.enums.InnerRoleEnum}
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @GetMapping("/userId")
     public ServiceResponse<UserEntity> queryUserByUserId(@RequestParam("userId") String userId) {
         return userQueryApi.queryUserByUserId(userId);
@@ -55,7 +56,7 @@ public class UserQueryController {
     }
 
 
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @PostMapping("/list")
     public ServiceResponse<PageResponse<UserEntity>> queryUserList(@RequestBody @Valid UserListQueryRequest pageRequest) {
         return userQueryApi.queryUserPageList(pageRequest);

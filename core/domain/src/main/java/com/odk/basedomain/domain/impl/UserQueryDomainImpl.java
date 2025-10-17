@@ -75,13 +75,6 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     }
 
     @Override
-    public UserEntity queryUserAndCheckStatus(UserQueryCriteria criteria) {
-        UserEntity userEntity = queryUser(criteria);
-        AssertUtil.isTrue(UserStatusEnum.NORMAL.getCode().equals(userEntity.getUserStatus()), BizErrorCode.USER_STATUS_ERROR);
-        return userEntity;
-    }
-
-    @Override
     public List<UserEntity> queryUserList(UserListQueryCriteria criteria) {
         AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL, "userQueryTypeEnum is null.");
         return switch (criteria.getQueryType()) {

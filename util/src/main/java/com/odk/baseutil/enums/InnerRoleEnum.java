@@ -15,6 +15,12 @@ public enum InnerRoleEnum implements IEnum {
 
     NORMAL("MEMBER", "会员");
 
+
+    /**
+     * 管理员角色
+     */
+    public static final String ADMIN_ROLE = "ADMIN";
+
     private final String code;
 
     private final String description;

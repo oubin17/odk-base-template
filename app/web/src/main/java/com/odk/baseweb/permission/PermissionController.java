@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
 import com.odk.baseutil.dto.permission.PermissionDTO;
+import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.request.role.PermissionAddRequest;
 import com.odk.baseutil.request.role.PermissionQueryRequest;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class PermissionController {
      * @param permissionAddRequest
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @PostMapping("/add")
     public ServiceResponse<Boolean> addPermission(@RequestBody PermissionAddRequest permissionAddRequest) {
         return this.permissionApi.addPermission(permissionAddRequest);
@@ -45,7 +46,7 @@ public class PermissionController {
      * @param permissionQueryRequest
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @GetMapping("/list")
     public ServiceResponse<List<PermissionDTO>> permissionList(@RequestBody PermissionQueryRequest permissionQueryRequest) {
         return this.permissionApi.permissionList(permissionQueryRequest);

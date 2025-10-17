@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.RoleApi;
 import com.odk.baseutil.dto.permission.UserRoleDTO;
+import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.request.role.RoleAddRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class RoleController {
      * @param roleAddRequest
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @PostMapping("/add")
     public ServiceResponse<String> addRole(@RequestBody RoleAddRequest roleAddRequest) {
         return this.roleApi.addRole(roleAddRequest);
@@ -44,7 +45,7 @@ public class RoleController {
      * @param roleId
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @DeleteMapping()
     public ServiceResponse<Boolean> deleteRole(@RequestParam("roleId") String roleId) {
         return this.roleApi.deleteRole(roleId);
@@ -55,7 +56,7 @@ public class RoleController {
      *
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @GetMapping("/list")
     public ServiceResponse<List<UserRoleDTO>> allRoleList() {
         return this.roleApi.roleList();

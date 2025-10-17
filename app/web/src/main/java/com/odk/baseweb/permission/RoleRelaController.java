@@ -3,6 +3,7 @@ package com.odk.baseweb.permission;
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.RoleApi;
+import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.request.role.UserRoleRelaRequest;
 import com.odk.baseutil.response.PermissionQueryResponse;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class RoleRelaController {
      * @param relaRequest
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @PostMapping("/add")
     public ServiceResponse<String> addRoleRela(UserRoleRelaRequest relaRequest) {
         return this.roleApi.addRoleRela(relaRequest);
@@ -42,7 +43,7 @@ public class RoleRelaController {
      * @param relaRequest
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @PostMapping("/delete")
     public ServiceResponse<Boolean> deleteRoleRela(UserRoleRelaRequest relaRequest) {
         return this.roleApi.deleteRoleRela(relaRequest);
@@ -64,7 +65,7 @@ public class RoleRelaController {
      * @param userId
      * @return
      */
-    @SaCheckRole(value = {"ADMIN"})
+    @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @GetMapping("/userId")
     public ServiceResponse<PermissionQueryResponse> queryUserPermission(@RequestParam("userId") String userId) {
         return this.roleApi.userRoles(userId);

@@ -41,7 +41,7 @@ public class UserQueryCriteria {
     private boolean nullAllowed;
 
     /**
-     * 是否检查状态: 默认为 true，也就是强制检查用户状态，用户被冻结则报错
+     * 是否检查状态: 默认为 false，也就是不检查用户状态，如需检查用户是否状态正常，设置为 true
      */
     private boolean statusCheck;
 }
