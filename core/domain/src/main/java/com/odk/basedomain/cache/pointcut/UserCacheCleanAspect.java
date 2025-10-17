@@ -1,13 +1,18 @@
 package com.odk.basedomain.cache.pointcut;
 
+import com.google.common.collect.Maps;
+import com.odk.basedomain.cache.CacheProcess;
 import com.odk.baseutil.enums.UserCacheSceneEnum;
-import com.odk.redisspringbootstarter.RedisUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * UserCacheCleanAspect
@@ -18,9 +23,9 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
-public class UserCacheCleanAspect {
+public class UserCacheCleanAspect implements ApplicationContextAware {
 
-    private RedisUtil redisUtil;
+    private Map<String, CacheProcess> cacheProcessMap;
 
     // 拦截带有特定注解的方法
     @AfterReturning(pointcut = "@annotation(com.odk.basedomain.cache.pointcut.UserCacheClean)")
@@ -31,12 +36,15 @@ public class UserCacheCleanAspect {
         Object[] args = joinPoint.getArgs();
         if (args.length > 0 && args[0] instanceof String key) {
             UserCacheSceneEnum scene = annotation.scene();
-            redisUtil.delete(UserCacheSceneEnum.generateCacheKey(scene, key));
+            cacheProcessMap.get(scene.getCode()).evictCache(key);
         }
     }
 
-    @Autowired
-    public void setRedisUtil(RedisUtil redisUtil) {
-        this.redisUtil = redisUtil;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        cacheProcessMap = Maps.newHashMap();
+        for (CacheProcess cacheProcess : applicationContext.getBeansOfType(CacheProcess.class).values()) {
+            cacheProcessMap.put(cacheProcess.getCacheScene().getCode(), cacheProcess);
+        }
     }
 }

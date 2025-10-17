@@ -30,7 +30,8 @@ public class UserProfileManager implements IUserProfileManager {
     @Override
     @UserCacheClean(scene = UserCacheSceneEnum.USER_PROFILE)
     public boolean updateUserProfile(String userId, UserProfileDTO userProfileDTO) {
-        UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userProfileDTO.getUserId(), TenantIdContext.getTenantId());
+        userProfileDTO.setUserId(userId);
+        UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
         userProfileMapper.merge(userProfileDTO, userProfileDO);
         userProfileRepository.save(userProfileDO);
 
