@@ -80,15 +80,12 @@ public class ExcelUploadManager {
      */
     public static ByteArrayOutputStream writeToStreamExample(List<ExcelRowDTO> excelRowDTOS) throws Exception {
         // 使用ByteArrayOutputStream替代FileOutputStream
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             // 使用工具类写入Excel到内存流
             ExcelWriteUtil.writeExcel(excelRowDTOS, ExcelRowDTO.class, outputStream, "用户信息");
             return outputStream;
-        } finally {
-            // 关闭流
-            outputStream.close();
         }
+        // 关闭流
     }
 
     /**
