@@ -39,8 +39,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserQueryDomainImpl implements UserQueryDomain {
 
-    private UserBaseRepository userBaseRepository;
-
     private UserAccessTokenRepository accessTokenRepository;
 
     private RoleDomain roleDomain;
