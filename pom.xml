@@ -159,6 +159,12 @@
                 <scope>provided</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.openai</groupId>
+                <artifactId>openai-java</artifactId>
+                <version>4.6.1</version>
+            </dependency>
+
             <!-- MapStruct 核心依赖 -->
             <dependency>
                 <groupId>org.mapstruct</groupId>

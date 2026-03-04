@@ -49,6 +49,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
