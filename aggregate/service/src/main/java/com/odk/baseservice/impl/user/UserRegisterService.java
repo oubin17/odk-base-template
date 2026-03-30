@@ -1,18 +1,14 @@
 package com.odk.baseservice.impl.user;
 
-import com.odk.base.exception.AssertUtil;
-import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.basemanager.api.user.IUserRegisterManager;
 import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
-import com.odk.baseutil.dto.user.UserRegisterDTO;
-import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
-import com.odk.baseutil.enums.BizScene;
-import com.odk.baseutil.enums.VerifySceneEnum;
 import com.odk.baseutil.convert.UserRegisterConvert;
+import com.odk.baseutil.dto.user.UserRegisterDTO;
+import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.request.UserRegisterRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -50,17 +46,17 @@ public class UserRegisterService extends AbstractApiImpl implements UserRegister
 
             @Override
             protected void beforeProcess(BaseRequest request) {
-                if (whiteListCache != null && whiteListCache.contains(userRegisterRequest.getLoginId())) {
-                    return;
-                }
+//                if (whiteListCache != null && whiteListCache.contains(userRegisterRequest.getLoginId())) {
+//                    return;
+//                }
 
-                VerificationCodeDTO dto = userRegisterRequest.getVerificationCode();
-                AssertUtil.notNull(dto, BizErrorCode.PARAM_ILLEGAL, "验证码不能为空");
-                //检查验证码是否有效:这里因为有 uniqueId 的原因，可以直接比较，如果没有 uniqueId，使用接口攻击会有风险
-                dto.setVerifyKey(userRegisterRequest.getLoginId());
-                dto.setVerifyType(userRegisterRequest.getLoginType());
-                dto.setVerifyScene(VerifySceneEnum.REGISTER);
-                verificationCodeManager.compareAndIncr(dto);
+//                VerificationCodeDTO dto = userRegisterRequest.getVerificationCode();
+//                AssertUtil.notNull(dto, BizErrorCode.PARAM_ILLEGAL, "验证码不能为空");
+//                //检查验证码是否有效:这里因为有 uniqueId 的原因，可以直接比较，如果没有 uniqueId，使用接口攻击会有风险
+//                dto.setVerifyKey(userRegisterRequest.getLoginId());
+//                dto.setVerifyType(userRegisterRequest.getLoginType());
+//                dto.setVerifyScene(VerifySceneEnum.REGISTER);
+//                verificationCodeManager.compareAndIncr(dto);
             }
 
             @Override

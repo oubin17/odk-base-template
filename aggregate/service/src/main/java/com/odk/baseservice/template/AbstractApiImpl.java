@@ -275,7 +275,7 @@ public class AbstractApiImpl extends AbstractApi {
      * @return
      */
     private <R> ServiceResponse<R> handleBizException(BizException bizEx) {
-        log.error("biz exception occurred，error code: {}，error message: {}", bizEx.getErrorCode(), bizEx.getMessage());
+        log.error("biz exception occurred，error code: {}，error message: {}", bizEx.getErrorCode(), bizEx.getMessage(), bizEx);
         return generateBaseResult(bizEx);
     }
 
