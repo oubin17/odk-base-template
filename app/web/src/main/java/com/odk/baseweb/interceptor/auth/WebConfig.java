@@ -47,11 +47,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        //trace id
+        registry.addInterceptor(new TracerIdInterceptor());
         // 设置租户
         registry.addInterceptor(new TenantIdInterceptor());
         registry.addInterceptor(new SupportTenantIdInterceptor());
-        //trace id
-        registry.addInterceptor(new TracerIdInterceptor());
+
         //注册 Sa-Token 拦截器，打开注解式鉴权功能
         registry.addInterceptor(saInterceptor()).addPathPatterns("/**");
     }
