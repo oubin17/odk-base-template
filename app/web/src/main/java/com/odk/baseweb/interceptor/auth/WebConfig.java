@@ -5,9 +5,11 @@ import cn.dev33.satoken.router.SaRouter;
 import com.odk.baseutil.enums.InnerRoleEnum;
 import com.odk.baseutil.userinfo.RoleContext;
 import com.odk.baseutil.userinfo.SessionContext;
+import com.odk.baseweb.interceptor.sign.SignInterceptor;
 import com.odk.baseweb.interceptor.tenantid.SupportTenantIdInterceptor;
 import com.odk.baseweb.interceptor.tenantid.TenantIdInterceptor;
 import com.odk.baseweb.interceptor.tracer.TracerIdInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -24,6 +26,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private SignInterceptor signInterceptor;
 
     /**
      * 如果不指定端口，默认http -> 80   https -> 443
@@ -47,6 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(signInterceptor);
         //trace id
         registry.addInterceptor(new TracerIdInterceptor());
         // 设置租户
