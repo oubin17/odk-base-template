@@ -72,7 +72,7 @@ public class SignInterceptor implements HandlerInterceptor {
         // ====================== 🔥 核心：防重放 - nonce一次性校验 ======================
         String nonceKey = NONCE_PREFIX + nonce;
         // setIfAbsent = 不存在则设置，存在则返回false（代表重复使用）
-        Boolean ifAbsent = redisUtil.setIfAbsent(nonceKey, "used", 300, TimeUnit.SECONDS);
+        Boolean ifAbsent = redisUtil.setIfAbsent(nonceKey, "used", 30, TimeUnit.SECONDS);
         if (Boolean.FALSE.equals(ifAbsent)) {
             throw new BizException(SIGNING_ERROR, "请求已重复，请重新发起");
         }
