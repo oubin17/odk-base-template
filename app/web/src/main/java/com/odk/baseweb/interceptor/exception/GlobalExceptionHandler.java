@@ -58,11 +58,11 @@ public class GlobalExceptionHandler {
         log.error("Token 校验异常", e);
         // 处理校验异常，可以根据需要返回适当的响应
         if (e instanceof NotLoginException) {
-            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_UNMATCHED, "token无效"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_UNMATCHED), HttpStatus.FORBIDDEN);
         } else if (e instanceof NotRoleException) {
             return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PERMISSION_DENY, e.getMessage()), HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, "系统异常"), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR), HttpStatus.FORBIDDEN);
     }
 
     /**
@@ -94,7 +94,7 @@ public class GlobalExceptionHandler {
         log.error("参数校验异常", ex);
         Optional<String> firstError = ex.getBindingResult().getAllErrors().stream().findFirst().map(ObjectError::getDefaultMessage);
 
-        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PARAM_ILLEGAL, firstError.orElse("系统异常")), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PARAM_ILLEGAL, firstError.orElse("Parameter is illegal")), HttpStatus.BAD_REQUEST);
     }
 
 

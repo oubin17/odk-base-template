@@ -71,13 +71,13 @@ public class EncryptionService implements InitializingBean, IEncryption {
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (IllegalBlockSizeException e) {
             log.error("加密数据长度超过117字节", e);
-            throw new BizException(BizErrorCode.PARAM_ILLEGAL, "加密数据过长（最大117字节）");
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL);
         } catch (BadPaddingException e) {
             log.error("加密填充异常", e);
-            throw new BizException(BizErrorCode.SYSTEM_ERROR, "加密配置错误");
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL);
         } catch (Exception e) {
             log.error("加密系统错误", e);
-            throw new BizException(BizErrorCode.SYSTEM_ERROR, "加密失败");
+            throw new BizException(BizErrorCode.SYSTEM_ERROR);
         }
     }
 
@@ -92,16 +92,16 @@ public class EncryptionService implements InitializingBean, IEncryption {
 
         } catch (IllegalBlockSizeException e) {
             log.error("解密数据长度不符合算法要求", e);
-            throw new BizException(BizErrorCode.PARAM_ILLEGAL, "数据长度不符合算法要求");
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL);
         } catch (BadPaddingException e) {
             log.error("解密密钥不匹配", e);
-            throw new BizException(BizErrorCode.PARAM_ILLEGAL, "解密密钥不匹配");
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL);
         } catch (IOException e) {
             log.error("密钥文件读取失败", e);
-            throw new BizException(BizErrorCode.PARAM_ILLEGAL, "密钥文件读取失败");
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL);
         } catch (Exception e) {
             log.error("系统级错误", e);
-            throw new BizException(BizErrorCode.SYSTEM_ERROR, "系统级错误");
+            throw new BizException(BizErrorCode.SYSTEM_ERROR);
         }
     }
 

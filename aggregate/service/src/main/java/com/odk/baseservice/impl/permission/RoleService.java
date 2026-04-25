@@ -106,7 +106,7 @@ public class RoleService extends AbstractApiImpl implements RoleApi {
         return super.bizProcess(BizScene.USER_ROLE_ADD, roleId, new ApiCallBack<Boolean, Boolean>() {
             @Override
             protected void checkParams(Object request) {
-                AssertUtil.notNull(roleId, BizErrorCode.PARAM_ILLEGAL, "roleId不为空");
+                AssertUtil.notNull(roleId, BizErrorCode.PARAM_ILLEGAL);
             }
             @Override
             protected Boolean doProcess(Object args) {

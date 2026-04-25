@@ -55,7 +55,7 @@ public class RoleManager implements IRoleManager {
     @Override
     public String addRole(String roleCode, String roleName) {
         UserRoleDO userRoleDO = userRoleRepository.findByRoleCodeAndTenantId(roleCode, TenantIdContext.getTenantId());
-        AssertUtil.isNull(userRoleDO, BizErrorCode.PARAM_ILLEGAL, "角色码重复，添加角色失败");
+        AssertUtil.isNull(userRoleDO, BizErrorCode.PARAM_ILLEGAL);
         UserRoleDO addRole = new UserRoleDO();
         addRole.setRoleCode(roleCode);
         addRole.setRoleName(roleName);
@@ -69,7 +69,7 @@ public class RoleManager implements IRoleManager {
     @UserCacheClean(scene = UserCacheSceneEnum.USER_ROLE)
     public Boolean deleteRole(String roleId) {
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
-        AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
+        AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL);
         AssertUtil.equal(userRoleDO.get().getTenantId(), TenantIdContext.getTenantId(), BizErrorCode.PARAM_ILLEGAL);
         UserRoleDO updateUserRoleDO = userRoleDO.get();
         updateUserRoleDO.setStatus(CommonStatusEnum.DELETE.getCode());
@@ -94,10 +94,10 @@ public class RoleManager implements IRoleManager {
     public String addUserRoleRela(String roleId, String userId) {
         this.userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(userId).build());
         UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleIdAndTenantId(userId, roleId, TenantIdContext.getTenantId());
-        AssertUtil.isNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户已具备该权限");
+        AssertUtil.isNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL);
 
         Optional<UserRoleDO> userRoleDO = userRoleRepository.findById(roleId);
-        AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL, "角色不存在");
+        AssertUtil.isTrue(userRoleDO.isPresent(), BizErrorCode.PARAM_ILLEGAL);
         AssertUtil.equal(userRoleDO.get().getTenantId(), TenantIdContext.getTenantId(), BizErrorCode.PARAM_ILLEGAL);
         UserRoleRelDO roleRelDO = new UserRoleRelDO();
         roleRelDO.setUserId(userId);
@@ -110,7 +110,7 @@ public class RoleManager implements IRoleManager {
     @Override
     public Boolean deleteUserRoleRela(String roleId, String userId) {
         UserRoleRelDO userRoleRelDO = relRepository.findByUserIdAndRoleIdAndTenantId(userId, roleId, TenantIdContext.getTenantId());
-        AssertUtil.notNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL, "用户不具备该权限");
+        AssertUtil.notNull(userRoleRelDO, BizErrorCode.PARAM_ILLEGAL);
         relRepository.deleteById(userRoleRelDO.getId());
         return true;
     }

@@ -34,7 +34,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
             @Override
             protected void checkParams(Object request) {
-                AssertUtil.notNull(request, BizErrorCode.PARAM_ILLEGAL, "userId is null.");
+                AssertUtil.notNull(request, BizErrorCode.PARAM_ILLEGAL);
             }
 
             @Override
@@ -56,7 +56,7 @@ public class UserQueryService extends AbstractApiImpl implements UserQueryApi {
 
             @Override
             protected void checkParams(Object request) {
-                AssertUtil.isTrue(SessionContext.isLogin(), BizErrorCode.USER_NOT_LOGIN, "用户未登录.");
+                AssertUtil.isTrue(SessionContext.isLogin(), BizErrorCode.USER_NOT_LOGIN);
             }
 
             @Override

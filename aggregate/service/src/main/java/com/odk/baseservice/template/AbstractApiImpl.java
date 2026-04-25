@@ -87,7 +87,7 @@ public class AbstractApiImpl extends AbstractApi {
             //1. 初始化上下文
             initContext(bizScene);
             //2.简单参数校验
-            AssertUtil.notNull(request, BizErrorCode.PARAM_ILLEGAL, "request is null.");
+            AssertUtil.notNull(request, BizErrorCode.PARAM_ILLEGAL, "Request is null");
             //3.参数校验
             callBack.checkParams(request);
             //4.执行业务逻辑前置操作，如参数转换，复杂参数检查

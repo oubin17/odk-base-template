@@ -14,7 +14,6 @@ import com.odk.basedomain.mapper.UserComplexMapper;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
-import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.baseutil.entity.UserBaseEntity;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.request.UserListQueryRequest;
@@ -54,7 +53,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Override
     public UserEntity queryUser(UserQueryCriteria criteria) {
 
-        AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL, "userQueryTypeEnum is null.");
+        AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL);
         UserEntity userEntity = switch (criteria.getQueryType()) {
             case USER_ID -> getUserInfo(criteria.getUserId());
             case LOGIN_ID -> queryByLoginTypeAndLoginId(
@@ -77,7 +76,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     @Override
     public List<UserEntity> queryUserList(UserListQueryCriteria criteria) {
-        AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL, "userQueryTypeEnum is null.");
+        AssertUtil.notNull(criteria.getQueryType(), BizErrorCode.PARAM_ILLEGAL);
         return switch (criteria.getQueryType()) {
             case USER_ID, SESSION, LOGIN_ID -> new ArrayList<>();
             case USER_ID_LIST -> queryByUserIdList(criteria.getUserIds());

@@ -6,6 +6,7 @@ import com.odk.base.enums.user.UserTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
+import com.odk.base.util.I18nUtil;
 import com.odk.base.util.JacksonUtil;
 import com.odk.basedomain.model.user.UserAccessTokenDO;
 import com.odk.basedomain.model.user.UserBaseDO;
@@ -64,7 +65,7 @@ public class UserRegisterManager implements IUserRegisterManager {
         userRegisterDTO.setIdentifyValue(encryptionService.bcryptEncode(decrypt));
 
         UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId(), TenantIdContext.getTenantId());
-        AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, "用户已经存在，类型：" + userRegisterDTO.getLoginType() + "，登录ID：" + userRegisterDTO.getLoginId());
+        AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, I18nUtil.getMessage("user.existed", userRegisterDTO.getLoginId()));
         String userId;
         try {
             userId = transactionTemplate.execute(status -> {

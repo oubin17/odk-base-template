@@ -54,7 +54,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         VerifySceneEnum verifyScene = verificationCodeDTO.getVerifyScene();
         String key = generateKey(verificationCodeDTO);
         VerificationCodeEntity entity = (VerificationCodeEntity) redisUtil.get(key);
-        AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED, "验证码已发送，请稍后重试。");
+        AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED);
 
         String lockKey = "lock_" + key;
         //这里需要防止并发调用
@@ -62,7 +62,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         if (acquired) {
             try {
                 entity = (VerificationCodeEntity) redisUtil.get(key);
-                AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED, "验证码已发送，请稍后重试。");
+                AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED);
                 //判断24小时内，验证码发送次数是否达到上限
                 String maxVerifyTimesKey = "max_verify_times_" + key;
                 if (redisUtil.exists(maxVerifyTimesKey)) {
@@ -118,14 +118,14 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         if (entity.getVerifyTimes() >= verificationCodeDTO.getVerifyScene().getMaxVerifyTimes()) {
             //超过最大验证次数
             redisUtil.delete(key);
-            throw new BizException(BizErrorCode.VERIFY_CODE_COMPARE_MAX_TIMES, "验证码已超过最大验证次数，请重新获取。");
+            throw new BizException(BizErrorCode.VERIFY_CODE_COMPARE_MAX_TIMES);
         }
         //计算剩余时间
         int leftSeconds = leftSeconds(entity.getCreateTime(), verificationCodeDTO.getVerifyScene());
         redisUtil.set(key, entity, leftSeconds, TimeUnit.SECONDS);
         entity.setCode(null);
         ServiceContextHolder.setErrorContext(entity);
-        throw new BizException(BizErrorCode.VERIFY_CODE_UNMATCHED, "验证码错误，请重新输入。");
+        throw new BizException(BizErrorCode.VERIFY_CODE_UNMATCHED);
     }
 
     /**

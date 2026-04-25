@@ -51,7 +51,7 @@ public class EnumValueValidator implements ConstraintValidator<EnumValue, Object
                 return precomputeAllowedValues(enumClass, property);
             } catch (Exception e) {
                 log.error("初始化枚举校验器失败", e);
-                throw new BizException(BizErrorCode.SYSTEM_ERROR, "枚举校验初始化失败");
+                throw new BizException(BizErrorCode.SYSTEM_ERROR, "Enumeration validation initialization failed");
             }
         });
 
@@ -80,15 +80,14 @@ public class EnumValueValidator implements ConstraintValidator<EnumValue, Object
                     return buildAccessors(clazz);
                 } catch (Exception e) {
                     log.error("构建访问器失败", e);
-                    throw new BizException(BizErrorCode.SYSTEM_ERROR, "构建访问器失败");
+                    throw new BizException(BizErrorCode.SYSTEM_ERROR, "Failed to build accessor");
                 }
             });
 
             Accessor accessor = accessors.get(property.toLowerCase());
             if (accessor == null) {
                 log.error("枚举类 {} 不存在属性: {}", enumClass.getName(), property);
-                throw new BizException(BizErrorCode.SYSTEM_ERROR, "枚举类 " + enumClass.getName() +
-                        " 不存在属性: " + property);
+                throw new BizException(BizErrorCode.SYSTEM_ERROR, "Property does not exist:" + property);
             }
 
             // 获取所有枚举值

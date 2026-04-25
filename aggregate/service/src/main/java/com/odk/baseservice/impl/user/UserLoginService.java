@@ -68,9 +68,9 @@ public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
             protected void checkParams(BaseRequest request) {
                 String identifyType = userLoginRequest.getIdentifyType();
                 if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
-                    AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "密码不为空");
+                    AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL);
                 } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
-                    AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL, "验证码不为空");
+                    AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL);
                 }
             }
 

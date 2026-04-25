@@ -74,7 +74,7 @@ public class UserLoginManager implements IUserLoginManager {
     @Override
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
-        AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST, "用户ID不存在");
+        AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST);
 //        eventPublish.publish(new UserCacheCleanEvent(byUserId.get().getId(), UserCacheSceneEnum.USER_BASIC, CacheActionEnum.DELETE));
         SessionContext.logOut();
         return true;
