@@ -39,6 +39,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alibabacloud-dypnsapi20170525</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -30,21 +30,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public abstract class AbstractVerificationGenerate implements IVerificationGenerate {
 
-    /**
-     * 过期时间：秒
-     */
-//    private static final int EXPIRE_TIME = 118;
-
-    /**
-     * 单个验证码最大校验次数
-     */
-//    private static final int MAX_VERIFY_TIMES = 3;
-
-    /**
-     * 验证码最大发送次数
-     */
-//    private static final int MAX_VERIFY_TIMES_PER_DAY = 10;
-
     private RedisUtil redisUtil;
 
     private DistributedLockService lockService;
@@ -75,7 +60,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                     redisUtil.set(maxVerifyTimesKey, 1, 24, TimeUnit.HOURS);
 
                 }
-                VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity(verifyScene);
+                VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity(verifyScene, verificationCodeDTO.getVerifyKey());
                 if (redisUtil.setIfAbsent(key, verificationCodeEntity, verifyScene.getExpireTime(), TimeUnit.SECONDS)) {
                     log.info("验证码生成成功：key:{}, value:{}", key, JacksonUtil.toJsonString(entity));
                     verificationCodeEntity.setCode(null);
@@ -133,7 +118,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
      *
      * @return
      */
-    abstract protected String generateVerificationCode();
+    abstract protected String generateVerificationCode(String phoneNumber);
 
 
     /**
@@ -164,8 +149,8 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
      *
      * @return
      */
-    private VerificationCodeEntity generateVerificationCodeEntity(VerifySceneEnum verifyScene) {
-        String code = generateVerificationCode();
+    private VerificationCodeEntity generateVerificationCodeEntity(VerifySceneEnum verifyScene, String phoneNumber) {
+        String code = generateVerificationCode(phoneNumber);
         VerificationCodeEntity verificationCodeEntity = new VerificationCodeEntity();
         verificationCodeEntity.setCode(code);
         verificationCodeEntity.setVerifyTimes(0);

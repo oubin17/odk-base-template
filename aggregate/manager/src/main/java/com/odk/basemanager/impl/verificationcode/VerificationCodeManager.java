@@ -3,13 +3,13 @@ package com.odk.basemanager.impl.verificationcode;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.VerificationCodeDomain;
-import com.odk.baseinfra.verificationcode.IVerificationGenerate;
+import com.odk.baseinfra.verificationcode.SmsVerificationGenerate;
 import com.odk.basemanager.api.verificationcode.IVerificationCodeManager;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.entity.VerificationCodeEntity;
 import com.odk.baseutil.enums.VerificationCodeStatusEnum;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,9 +21,12 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class VerificationCodeManager implements IVerificationCodeManager {
 
-    private IVerificationGenerate verificationGenerate;
+//    private IVerificationGenerate verificationGenerate;
+
+    private SmsVerificationGenerate verificationGenerate;
 
     private VerificationCodeDomain verificationCodeDomain;
 
@@ -65,15 +68,5 @@ public class VerificationCodeManager implements IVerificationCodeManager {
             }
             throw bizException;
         }
-    }
-
-    @Autowired
-    public void setVerificationGenerate(IVerificationGenerate verificationGenerate) {
-        this.verificationGenerate = verificationGenerate;
-    }
-
-    @Autowired
-    public void setVerificationCodeDomain(VerificationCodeDomain verificationCodeDomain) {
-        this.verificationCodeDomain = verificationCodeDomain;
     }
 }
