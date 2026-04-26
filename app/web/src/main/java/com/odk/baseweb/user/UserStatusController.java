@@ -23,6 +23,16 @@ public class UserStatusController {
 
     private UserStatusApi userStatusApi;
 
+    /**
+     * 账号注销
+     *
+     * @return
+     */
+    @PostMapping("/deletion")
+    public ServiceResponse<String> deletion() {
+        return userStatusApi.deletion();
+    }
+
     @SaCheckRole(value = {InnerRoleEnum.ADMIN_ROLE})
     @PostMapping("/freeze")
     public ServiceResponse<Boolean> freezeUser(@RequestParam("userId") String userId) {

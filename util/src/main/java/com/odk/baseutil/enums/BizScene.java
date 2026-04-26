@@ -28,6 +28,8 @@ public enum BizScene {
 
     USER_UNFREEZE("USER_UNFREEZE", "用户解冻"),
 
+    ACCOUNT_DELETION("ACCOUNT_DELETION", "账号注销"),
+
 
     ROLE_LIST("ROLE_LIST", "角色列表"),
 

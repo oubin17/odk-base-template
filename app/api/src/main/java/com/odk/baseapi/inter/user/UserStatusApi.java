@@ -11,6 +11,8 @@ import com.odk.base.vo.response.ServiceResponse;
  */
 public interface UserStatusApi {
 
+    ServiceResponse<String> deletion();
+
     ServiceResponse<Boolean> freezeUser(String userId);
 
     ServiceResponse<Boolean> unfreezeUser(String userId);
