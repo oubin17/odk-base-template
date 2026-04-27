@@ -3,7 +3,7 @@ package com.odk.basemanager.impl.verificationcode;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
 import com.odk.basedomain.domain.VerificationCodeDomain;
-import com.odk.baseinfra.verificationcode.SmsVerificationGenerate;
+import com.odk.baseinfra.verificationcode.LocalVerificationGenerate;
 import com.odk.basemanager.api.verificationcode.IVerificationCodeManager;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.entity.VerificationCodeEntity;
@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class VerificationCodeManager implements IVerificationCodeManager {
 
-//    private IVerificationGenerate verificationGenerate;
+    private LocalVerificationGenerate verificationGenerate;
 
-    private SmsVerificationGenerate verificationGenerate;
+//    private SmsVerificationGenerate verificationGenerate;
 
     private VerificationCodeDomain verificationCodeDomain;
 
@@ -41,9 +41,8 @@ public class VerificationCodeManager implements IVerificationCodeManager {
         return generate;
     }
 
-    @Deprecated
     public boolean compare(VerificationCodeDTO verificationCodeDTO) {
-        return verificationGenerate.compare(verificationCodeDTO);
+        return verificationGenerate.compareUniqueId(verificationCodeDTO);
     }
 
     /**

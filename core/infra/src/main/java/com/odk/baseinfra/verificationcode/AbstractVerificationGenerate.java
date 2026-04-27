@@ -81,10 +81,10 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
 
 
     @Override
-    public boolean compare(VerificationCodeDTO verificationCodeDTO) {
+    public boolean compareUniqueId(VerificationCodeDTO verificationCodeDTO) {
         VerificationCodeEntity entity = getCodeOrThrow(generateKey(verificationCodeDTO));
         AssertUtil.equal(entity.getUniqueId(), verificationCodeDTO.getUniqueId(), BizErrorCode.VERIFY_CODE_UNIQUE_ERROR);
-        return StringUtils.equals(verificationCodeDTO.getVerifyCode(), entity.getCode());
+        return true;
     }
 
     @Override

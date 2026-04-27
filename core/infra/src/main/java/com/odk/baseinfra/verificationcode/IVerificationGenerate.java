@@ -28,7 +28,7 @@ public interface IVerificationGenerate {
      * @param verificationCodeDTO
      * @return
      */
-    boolean compare(VerificationCodeDTO verificationCodeDTO);
+    boolean compareUniqueId(VerificationCodeDTO verificationCodeDTO);
 
     /**
      * 校验验证码:如果不通过，则根据策略增加错误次数或删除验证码

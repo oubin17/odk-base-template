@@ -25,17 +25,17 @@ public class VerificationCodeRequest extends BaseRequest {
     private static final long serialVersionUID = 3753890578092494681L;
 
     /**
-     * 登录 ID：手机号、邮箱、用户名、第三方登录唯一标识
-     */
-    @NotBlank(message = "verifyKey不能为空")
-    private String verifyKey;
-
-    /**
      * 验证码类型：手机、邮箱、用户名、第三方登录唯一标识
      */
     @NotBlank(message = "verifyType不能为空")
     @EnumValue(enumClass = TokenTypeEnum.class, property = "code", message = "loginType非法")
-    private String verifyType;
+    private String verifyType = TokenTypeEnum.MOBILE.getCode();
+
+    /**
+     * 登录 ID：手机号、邮箱、用户名、第三方登录唯一标识
+     */
+//    @NotBlank(message = "verifyKey不能为空")
+    private String verifyKey;
 
     /**
      * 验证码场景：登录、注册、找回密码等

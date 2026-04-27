@@ -1,19 +1,25 @@
 package com.odk.baseservice.impl.verificationcode;
 
+import com.google.common.collect.ImmutableSet;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.verificationcode.VerificationCodeApi;
+import com.odk.basedomain.domain.UserQueryDomain;
+import com.odk.basedomain.domain.criteria.UserQueryCriteria;
 import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
 import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.convert.VerificationCodeConvert;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
+import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.entity.VerificationCodeEntity;
 import com.odk.baseutil.enums.BizScene;
-import com.odk.baseutil.convert.VerificationCodeConvert;
+import com.odk.baseutil.enums.UserQueryTypeEnum;
+import com.odk.baseutil.enums.VerifySceneEnum;
 import com.odk.baseutil.request.VerificationCodeRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,11 +31,19 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class VerificationCodeService extends AbstractApiImpl implements VerificationCodeApi {
 
     private VerificationCodeManager verificationCodeManager;
 
     private VerificationCodeConvert verificationCodeConvert;
+
+    private UserQueryDomain userQueryDomain;
+
+    /**
+     * 不从 token 中获取手机号的场景：注册、登录。
+     */
+    private static final ImmutableSet<VerifySceneEnum> SCENE_LIST = ImmutableSet.of(VerifySceneEnum.REGISTER, VerifySceneEnum.LOGIN);
 
     @Override
     public ServiceResponse<VerificationCodeEntity> generateCode(VerificationCodeRequest codeRequest) {
@@ -37,7 +51,15 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
 
             @Override
             protected Object convert(BaseRequest request) {
-                return verificationCodeConvert.toDTO(codeRequest);
+                VerificationCodeDTO dto = verificationCodeConvert.toDTO(codeRequest);
+                if (SCENE_LIST.contains(dto.getVerifyScene())) {
+                    AssertUtil.notNull(codeRequest.getVerifyKey(), BizErrorCode.PARAM_ILLEGAL);
+                } else {
+                    //从 token 中获取用户手机号
+                    UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.SESSION).nullAllowed(false).build());
+                    dto.setVerifyKey(userEntity.getAccessToken().getTokenValue());
+                }
+                return dto;
             }
 
             @Override
@@ -79,16 +101,6 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
             }
 
         });
-    }
-
-    @Autowired
-    public void setVerificationCodeManager(VerificationCodeManager verificationCodeManager) {
-        this.verificationCodeManager = verificationCodeManager;
-    }
-
-    @Autowired
-    public void setVerificationCodeMapper(VerificationCodeConvert verificationCodeConvert) {
-        this.verificationCodeConvert = verificationCodeConvert;
     }
 
 }

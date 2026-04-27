@@ -18,9 +18,9 @@ public enum VerifySceneEnum implements IEnum {
 
     COMMON("COMMON", 300, 10, 20, "通用"),
 
-    LOGIN("LOGIN", 1200, 3, 10, "登录"),
+    LOGIN("LOGIN", 300, 10, 10, "登录"),
 
-    REGISTER("REGISTER", 180, 3, 10, "注册"),
+    REGISTER("REGISTER", 300, 10, 10, "注册"),
 
     ;
 
