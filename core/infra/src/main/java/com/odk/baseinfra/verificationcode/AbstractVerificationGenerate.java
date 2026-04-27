@@ -34,6 +34,8 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
 
     private DistributedLockService lockService;
 
+    private static final String VERIFY_CODE_KEY_PREFIX = "sms:";
+
     @Override
     public VerificationCodeEntity generate(VerificationCodeDTO verificationCodeDTO) {
         VerifySceneEnum verifyScene = verificationCodeDTO.getVerifyScene();
@@ -41,7 +43,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
         VerificationCodeEntity entity = (VerificationCodeEntity) redisUtil.get(key);
         AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED);
 
-        String lockKey = "lock_" + key;
+        String lockKey = key + "_lock";
         //这里需要防止并发调用
         boolean acquired = lockService.tryLock(lockKey, 1, 10);
         if (acquired) {
@@ -49,7 +51,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                 entity = (VerificationCodeEntity) redisUtil.get(key);
                 AssertUtil.isNull(entity, BizErrorCode.VERIFY_CODE_EXISTED);
                 //判断24小时内，验证码发送次数是否达到上限
-                String maxVerifyTimesKey = "max_verify_times_" + key;
+                String maxVerifyTimesKey = key + "_max_verify_times";
                 if (redisUtil.exists(maxVerifyTimesKey)) {
                     int maxVerifyTimes = (int) redisUtil.get(maxVerifyTimesKey);
                     if (maxVerifyTimes > verifyScene.getMaxSendPerDay()) {
@@ -141,7 +143,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
      * @return
      */
     private String generateKey(VerificationCodeDTO verificationCodeDTO) {
-        return verificationCodeDTO.getVerifyScene().getCode() + "_" + verificationCodeDTO.getVerifyType() + "_" + verificationCodeDTO.getVerifyKey() + "_" + TenantIdContext.getTenantId();
+        return VERIFY_CODE_KEY_PREFIX + verificationCodeDTO.getVerifyScene().getCode() + "_" + verificationCodeDTO.getVerifyType() + "_" + verificationCodeDTO.getVerifyKey() + "_" + TenantIdContext.getTenantId();
     }
 
     /**

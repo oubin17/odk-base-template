@@ -60,6 +60,7 @@ public class I18nTestController {
      *
      * @return 异常响应（会被GlobalExceptionHandler拦截并返回国际化消息）
      */
+    @SaIgnore
     @GetMapping("/exception")
     public ServiceResponse<Void> testException() {
         // 抛出业务异常，测试GlobalExceptionHandler的国际化处理
