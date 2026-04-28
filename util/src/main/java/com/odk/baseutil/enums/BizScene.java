@@ -12,6 +12,8 @@ public enum BizScene {
 
     USER_REGISTER("USER_REGISTER", "用户注册"),
 
+    USER_REGISTER_LOGIN("USER_REGISTER_LOGIN", "用户注册后登录"),
+
     USER_LOGIN("USER_LOGIN", "用户登录"),
 
     USER_LOGOUT("USER_LOGOUT", "注销登录"),

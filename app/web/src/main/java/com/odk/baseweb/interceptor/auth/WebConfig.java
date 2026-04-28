@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * 如果不指定端口，默认http -> 80   https -> 443
      */
-    private static final String[] allowedOrigins = new String[]{"http://localhost:5173", "http://localhost"} ;
+    private static final String[] allowedOrigins = new String[]{"http://localhost:5173", "http://localhost"};
 
     /**
      * 配置跨域请求规则
@@ -72,13 +72,19 @@ public class WebConfig implements WebMvcConfigurer {
     /**
      * 这里用于路由拦截鉴权
      * 如果遇到拦截无效，请检查头部是否带上cookie标识
-     *
+     * <p>
      * important：这里的路径，必须是从controller层开始的路径
      *
      * @return
      */
     private SaInterceptor saInterceptor() {
-        String[] noLoginCheck = new String[]{"/user/query/loginId", "/user/register", "/user/login"};
+        String[] noLoginCheck = new String[]{
+                "/user/query/loginId",
+                "/user/register",
+                "/user/register/login",
+                "/user/register/noauth",
+                "/user/login"
+        };
         return new SaInterceptor(handler -> {
             // 指定一条 match 规则
             SaRouter.match("/**")    // 拦截的 path 列表，可以写多个 */

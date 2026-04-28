@@ -1,6 +1,7 @@
 package com.odk.baseutil.convert;
 
 import com.odk.baseutil.dto.user.UserRegisterDTO;
+import com.odk.baseutil.request.UserRegisterNoAuthRequest;
 import com.odk.baseutil.request.UserRegisterRequest;
 import org.mapstruct.Mapper;
 
@@ -15,4 +16,6 @@ import org.mapstruct.Mapper;
 public interface UserRegisterConvert {
 
     UserRegisterDTO toDTO(UserRegisterRequest userRegisterRequest);
+
+    UserRegisterDTO toDTO(UserRegisterNoAuthRequest userRegisterRequest);
 }

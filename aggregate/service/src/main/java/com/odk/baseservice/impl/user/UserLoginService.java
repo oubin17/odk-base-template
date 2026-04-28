@@ -3,22 +3,22 @@ package com.odk.baseservice.impl.user;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
-import com.odk.base.vo.request.BaseRequest;
-import com.odk.base.vo.response.BaseResponse;
+import com.odk.base.exception.BizException;
+import com.odk.base.util.I18nUtil;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserLoginApi;
 import com.odk.basemanager.api.user.IUserLoginManager;
-import com.odk.baseservice.template.AbstractApiImpl;
-import com.odk.baseutil.dto.user.UserLoginDTO;
+import com.odk.baseutil.annotation.BizProcess;
+import com.odk.baseutil.convert.UserLoginConvert;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.enums.VerifySceneEnum;
-import com.odk.baseutil.convert.UserLoginConvert;
+import com.odk.baseutil.enums.VerifyTypeEnum;
 import com.odk.baseutil.request.UserLoginRequest;
 import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.baseutil.userinfo.SessionContext;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,117 +30,40 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class UserLoginService extends AbstractApiImpl implements UserLoginApi {
+@AllArgsConstructor
+public class UserLoginService implements UserLoginApi {
 
     private IUserLoginManager userLoginManager;
 
     private UserLoginConvert userLoginConvert;
 
     @Override
+    @BizProcess(bizScene = BizScene.USER_LOGIN)
     public ServiceResponse<UserLoginResponse> userLogin(UserLoginRequest userLoginRequest) {
 
-//        return ServiceTemplate.execute(
-//                BizScene.USER_LOGIN,
-//                userLoginRequest,
-//                loginRequest -> {
-//                    String identifyType = userLoginRequest.getIdentifyType();
-//                    if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
-//                        AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL, "密码不为空");
-//                    } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
-//                        AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL, "验证码不为空");
-//                    }
-//                },
-//                loginRequest -> {
-//                    UserLoginDTO userLoginDTO = userLoginMapper.toDTO(userLoginRequest);
-//                    UserEntity userEntity = userLoginManager.userLogin(userLoginDTO);
-//                    return userLoginMapper.toResponse(userEntity);
-//                },
-//                userLoginResponse -> {
-//                    if (userLoginResponse.isSuccess()) {
-//                        userLoginResponse.getData().setToken(StpUtil.getTokenInfo().getTokenValue());
-//                    }
-//                });
+        String identifyType = userLoginRequest.getIdentifyType();
+        if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
+            AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL);
+        } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
+            AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL);
+            userLoginRequest.getVerificationCode().fillVerifyInfo(VerifySceneEnum.LOGIN, VerifyTypeEnum.MOBILE, userLoginRequest.getLoginId());
+        }
 
+        UserEntity userEntity = userLoginManager.userLogin(userLoginConvert.toDTO(userLoginRequest));
+        UserLoginResponse response = userLoginConvert.toResponse(userEntity);
+        response.setToken(SessionContext.getToken());
+        return ServiceResponse.valueOfSuccess(response);
 
-        return super.strictBizProcess(BizScene.USER_LOGIN, userLoginRequest, new StrictApiCallBack<UserLoginResponse, UserLoginResponse>() {
-
-            @Override
-            protected void checkParams(BaseRequest request) {
-                String identifyType = userLoginRequest.getIdentifyType();
-                if (IdentificationTypeEnum.PASSWORD.getCode().equals(identifyType)) {
-                    AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL);
-                } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
-                    AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL);
-                }
-            }
-
-            @Override
-            protected void beforeProcess(BaseRequest request) {
-                if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(userLoginRequest.getIdentifyType())) {
-                    userLoginRequest.getVerificationCode().setVerifyScene(VerifySceneEnum.LOGIN);
-                    userLoginRequest.getVerificationCode().setVerifyKey(userLoginRequest.getLoginId());
-                    userLoginRequest.getVerificationCode().setVerifyType(userLoginRequest.getLoginType());
-                }
-
-            }
-
-            @Override
-            protected Object convert(BaseRequest request) {
-                UserLoginRequest loginRequest = (UserLoginRequest) request;
-                return userLoginConvert.toDTO(loginRequest);
-            }
-
-            @Override
-            protected UserLoginResponse doProcess(Object args) {
-                UserLoginDTO userLoginDTO = (UserLoginDTO) args;
-                UserEntity userEntity = userLoginManager.userLogin(userLoginDTO);
-                return userLoginConvert.toResponse(userEntity);
-            }
-
-            @Override
-            protected UserLoginResponse convertResult(UserLoginResponse apiResult) {
-                return apiResult;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void afterProcess(BaseResponse response) {
-                if (response.isSuccess()) {
-                    ServiceResponse<UserLoginResponse> userLoginResponseServiceResponse = (ServiceResponse<UserLoginResponse>) response;
-                    userLoginResponseServiceResponse.getData().setToken(SessionContext.getToken());
-                }
-            }
-        });
     }
 
     @Override
+    @BizProcess(bizScene = BizScene.USER_LOGOUT)
     public ServiceResponse<Boolean> userLogout() {
-        return super.bizProcess(BizScene.USER_LOGOUT, null, new ApiCallBack<Boolean, Boolean>() {
 
-            @Override
-            protected Boolean doProcess(Object args) {
-                if (!SessionContext.isLogin()) {
-                    log.error("当前用户非登录态，登录注销失败！");
-//                    throw new BizException(BizErrorCode.PARAM_ILLEGAL, "用户非登录态，登出异常");
-                }
-                return userLoginManager.userLogout();
+        if (!SessionContext.isLogin()) {
+            throw new BizException(BizErrorCode.PARAM_ILLEGAL, I18nUtil.getMessage("user.not.login"));
+        }
+        return ServiceResponse.valueOfSuccess(userLoginManager.userLogout());
 
-            }
-
-            @Override
-            protected Boolean convertResult(Boolean apiResult) {
-                return apiResult;
-            }
-        });
-    }
-
-    @Autowired
-    public void setUserLoginManager(IUserLoginManager userLoginManager) {
-        this.userLoginManager = userLoginManager;
-    }
-
-    @Autowired
-    public void setUserLoginMapper(UserLoginConvert userLoginConvert) {
-        this.userLoginConvert = userLoginConvert;
     }
 }

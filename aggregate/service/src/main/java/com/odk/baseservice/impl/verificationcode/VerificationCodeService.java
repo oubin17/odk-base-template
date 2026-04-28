@@ -5,9 +5,7 @@ import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.verificationcode.VerificationCodeApi;
-import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
-import com.odk.baseservice.template.AbstractApiImpl;
 import com.odk.baseutil.annotation.BizProcess;
 import com.odk.baseutil.convert.VerificationCodeConvert;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
@@ -31,13 +29,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class VerificationCodeService extends AbstractApiImpl implements VerificationCodeApi {
+public class VerificationCodeService implements VerificationCodeApi {
 
     private VerificationCodeManager verificationCodeManager;
 
     private VerificationCodeConvert verificationCodeConvert;
-
-    private UserQueryDomain userQueryDomain;
 
     /**
      * 不从 token 中获取手机号的场景：注册、登录。

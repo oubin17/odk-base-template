@@ -2,6 +2,7 @@ package com.odk.baseweb.user;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
+import com.odk.baseutil.request.UserRegisterNoAuthRequest;
 import com.odk.baseutil.request.UserRegisterRequest;
 import com.odk.baseutil.response.UserLoginResponse;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class UserRegisterController {
     }
 
     /**
-     * 用户注册
+     * 用户注册（需验证码）
      *
      * @param userRegisterRequest
      * @return
@@ -47,5 +48,17 @@ public class UserRegisterController {
     public ServiceResponse<UserLoginResponse> loginAfterRegister(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         return userRegisterApi.loginAfterRegister(userRegisterRequest);
     }
+
+    /**
+     * 用户注册（无需验证码）
+     *
+     * @param noAuthRequest
+     * @return
+     */
+    @PostMapping("/noauth")
+    public ServiceResponse<String> userRegisterNoAuth(@RequestBody @Valid UserRegisterNoAuthRequest noAuthRequest) {
+        return userRegisterApi.userRegisterNoAuth(noAuthRequest);
+    }
+
 
 }
