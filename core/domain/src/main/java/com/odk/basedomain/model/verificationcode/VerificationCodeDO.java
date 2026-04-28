@@ -60,6 +60,12 @@ public class VerificationCodeDO extends BaseDO {
     private String status;
 
     /**
+     * 验证码生成失败原因
+     */
+    @Column(name = "error_msg")
+    private String errorMsg;
+
+    /**
      * 唯一标识
      */
     @Column(name = "unique_id")

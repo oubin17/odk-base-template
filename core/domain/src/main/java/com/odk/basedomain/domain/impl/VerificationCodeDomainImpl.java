@@ -24,13 +24,14 @@ public class VerificationCodeDomainImpl implements VerificationCodeDomain {
     private VerificationCodeRepository verificationCodeRepository;
 
     @Override
-    public void saveVerificationCodeFlow(VerificationCodeDTO verificationCodeDTO, String uniqueId, VerificationCodeStatusEnum status) {
+    public void saveVerificationCodeFlow(VerificationCodeDTO verificationCodeDTO, String uniqueId, VerificationCodeStatusEnum status, String errorMsg) {
         VerificationCodeDO codeDO = new VerificationCodeDO();
         codeDO.setVerifyKey(verificationCodeDTO.getVerifyKey());
         codeDO.setVerifyType(verificationCodeDTO.getVerifyType());
         codeDO.setVerifyScene(verificationCodeDTO.getVerifyScene().getCode());
         codeDO.setVerifyTimes(0);
         codeDO.setStatus(status.getCode());
+        codeDO.setErrorMsg(errorMsg);
         codeDO.setUserId(SessionContext.getLoginIdOrDefault(null));
         codeDO.setUniqueId(uniqueId);
         verificationCodeRepository.save(codeDO);

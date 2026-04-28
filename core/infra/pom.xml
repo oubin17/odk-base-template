@@ -19,6 +19,12 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- Spring AOP -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-aop</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>com.odk</groupId>
             <artifactId>odk-common-util-base</artifactId>

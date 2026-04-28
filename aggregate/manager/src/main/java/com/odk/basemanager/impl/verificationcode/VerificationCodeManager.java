@@ -26,19 +26,21 @@ public class VerificationCodeManager implements IVerificationCodeManager {
 
     private LocalVerificationGenerate verificationGenerate;
 
-//    private SmsVerificationGenerate verificationGenerate;
-
     private VerificationCodeDomain verificationCodeDomain;
 
     @Override
     public VerificationCodeEntity generate(VerificationCodeDTO verificationCodeDTO) {
-        VerificationCodeEntity generate = verificationGenerate.generate(verificationCodeDTO);
-        if (null == generate) {
-            verificationCodeDomain.saveVerificationCodeFlow(verificationCodeDTO, null, VerificationCodeStatusEnum.GENERATE_FAIL);
-        } else {
-            verificationCodeDomain.saveVerificationCodeFlow(verificationCodeDTO, generate.getUniqueId(), VerificationCodeStatusEnum.GENERATE_SUCCESS);
+        try {
+            VerificationCodeEntity generate = verificationGenerate.generate(verificationCodeDTO);
+            if (generate != null) {
+                verificationCodeDomain.saveVerificationCodeFlow(verificationCodeDTO, generate.getUniqueId(), VerificationCodeStatusEnum.GENERATE_SUCCESS, null);
+            }
+            return generate;
+        } catch (Exception e) {
+            log.error("生成验证码发生未知异常，异常信息:", e);
+            verificationCodeDomain.saveVerificationCodeFlow(verificationCodeDTO, null, VerificationCodeStatusEnum.GENERATE_FAIL, e.getMessage());
+            throw e;
         }
-        return generate;
     }
 
     @Override

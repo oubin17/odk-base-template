@@ -37,14 +37,23 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BizException.class)
     public ResponseEntity<ServiceResponse<Void>> handleBizException(BizException e) {
-        log.error("发生预期外异常", e);
-        // 处理校验异常，可以根据需要返回适当的响应
-        if (e.getErrorCode() == null) {
-            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.FORBIDDEN);
-        } else {
-            return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode(), e.getMessage()), HttpStatus.BAD_REQUEST);
+        log.error("biz exception happened:", e);
 
-        }
+        BizErrorCode errorCode = e.getErrorCode();
+
+        return new ResponseEntity<>(ServiceResponse.valueOfError(
+                errorCode.getErrorType(),
+                errorCode.getErrorCode(),
+                e.getMessage() == null ? e.getErrorCode().getErrorContext() : e.getMessage(),
+                e.getExtendInfo()), HttpStatus.BAD_REQUEST);
+
+        // 处理校验异常，可以根据需要返回适当的响应
+//        if (e.getErrorCode() == null) {
+//            return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.FORBIDDEN);
+//        } else {
+//            return new ResponseEntity<>(ServiceResponse.valueOfError(e.getErrorCode(), e.getMessage()), HttpStatus.BAD_REQUEST);
+//
+//        }
     }
 
     /**
@@ -55,7 +64,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotLoginException.class)
     public ResponseEntity<ServiceResponse<Void>> handleSaTokenException(SaTokenException e) {
-        log.error("Token 校验异常", e);
+        log.error("Token check error:", e);
         // 处理校验异常，可以根据需要返回适当的响应
         if (e instanceof NotLoginException) {
             return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_UNMATCHED), HttpStatus.FORBIDDEN);
@@ -73,7 +82,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ServiceResponse<Void>> handleUnknownException(Exception e) {
-        log.error("未知系统异常", e);
+        log.error("unknown system error:", e);
         return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR, e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
@@ -91,12 +100,11 @@ public class GlobalExceptionHandler {
 //            String errorMessage = error.getDefaultMessage();
 //            errors.put(fieldName, errorMessage);
 //        });
-        log.error("参数校验异常", ex);
+        log.error("params check error:", ex);
         Optional<String> firstError = ex.getBindingResult().getAllErrors().stream().findFirst().map(ObjectError::getDefaultMessage);
 
         return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.PARAM_ILLEGAL, firstError.orElse("Parameter is illegal")), HttpStatus.BAD_REQUEST);
     }
-
 
 
 }

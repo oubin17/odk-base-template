@@ -58,7 +58,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                         throw new BizException(BizErrorCode.VERIFY_CODE_SEND_MAX_TIMES);
                     }
                     redisUtil.incrBy(maxVerifyTimesKey, 1);
-               } else {
+                } else {
                     redisUtil.set(maxVerifyTimesKey, 1, 24, TimeUnit.HOURS);
 
                 }
@@ -68,10 +68,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                     verificationCodeEntity.setCode(null);
                     return verificationCodeEntity;
                 }
-            } catch (Exception e) {
-                log.error("生成验证码发生未知异常，异常信息:", e);
-            }
-            finally {
+            } finally {
                 lockService.unlock(lockKey);
             }
         } else {

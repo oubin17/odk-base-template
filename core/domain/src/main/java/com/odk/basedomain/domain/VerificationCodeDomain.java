@@ -19,7 +19,7 @@ public interface VerificationCodeDomain {
      * @param uniqueId
      * @param status
      */
-    void saveVerificationCodeFlow(VerificationCodeDTO verificationCodeDTO, String uniqueId, VerificationCodeStatusEnum status);
+    void saveVerificationCodeFlow(VerificationCodeDTO verificationCodeDTO, String uniqueId, VerificationCodeStatusEnum status, String errorMsg);
 
     /**
      * 验证成功
