@@ -5,7 +5,6 @@ import com.odk.base.enums.user.UserStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.exception.BizException;
-import com.odk.base.vo.response.BaseResponse;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserStatusApi;
 import com.odk.basedomain.domain.UserQueryDomain;
@@ -16,7 +15,7 @@ import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.repository.user.UserAccessTokenHisRepository;
 import com.odk.basedomain.repository.user.UserAccessTokenRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
-import com.odk.baseservice.template.AbstractApiImpl;
+import com.odk.baseutil.annotation.BizProcess;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
@@ -37,7 +36,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class UserStatusService extends AbstractApiImpl implements UserStatusApi {
+public class UserStatusService implements UserStatusApi {
 
     private UserQueryDomain userQueryDomain;
 
@@ -50,44 +49,59 @@ public class UserStatusService extends AbstractApiImpl implements UserStatusApi 
     private TransactionTemplate transactionTemplate;
 
     @Override
-    public ServiceResponse<String> deletion() {
-        return super.bizProcess(BizScene.ACCOUNT_DELETION, null, new ApiCallBack<String, String>() {
+    @BizProcess(bizScene = BizScene.ACCOUNT_DELETION)
+    public ServiceResponse<Void> deletion() {
 
-            @Override
-            protected String doProcess(Object args) {
-                UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.SESSION).nullAllowed(false).build());
-                AssertUtil.notNull(userEntity.getAccessToken(), BizErrorCode.USER_NOT_EXIST);
-                //1.查出旧的 access token
-                UserAccessTokenDO byTokenTypeAndTokenValueAndTenantId = userAccessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(userEntity.getAccessToken().getTokenType(), userEntity.getAccessToken().getTokenValue(), TenantIdContext.getTenantId());
-                UserAccessTokenHisDO userAccessTokenHisDO = getUserAccessTokenHisDO(byTokenTypeAndTokenValueAndTenantId);
+        UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.SESSION).nullAllowed(false).build());
+        AssertUtil.notNull(userEntity.getAccessToken(), BizErrorCode.USER_NOT_EXIST);
 
-                UserBaseDO userBaseDO = userBaseRepository.findById(userEntity.getUserId())
-                        .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_EXIST));
-                AssertUtil.isTrue(UserStatusEnum.isNormal(userBaseDO.getUserStatus()), BizErrorCode.USER_STATUS_ERROR);
-                return transactionTemplate.execute(status -> {
-                    //1. 删除旧的 access token
-                    userAccessTokenRepository.delete(byTokenTypeAndTokenValueAndTenantId);
-                    //2. 保存新的 access token
-                    userAccessTokenHisRepository.save(userAccessTokenHisDO);
+        UserBaseDO userBaseDO = userBaseRepository.findById(userEntity.getUserId())
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_EXIST));
+        AssertUtil.isTrue(UserStatusEnum.isNormal(userBaseDO.getUserStatus()), BizErrorCode.USER_STATUS_ERROR);
 
-                    userBaseDO.setUserStatus(UserStatusEnum.CLOSED.getCode());
-                    userBaseRepository.save(userBaseDO);
+        //1.查出旧的 access token
+        UserAccessTokenDO byTokenTypeAndTokenValueAndTenantId = userAccessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(userEntity.getAccessToken().getTokenType(), userEntity.getAccessToken().getTokenValue(), TenantIdContext.getTenantId());
+        UserAccessTokenHisDO userAccessTokenHisDO = getUserAccessTokenHisDO(byTokenTypeAndTokenValueAndTenantId);
 
-                    return userEntity.getUserId();
-                });
-            }
+        transactionTemplate.execute(status -> {
+            //1. 删除旧的 access token
+            userAccessTokenRepository.delete(byTokenTypeAndTokenValueAndTenantId);
+            //2. 保存新的 access token
+            userAccessTokenHisRepository.save(userAccessTokenHisDO);
 
-            @Override
-            protected String convertResult(String apiResult) {
-                return apiResult;
-            }
+            userBaseDO.setUserStatus(UserStatusEnum.CLOSED.getCode());
+            userBaseRepository.save(userBaseDO);
 
-            @Override
-            protected void afterProcess(BaseResponse response) {
-                SessionContext.logOut();
-            }
+            return userEntity.getUserId();
         });
+        SessionContext.logOut();
+        return ServiceResponse.valueOfSuccess();
+
     }
+
+    @Override
+    @BizProcess(bizScene = BizScene.USER_FREEZE)
+    public ServiceResponse<Boolean> freezeUser(String userId) {
+        UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(userId).nullAllowed(false).build());
+        UserBaseDO userBaseDO = userBaseRepository.findById(userEntity.getUserId())
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_EXIST));
+        AssertUtil.isTrue(UserStatusEnum.isNormal(userBaseDO.getUserStatus()), BizErrorCode.USER_STATUS_ERROR);
+        userBaseDO.setUserStatus(UserStatusEnum.FROZEN.getCode());
+        userBaseRepository.save(userBaseDO);
+        SessionContext.kickOut(userId);
+        return ServiceResponse.valueOfSuccess();
+    }
+
+    @Override
+    @BizProcess(bizScene = BizScene.USER_UNFREEZE)
+    public ServiceResponse<Boolean> unfreezeUser(String userId) {
+        UserBaseDO userBaseDO = userBaseRepository.findById(userId)
+                .orElseThrow(() -> new BizException(BizErrorCode.USER_NOT_EXIST));
+        userBaseDO.setUserStatus(UserStatusEnum.NORMAL.getCode());
+        userBaseRepository.save(userBaseDO);
+        return ServiceResponse.valueOfSuccess();
+    }
+
 
     @NotNull
     private static UserAccessTokenHisDO getUserAccessTokenHisDO(UserAccessTokenDO byTokenTypeAndTokenValueAndTenantId) {
@@ -98,60 +112,5 @@ public class UserStatusService extends AbstractApiImpl implements UserStatusApi 
         userAccessTokenHisDO.setTokenValue(byTokenTypeAndTokenValueAndTenantId.getTokenValue());
         userAccessTokenHisDO.setTenantId(byTokenTypeAndTokenValueAndTenantId.getTenantId());
         return userAccessTokenHisDO;
-    }
-
-    @Override
-    public ServiceResponse<Boolean> freezeUser(String userId) {
-        return super.bizProcess(BizScene.USER_FREEZE, userId, new ApiCallBack<Boolean, Boolean>() {
-
-            @Override
-            protected void checkParams(Object request) {
-                UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(userId).nullAllowed(false).build());
-
-                //long count = userEntity.getRoles().stream().filter(role -> role.getRoleCode().equals(InnerRoleEnum.ADMIN_ROLE)).count();
-            }
-
-            @Override
-            protected Boolean doProcess(Object args) {
-
-                UserBaseDO userBaseDO = userBaseRepository.findById(userId).orElse(null);
-                AssertUtil.notNull(userBaseDO, BizErrorCode.USER_NOT_EXIST);
-                userBaseDO.setUserStatus(UserStatusEnum.FROZEN.getCode());
-                userBaseRepository.save(userBaseDO);
-                SessionContext.kickOut(userId);
-                return true;
-            }
-
-            @Override
-            protected Boolean convertResult(Boolean apiResult) {
-                return apiResult;
-            }
-        });
-    }
-
-    @Override
-    public ServiceResponse<Boolean> unfreezeUser(String userId) {
-        return super.bizProcess(BizScene.USER_UNFREEZE, userId, new ApiCallBack<Boolean, Boolean>() {
-
-            @Override
-            protected void checkParams(Object request) {
-                userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.USER_ID).userId(userId).nullAllowed(false).build());
-            }
-            @Override
-            protected Boolean doProcess(Object args) {
-
-                UserBaseDO userBaseDO = userBaseRepository.findById(userId).orElse(null);
-                AssertUtil.notNull(userBaseDO, BizErrorCode.USER_NOT_EXIST);
-                userBaseDO.setUserStatus(UserStatusEnum.NORMAL.getCode());
-                userBaseRepository.save(userBaseDO);
-                return true;
-
-            }
-
-            @Override
-            protected Boolean convertResult(Boolean apiResult) {
-                return apiResult;
-            }
-        });
     }
 }

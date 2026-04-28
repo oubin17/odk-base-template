@@ -26,6 +26,16 @@ public class PasswordController {
      * 设置密码
      *
      */
+    @PostMapping("/existed")
+    ServiceResponse<Boolean> checkExisted(@RequestBody PasswordSetRequest passwordSetRequest) {
+        return passwordApi.checkExisted(passwordSetRequest);
+    }
+
+
+    /**
+     * 设置密码
+     *
+     */
     @PostMapping("/set")
     ServiceResponse<Boolean> setPassword(@RequestBody PasswordSetRequest passwordSetRequest) {
         return passwordApi.setPassword(passwordSetRequest);

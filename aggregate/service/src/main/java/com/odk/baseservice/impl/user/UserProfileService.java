@@ -1,17 +1,15 @@
 package com.odk.baseservice.impl.user;
 
-import com.odk.base.vo.request.BaseRequest;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserProfileApi;
 import com.odk.basemanager.api.user.IUserProfileManager;
-import com.odk.baseservice.template.AbstractApiImpl;
-import com.odk.baseutil.dto.user.UserProfileDTO;
-import com.odk.baseutil.enums.BizScene;
+import com.odk.baseutil.annotation.BizProcess;
 import com.odk.baseutil.convert.UserProfileRequestConvert;
+import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.request.UserProfileRequest;
 import com.odk.baseutil.userinfo.SessionContext;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,43 +21,17 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class UserProfileService extends AbstractApiImpl implements UserProfileApi {
+@AllArgsConstructor
+public class UserProfileService implements UserProfileApi {
 
     private UserProfileRequestConvert userProfileRequestConvert;
 
     private IUserProfileManager userProfileManager;
 
     @Override
+    @BizProcess(bizScene = BizScene.USER_PROFILE_UPDATE)
     public ServiceResponse<Boolean> updateUserProfile(UserProfileRequest userProfileRequest) {
-        return super.strictBizProcess(BizScene.USER_PROFILE_UPDATE, userProfileRequest, new StrictApiCallBack<Boolean, Boolean>() {
-
-            @Override
-            protected Object convert(BaseRequest request) {
-                UserProfileRequest profileRequest = (UserProfileRequest) request;
-                return userProfileRequestConvert.toDTO(profileRequest);
-            }
-
-            @Override
-            protected Boolean doProcess(Object args) {
-                UserProfileDTO profileRequest = (UserProfileDTO) args;
-                return userProfileManager.updateUserProfile(SessionContext.getLoginIdWithCheck(), profileRequest);
-            }
-
-            @Override
-            protected Boolean convertResult(Boolean apiResult) {
-                return apiResult;
-            }
-        });
+        return ServiceResponse.valueOfSuccess(userProfileManager.updateUserProfile(SessionContext.getLoginIdWithCheck(), userProfileRequestConvert.toDTO(userProfileRequest)));
     }
 
-
-    @Autowired
-    public void setUserProfileRequestMapper(UserProfileRequestConvert userProfileRequestConvert) {
-        this.userProfileRequestConvert = userProfileRequestConvert;
-    }
-
-    @Autowired
-    public void setUserProfileManager(IUserProfileManager userProfileManager) {
-        this.userProfileManager = userProfileManager;
-    }
 }

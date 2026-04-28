@@ -29,7 +29,7 @@ public class UserStatusController {
      * @return
      */
     @PostMapping("/deletion")
-    public ServiceResponse<String> deletion() {
+    public ServiceResponse<Void> deletion() {
         return userStatusApi.deletion();
     }
 

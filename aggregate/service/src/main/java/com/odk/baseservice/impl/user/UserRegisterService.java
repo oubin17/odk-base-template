@@ -25,6 +25,7 @@ import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.baseutil.userinfo.SessionContext;
 import com.odk.baseutil.validate.ValidationUtil;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -51,21 +52,12 @@ public class UserRegisterService implements UserRegisterApi {
     private UserLoginConvert userLoginConvert;
 
     @Override
-    @BizProcess(bizScene = BizScene.USER_REGISTER_LOGIN)
-    public ServiceResponse<UserLoginResponse> loginAfterRegister(UserRegisterRequest userRegisterRequest) {
-        ServiceResponse<String> response = userRegister(userRegisterRequest);
-        if (response.isSuccess()) {
-            ServiceResponse<UserLoginResponse> serviceResponse = ServiceResponse.valueOfSuccess(userLoginConvert.toResponse(userLoginManager.userLoginAfterRegister(response.getData())));
-            serviceResponse.getData().setToken(SessionContext.getToken());
-            return serviceResponse;
-        }
-        return ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR);
-    }
-
-    @Override
     @BizProcess(bizScene = BizScene.USER_REGISTER)
     public ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest) {
         validateLoginValue(userRegisterRequest.getLoginType(), userRegisterRequest.getLoginId());
+        if (StringUtils.isBlank(userRegisterRequest.getUserName())) {
+            userRegisterRequest.setUserName(I18nUtil.getMessage("user.name.default"));
+        }
 
         //1.先判断 uniqueId 是否存在
         VerificationCodeDTO dto = userRegisterRequest.getVerificationCode();
@@ -78,7 +70,18 @@ public class UserRegisterService implements UserRegisterApi {
         });
 
         return ServiceResponse.valueOfSuccess(userRegisterManager.registerUser(userRegisterConvert.toDTO(userRegisterRequest)));
+    }
 
+    @Override
+    @BizProcess(bizScene = BizScene.USER_REGISTER_LOGIN)
+    public ServiceResponse<UserLoginResponse> loginAfterRegister(UserRegisterRequest userRegisterRequest) {
+        ServiceResponse<String> response = userRegister(userRegisterRequest);
+        if (response.isSuccess()) {
+            ServiceResponse<UserLoginResponse> serviceResponse = ServiceResponse.valueOfSuccess(userLoginConvert.toResponse(userLoginManager.userLoginAfterRegister(response.getData())));
+            serviceResponse.getData().setToken(SessionContext.getToken());
+            return serviceResponse;
+        }
+        return ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR);
     }
 
     @Override

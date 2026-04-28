@@ -14,6 +14,13 @@ import com.odk.baseutil.request.password.PasswordUpdateRequest;
 public interface PasswordApi {
 
     /**
+     * 检查是否存在密码
+     *
+     * @return
+     */
+    ServiceResponse<Boolean> checkExisted(PasswordSetRequest passwordSetRequest);
+
+    /**
      * 设置密码
      *
      * @param passwordSetRequest

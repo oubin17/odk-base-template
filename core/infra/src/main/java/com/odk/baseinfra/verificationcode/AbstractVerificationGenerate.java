@@ -59,7 +59,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                     }
                     redisUtil.incrBy(maxVerifyTimesKey, 1);
                 } else {
-                    redisUtil.set(maxVerifyTimesKey, 1, 24, TimeUnit.HOURS);
+                    redisUtil.set(maxVerifyTimesKey, 1, 12, TimeUnit.HOURS);
 
                 }
                 VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity(verifyScene, verificationCodeDTO.getVerifyKey());
