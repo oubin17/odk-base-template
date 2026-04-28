@@ -18,6 +18,7 @@ import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
 import com.odk.baseutil.enums.VerifySceneEnum;
 import com.odk.baseutil.request.VerificationCodeRequest;
+import com.odk.baseutil.userinfo.SessionContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -56,8 +57,7 @@ public class VerificationCodeService extends AbstractApiImpl implements Verifica
                     AssertUtil.notNull(codeRequest.getVerifyKey(), BizErrorCode.PARAM_ILLEGAL);
                 } else {
                     //从 token 中获取用户手机号
-                    UserEntity userEntity = userQueryDomain.queryUser(UserQueryCriteria.builder().queryType(UserQueryTypeEnum.SESSION).nullAllowed(false).build());
-                    dto.setVerifyKey(userEntity.getAccessToken().getTokenValue());
+                    dto.setVerifyKey(SessionContext.getLoginIdWithCheck());
                 }
                 return dto;
             }

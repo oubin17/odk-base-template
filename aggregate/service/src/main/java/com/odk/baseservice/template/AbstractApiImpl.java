@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * AbstractApiImpl
@@ -361,7 +362,7 @@ public class AbstractApiImpl extends AbstractApi {
         }
 
         return String.format("[%s,%s,%s,%s]",
-                ServiceContextHolder.getSceneCode().getCode(),
+                Optional.ofNullable(ServiceContextHolder.getSceneCode()).map(BizScene::getCode).orElse("-"),
                 SessionContext.getLoginIdOrDefault("-"),
                 "RESPONSE",
                 responseStr);
@@ -378,7 +379,7 @@ public class AbstractApiImpl extends AbstractApi {
     private String buildSummaryDigestLog(boolean isSuccess, String resultCode, long executeTime) {
 
         return String.format("[%s,%s,%s,%s](%dms)",
-                ServiceContextHolder.getSceneCode().getCode(),
+                Optional.ofNullable(ServiceContextHolder.getSceneCode()).map(BizScene::getCode).orElse("-"),
                 SessionContext.getLoginIdOrDefault("-"),
                 isSuccess ? "SUCCESS" : "FAIL",
                 StringUtils.defaultIfBlank(resultCode, "-"),

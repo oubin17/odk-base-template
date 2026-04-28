@@ -41,6 +41,7 @@ public class VerificationCodeManager implements IVerificationCodeManager {
         return generate;
     }
 
+    @Override
     public boolean compare(VerificationCodeDTO verificationCodeDTO) {
         return verificationGenerate.compareUniqueId(verificationCodeDTO);
     }

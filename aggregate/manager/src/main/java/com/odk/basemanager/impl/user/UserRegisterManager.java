@@ -21,6 +21,7 @@ import com.odk.basemanager.api.user.IUserRegisterManager;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -60,9 +61,11 @@ public class UserRegisterManager implements IUserRegisterManager {
      */
     @Override
     public String registerUser(UserRegisterDTO userRegisterDTO) {
-        String password = userRegisterDTO.getIdentifyValue();
-        String decrypt = encryptionService.rsaDecode(password);
-        userRegisterDTO.setIdentifyValue(encryptionService.bcryptEncode(decrypt));
+        if (StringUtils.isNotBlank(userRegisterDTO.getIdentifyValue())) {
+            String password = userRegisterDTO.getIdentifyValue();
+            String decrypt = encryptionService.rsaDecode(password);
+            userRegisterDTO.setIdentifyValue(encryptionService.bcryptEncode(decrypt));
+        }
 
         UserAccessTokenDO byTokenTypeAndTokenValue = accessTokenRepository.findByTokenTypeAndTokenValueAndTenantId(userRegisterDTO.getLoginType(), userRegisterDTO.getLoginId(), TenantIdContext.getTenantId());
         AssertUtil.isNull(byTokenTypeAndTokenValue, BizErrorCode.USER_HAS_EXISTED, I18nUtil.getMessage("user.existed", userRegisterDTO.getLoginId()));
@@ -73,8 +76,10 @@ public class UserRegisterManager implements IUserRegisterManager {
                 String userId1 = addUserBase();
                 //2.添加登录信息
                 addAccessToken(userId1, userRegisterDTO);
-                //3.添加密码信息 密码加密
-                addIdentification(userId1, userRegisterDTO);
+                //3.添加密码信息 密码加密，注册时允许不设置密码
+                if (StringUtils.isNotBlank(userRegisterDTO.getIdentifyValue())) {
+                    addIdentification(userId1, userRegisterDTO);
+                }
                 //4.添加用户画像
                 addUserProfile(userId1, userRegisterDTO.getUserName());
                 return userId1;

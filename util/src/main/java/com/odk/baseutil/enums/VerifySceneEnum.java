@@ -22,6 +22,7 @@ public enum VerifySceneEnum implements IEnum {
 
     REGISTER("REGISTER", 300, 10, 10, "注册"),
 
+    PASSWORD_SET("PASSWORD_SET", 300, 10, 10, "设置密码"),
     ;
 
     private final String code;

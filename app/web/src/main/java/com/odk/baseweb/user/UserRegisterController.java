@@ -3,6 +3,7 @@ package com.odk.baseweb.user;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.user.UserRegisterApi;
 import com.odk.baseutil.request.UserRegisterRequest;
+import com.odk.baseutil.response.UserLoginResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,4 +37,15 @@ public class UserRegisterController {
     public ServiceResponse<String> userRegister(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         return userRegisterApi.userRegister(userRegisterRequest);
     }
+
+    /**
+     * 注册后直接登录
+     * @param userRegisterRequest
+     * @return
+     */
+    @PostMapping("/login")
+    public ServiceResponse<UserLoginResponse> loginAfterRegister(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        return userRegisterApi.loginAfterRegister(userRegisterRequest);
+    }
+
 }

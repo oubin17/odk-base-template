@@ -21,6 +21,14 @@ public interface IUserLoginManager {
     UserEntity userLogin(UserLoginDTO userLoginDTO);
 
     /**
+     * 用户登录
+     *
+     * @param userId
+     * @return
+     */
+    UserEntity userLoginAfterRegister(String userId);
+
+    /**
      * 用户登出
      *
      * @return

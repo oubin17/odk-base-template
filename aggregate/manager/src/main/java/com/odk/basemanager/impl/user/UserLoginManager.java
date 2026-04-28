@@ -72,6 +72,19 @@ public class UserLoginManager implements IUserLoginManager {
     }
 
     @Override
+    public UserEntity userLoginAfterRegister(String userId) {
+        UserQueryCriteria build = UserQueryCriteria.builder()
+                .queryType(UserQueryTypeEnum.USER_ID)
+                .userId(userId)
+                .statusCheck(true)
+                .build();
+        UserEntity userEntity = userQueryDomain.queryUser(build);
+        //设置登录session
+        SessionContext.createLoginSession(userEntity.getUserId());
+        return userEntity;
+    }
+
+    @Override
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST);

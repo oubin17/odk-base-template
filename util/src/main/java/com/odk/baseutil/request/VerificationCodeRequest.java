@@ -1,8 +1,8 @@
 package com.odk.baseutil.request;
 
-import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.vo.request.BaseRequest;
 import com.odk.baseutil.enums.VerifySceneEnum;
+import com.odk.baseutil.enums.VerifyTypeEnum;
 import com.odk.baseutil.validate.EnumValue;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -28,8 +28,8 @@ public class VerificationCodeRequest extends BaseRequest {
      * 验证码类型：手机、邮箱、用户名、第三方登录唯一标识
      */
     @NotBlank(message = "verifyType不能为空")
-    @EnumValue(enumClass = TokenTypeEnum.class, property = "code", message = "loginType非法")
-    private String verifyType = TokenTypeEnum.MOBILE.getCode();
+    @EnumValue(enumClass = VerifyTypeEnum.class, property = "code", message = "loginType非法")
+    private String verifyType = VerifyTypeEnum.MOBILE.getCode();
 
     /**
      * 登录 ID：手机号、邮箱、用户名、第三方登录唯一标识

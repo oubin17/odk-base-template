@@ -59,7 +59,7 @@ public class UserRegisterRequest extends BaseRequest {
     /**
      * 密码
      */
-    @NotBlank(message = "identifyValue不能为空")
+//    @NotBlank(message = "identifyValue不能为空")
     private String identifyValue;
 
     /**

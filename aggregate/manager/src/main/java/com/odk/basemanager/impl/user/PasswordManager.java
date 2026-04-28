@@ -12,6 +12,8 @@ import com.odk.basemanager.api.user.IPasswordManager;
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
+import com.odk.baseutil.request.password.PasswordSetRequest;
+import com.odk.baseutil.userinfo.SessionContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -61,4 +63,28 @@ public class PasswordManager implements IPasswordManager {
 
     }
 
+    @Override
+    public boolean setPassword(PasswordSetRequest passwordSetRequest) {
+        String password = encryption.rsaDecode(passwordSetRequest.getIdentifyValue());
+        password = encryption.bcryptEncode(password);
+        UserIdentificationDO identification = new UserIdentificationDO();
+        identification.setUserId(SessionContext.getLoginIdWithCheck());
+        identification.setIdentifyType(passwordSetRequest.getIdentifyType());
+        identification.setIdentifyValue(password);
+        identificationRepository.save(identification);
+        return true;
+    }
+
+    @Override
+    public boolean reSetPassword(PasswordSetRequest passwordSetRequest) {
+        String password = encryption.rsaDecode(passwordSetRequest.getIdentifyValue());
+        password = encryption.bcryptEncode(password);
+
+        UserIdentificationDO userIdentificationDO = identificationRepository.findByUserIdAndIdentifyTypeAndTenantId(SessionContext.getLoginIdWithCheck(), passwordSetRequest.getIdentifyType(), TenantIdContext.getTenantId());
+        AssertUtil.notNull(userIdentificationDO, BizErrorCode.PARAM_ILLEGAL);
+        userIdentificationDO.setIdentifyValue(password);
+        identificationRepository.save(userIdentificationDO);
+        return true;
+
+    }
 }

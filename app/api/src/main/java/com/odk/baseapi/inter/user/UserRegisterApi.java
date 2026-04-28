@@ -2,6 +2,7 @@ package com.odk.baseapi.inter.user;
 
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseutil.request.UserRegisterRequest;
+import com.odk.baseutil.response.UserLoginResponse;
 
 /**
  * UserRegisterApi
@@ -20,4 +21,5 @@ public interface UserRegisterApi {
      */
     ServiceResponse<String> userRegister(UserRegisterRequest userRegisterRequest);
 
+    ServiceResponse<UserLoginResponse> loginAfterRegister(UserRegisterRequest userRegisterRequest);
 }

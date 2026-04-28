@@ -1,6 +1,7 @@
 package com.odk.basemanager.api.user;
 
 import com.odk.baseutil.dto.user.PasswordUpdateDTO;
+import com.odk.baseutil.request.password.PasswordSetRequest;
 
 /**
  * IPasswordManager
@@ -18,4 +19,20 @@ public interface IPasswordManager {
      * @return
      */
     boolean updatePassword(PasswordUpdateDTO passwordUpdateDTO);
+
+    /**
+     * 设置密码
+     *
+     * @param passwordSetRequest
+     * @return
+     */
+    boolean setPassword(PasswordSetRequest passwordSetRequest);
+
+    /**
+     * 重置密码
+     *
+     * @param passwordSetRequest
+     * @return
+     */
+    boolean reSetPassword(PasswordSetRequest passwordSetRequest);
 }
