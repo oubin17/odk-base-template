@@ -74,7 +74,7 @@ public class BizProcessAspect {
             
             // 记录异常
             log.error("[BizProcess-Exception] 业务场景: [{}]({}), 用户 ID:{}, 方法: {}, 耗时: {}ms, 异常信息: {}",
-                    bizScene, bizSceneDesc, SessionContext.getLoginIdOrDefault("-"), methodName, executeTime, throwable.getMessage(), throwable);
+                    bizScene, bizSceneDesc, SessionContext.getLoginIdOrDefault("-"), methodName, executeTime, throwable.getMessage());
             throw throwable;
         }
     }

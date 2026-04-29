@@ -46,6 +46,7 @@ public class UserLoginService implements UserLoginApi {
             AssertUtil.notNull(userLoginRequest.getIdentifyValue(), BizErrorCode.PARAM_ILLEGAL);
         } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(identifyType)) {
             AssertUtil.notNull(userLoginRequest.getVerificationCode(), BizErrorCode.PARAM_ILLEGAL);
+            //默认手机号登录，暂不支持邮箱
             userLoginRequest.getVerificationCode().fillVerifyInfo(VerifySceneEnum.LOGIN, VerifyTypeEnum.MOBILE, userLoginRequest.getLoginId());
         }
 

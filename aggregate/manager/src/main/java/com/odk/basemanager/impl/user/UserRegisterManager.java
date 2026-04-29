@@ -17,6 +17,7 @@ import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.basedomain.repository.user.UserProfileRepository;
 import com.odk.baseinfra.security.IEncryption;
+import com.odk.basemanager.api.privacy.IUserPrivacyManager;
 import com.odk.basemanager.api.user.IUserRegisterManager;
 import com.odk.baseutil.dto.user.UserRegisterDTO;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,8 @@ public class UserRegisterManager implements IUserRegisterManager {
 
     private UserProfileRepository userProfileRepository;
 
+    private IUserPrivacyManager userPrivacyManager;
+
 
     /**
      * 这里校验密码是否通过公钥加密
@@ -61,6 +64,7 @@ public class UserRegisterManager implements IUserRegisterManager {
      */
     @Override
     public String registerUser(UserRegisterDTO userRegisterDTO) {
+        //注册时可以不需要设置密码
         if (StringUtils.isNotBlank(userRegisterDTO.getIdentifyValue())) {
             String password = userRegisterDTO.getIdentifyValue();
             String decrypt = encryptionService.rsaDecode(password);
@@ -82,6 +86,8 @@ public class UserRegisterManager implements IUserRegisterManager {
                 }
                 //4.添加用户画像
                 addUserProfile(userId1, userRegisterDTO.getUserName());
+                //5.保存隐私协议
+                userPrivacyManager.registerAgree(userId1, userRegisterDTO.getExtendInfoDTO().getPrivacyVersion());
                 return userId1;
             });
         } catch (DataIntegrityViolationException exception) {

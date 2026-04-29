@@ -3,8 +3,10 @@ package com.odk.baseutil.request;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.vo.request.BaseRequest;
+import com.odk.baseutil.dto.user.UserExtendInfoDTO;
 import com.odk.baseutil.validate.EnumValue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -64,4 +66,9 @@ public class UserRegisterNoAuthRequest extends BaseRequest {
     @NotBlank(message = "identifyValue不能为空")
     private String identifyValue;
 
+    /**
+     * 拓展信息:隐私协议版本等
+     */
+    @NotNull(message = "拓展信息不为空")
+    private UserExtendInfoDTO extendInfoDTO;
 }

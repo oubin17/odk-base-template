@@ -67,6 +67,7 @@ public enum BizScene {
 
     REDISSON_LOCK_LOCK("REDISSON_LOCK_LOCK", "分布式锁"),
 
+    PRIVACY_AGREE("AGREE_PRIVACY", "用户隐私协议"),
 
     ;
 

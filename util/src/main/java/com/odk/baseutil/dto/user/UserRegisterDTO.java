@@ -47,4 +47,9 @@ public class UserRegisterDTO extends DTO {
      */
     private String userId;
 
+    /**
+     * 扩展信息
+     */
+    private UserExtendInfoDTO extendInfoDTO;
+
 }

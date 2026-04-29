@@ -3,6 +3,7 @@ package com.odk.baseutil.request;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.enums.user.TokenTypeEnum;
 import com.odk.base.vo.request.BaseRequest;
+import com.odk.baseutil.dto.user.UserExtendInfoDTO;
 import com.odk.baseutil.dto.verificationcode.VerificationCodeDTO;
 import com.odk.baseutil.validate.EnumValue;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +27,6 @@ public class UserRegisterRequest extends BaseRequest {
 
     @Serial
     private static final long serialVersionUID = -5394053093156366659L;
-
 
     /**
      * 用户名称
@@ -70,5 +70,11 @@ public class UserRegisterRequest extends BaseRequest {
      */
     @NotNull(message = "认证信息不能为空")
     private VerificationCodeDTO verificationCode;
+
+    /**
+     * 拓展信息:隐私协议版本等
+     */
+    @NotNull(message = "拓展信息不为空")
+    private UserExtendInfoDTO extendInfoDTO;
 
 }
