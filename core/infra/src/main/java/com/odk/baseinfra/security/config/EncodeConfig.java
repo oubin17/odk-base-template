@@ -1,4 +1,4 @@
-package com.odk.baseutil.security;
+package com.odk.baseinfra.security.config;
 
 import com.odk.base.security.BCryptPasswordEncoder;
 import org.springframework.context.annotation.Bean;

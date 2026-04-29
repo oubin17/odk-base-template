@@ -10,7 +10,6 @@ import com.odk.baseapi.inter.user.UserLoginApi;
 import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.baseutil.annotation.BizProcess;
 import com.odk.baseutil.convert.UserLoginConvert;
-import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.BizScene;
 import com.odk.baseutil.enums.VerifySceneEnum;
 import com.odk.baseutil.enums.VerifyTypeEnum;
@@ -49,11 +48,7 @@ public class UserLoginService implements UserLoginApi {
             //默认手机号登录，暂不支持邮箱
             userLoginRequest.getVerificationCode().fillVerifyInfo(VerifySceneEnum.LOGIN, VerifyTypeEnum.MOBILE, userLoginRequest.getLoginId());
         }
-
-        UserEntity userEntity = userLoginManager.userLogin(userLoginConvert.toDTO(userLoginRequest));
-        UserLoginResponse response = userLoginConvert.toResponse(userEntity);
-        response.setToken(SessionContext.getToken());
-        return ServiceResponse.valueOfSuccess(response);
+        return ServiceResponse.valueOfSuccess(userLoginManager.userLogin(userLoginConvert.toDTO(userLoginRequest)));
 
     }
 

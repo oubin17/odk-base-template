@@ -13,9 +13,12 @@ import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseinfra.security.IEncryption;
 import com.odk.basemanager.api.user.IUserLoginManager;
 import com.odk.basemanager.impl.verificationcode.VerificationCodeManager;
+import com.odk.baseutil.context.DeviceInfoContext;
+import com.odk.baseutil.convert.UserLoginConvert;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
+import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.baseutil.userinfo.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,8 @@ public class UserLoginManager implements IUserLoginManager {
 
 //    private IEventPublish eventPublish;
 
+    private UserLoginConvert userLoginConvert;
+
     /**
      * 用户登录
      *
@@ -51,7 +56,7 @@ public class UserLoginManager implements IUserLoginManager {
      * @return
      */
     @Override
-    public UserEntity userLogin(UserLoginDTO userLoginDTO) {
+    public UserLoginResponse userLogin(UserLoginDTO userLoginDTO) {
         UserQueryCriteria build = UserQueryCriteria.builder()
                 .queryType(UserQueryTypeEnum.LOGIN_ID)
                 .loginId(userLoginDTO.getLoginId())
@@ -66,33 +71,46 @@ public class UserLoginManager implements IUserLoginManager {
         } else if (IdentificationTypeEnum.VERIFICATION_CODE.getCode().equals(userLoginDTO.getIdentifyType())) {
             verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode());
         }
-        //设置登录session
-        SessionContext.createLoginSession(userEntity.getUserId());
-        return userEntity;
+
+        return setLoginSession(userEntity);
     }
 
     @Override
-    public UserEntity userLoginAfterRegister(String userId) {
+    public UserLoginResponse userLoginAfterRegister(String userId) {
         UserQueryCriteria build = UserQueryCriteria.builder()
                 .queryType(UserQueryTypeEnum.USER_ID)
                 .userId(userId)
                 .statusCheck(true)
                 .build();
         UserEntity userEntity = userQueryDomain.queryUser(build);
-        //设置登录session
-        SessionContext.createLoginSession(userEntity.getUserId());
-        return userEntity;
+        return setLoginSession(userEntity);
     }
+
 
     @Override
     public Boolean userLogout() {
         Optional<UserBaseDO> byUserId = baseRepository.findByIdAndTenantId(SessionContext.getLoginIdWithCheck(), TenantIdContext.getTenantId());
         AssertUtil.isTrue(byUserId.isPresent(), BizErrorCode.USER_NOT_EXIST);
 //        eventPublish.publish(new UserCacheCleanEvent(byUserId.get().getId(), UserCacheSceneEnum.USER_BASIC, CacheActionEnum.DELETE));
-        SessionContext.logOut();
+        SessionContext.logOut(SessionContext.getLoginIdWithCheck(), DeviceInfoContext.get().getDeviceType());
         return true;
     }
 
+    /**
+     * 登录成功后，设置session
+     *
+     * @param userEntity
+     * @return
+     */
+    private UserLoginResponse setLoginSession(UserEntity userEntity) {
+        //这里说明登录校验通过
+        UserLoginResponse response = userLoginConvert.toResponse(userEntity);
+        //设置登录session
+        SessionContext.createLoginSession(userEntity.getUserId(), DeviceInfoContext.get().getDeviceType());
+//        SessionContext.setSessionValue("deviceInfo", DeviceInfoContext.get());
+        response.setToken(SessionContext.getToken());
+        return response;
+    }
 
     @Autowired
     public void setBaseRepository(UserBaseRepository baseRepository) {
@@ -118,7 +136,14 @@ public class UserLoginManager implements IUserLoginManager {
     public void setEncryption(IEncryption encryption) {
         this.encryption = encryption;
     }
-//
+
+    @Autowired
+    public void setUserLoginConvert(UserLoginConvert userLoginConvert) {
+        this.userLoginConvert = userLoginConvert;
+    }
+
+
+    //
 //    @Autowired
 //    public void setEventPublish(IEventPublish eventPublish) {
 //        this.eventPublish = eventPublish;

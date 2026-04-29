@@ -1,7 +1,7 @@
 package com.odk.basemanager.api.user;
 
 import com.odk.baseutil.dto.user.UserLoginDTO;
-import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.response.UserLoginResponse;
 
 /**
  * IUserLoginManager
@@ -18,7 +18,7 @@ public interface IUserLoginManager {
      * @param userLoginDTO
      * @return
      */
-    UserEntity userLogin(UserLoginDTO userLoginDTO);
+    UserLoginResponse userLogin(UserLoginDTO userLoginDTO);
 
     /**
      * 用户登录
@@ -26,7 +26,7 @@ public interface IUserLoginManager {
      * @param userId
      * @return
      */
-    UserEntity userLoginAfterRegister(String userId);
+    UserLoginResponse userLoginAfterRegister(String userId);
 
     /**
      * 用户登出
@@ -34,4 +34,6 @@ public interface IUserLoginManager {
      * @return
      */
     Boolean userLogout();
+
+
 }

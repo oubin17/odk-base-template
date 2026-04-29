@@ -22,7 +22,6 @@ import com.odk.baseutil.enums.VerifyTypeEnum;
 import com.odk.baseutil.request.UserRegisterNoAuthRequest;
 import com.odk.baseutil.request.UserRegisterRequest;
 import com.odk.baseutil.response.UserLoginResponse;
-import com.odk.baseutil.userinfo.SessionContext;
 import com.odk.baseutil.validate.ValidationUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -77,9 +76,7 @@ public class UserRegisterService implements UserRegisterApi {
     public ServiceResponse<UserLoginResponse> loginAfterRegister(UserRegisterRequest userRegisterRequest) {
         ServiceResponse<String> response = userRegister(userRegisterRequest);
         if (response.isSuccess()) {
-            ServiceResponse<UserLoginResponse> serviceResponse = ServiceResponse.valueOfSuccess(userLoginConvert.toResponse(userLoginManager.userLoginAfterRegister(response.getData())));
-            serviceResponse.getData().setToken(SessionContext.getToken());
-            return serviceResponse;
+            return ServiceResponse.valueOfSuccess(userLoginManager.userLoginAfterRegister(response.getData()));
         }
         return ServiceResponse.valueOfError(BizErrorCode.SYSTEM_ERROR);
     }

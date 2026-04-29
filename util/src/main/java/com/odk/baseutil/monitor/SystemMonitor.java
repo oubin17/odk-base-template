@@ -31,10 +31,10 @@ public class SystemMonitor {
     private WebServerApplicationContext webServerApplicationContext;
 
     /**
-     * 数据库连接池监控，每分钟的第 1 秒执行
+     * 数据库连接池监控，每10分钟的第 1 秒执行
      */
     @Async("asyncTaskExecutor")
-    @Scheduled(cron = "1 * * * * ?")
+    @Scheduled(cron = "1 0/10 * * * ?")
     public void dataSourceMonitor() {
         DruidDataSource druidDataSource =  (DruidDataSource) dataSource;
         log.info("数据库连接池监控,最大连接数-{},活跃连接数-{},空闲连接数-{},等待连接线程数-{}", druidDataSource.getMaxActive(), druidDataSource.getActiveCount(), druidDataSource.getPoolingCount(), druidDataSource.getWaitThreadCount());
@@ -42,10 +42,10 @@ public class SystemMonitor {
     }
 
     /**
-     * Tomcat连接池监控，每分钟的第 11 秒执行
+     * Tomcat连接池监控，每10分钟的第 11 秒执行
      */
     @Async("asyncTaskExecutor")
-    @Scheduled(cron = "11 * * * * ?")
+    @Scheduled(cron = "11 0/10 * * * ?")
     public void tomcatMonitor() {
 
         Tomcat tomcat = ((TomcatWebServer) webServerApplicationContext.getWebServer()).getTomcat();

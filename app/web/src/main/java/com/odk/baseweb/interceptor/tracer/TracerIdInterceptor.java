@@ -1,6 +1,7 @@
 package com.odk.baseweb.interceptor.tracer;
 
 import com.odk.base.util.JacksonUtil;
+import com.odk.baseutil.context.DeviceInfoContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +27,17 @@ public class TracerIdInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //1. 设置 trace 上下文
         MDC.put(TRACER_ID, UUID.randomUUID().toString());
-        // 【核心修改】不要直接打印 request 对象，而是提取需要的信息
+        //2. 获取请求设备信息
+        DeviceInfoContext.DeviceInfo deviceInfo = getDeviceInfo(request);
+        DeviceInfoContext.set(deviceInfo);
 
-        // 2. 提取请求信息（安全脱敏版）
+        // 3. 提取请求信息（安全脱敏版）
         Map<String, Object> requestInfo = new HashMap<>();
         requestInfo.put("method", request.getMethod());
-        requestInfo.put("url", request.getRequestURL().toString());
-        requestInfo.put("uri", request.getRequestURI());
+//        requestInfo.put("url", request.getRequestURL().toString());
+//        requestInfo.put("uri", request.getRequestURI());
         requestInfo.put("remoteAddr", request.getRemoteAddr());
         requestInfo.put("headers", getHeaders(request));
 
@@ -64,7 +68,6 @@ public class TracerIdInterceptor implements HandlerInterceptor {
 //
 //        requestInfo.put("params", safeParams);
 
-        // 4. 打印日志
         try {
             log.info("[HTTP REQUEST:]: {}", JacksonUtil.toJsonString(requestInfo));
         } catch (Exception e) {
@@ -83,13 +86,41 @@ public class TracerIdInterceptor implements HandlerInterceptor {
         responseInfo.put("contentType", response.getContentType());
 
         try {
-            log.info("[HTTP RESPONSE]: {}", JacksonUtil.toJsonString(responseInfo));
+            DeviceInfoContext.remove();
+            MDC.clear();
         } catch (Exception e) {
             // 忽略序列化异常
+            log.warn("Failed to parse response log", e);
         } finally {
-            MDC.clear();
+            log.info("[HTTP RESPONSE]: {}", JacksonUtil.toJsonString(responseInfo));
         }
         MDC.clear();
+    }
+
+    /**
+     * 获取请求设备信息
+     *
+     * @param request
+     * @return
+     */
+    private DeviceInfoContext.DeviceInfo getDeviceInfo(HttpServletRequest request) {
+        // 从请求头取值
+        String deviceType = request.getHeader("X-OS-TYPE");
+        String deviceUid = request.getHeader("X-DEVICE-ID");
+
+        // 兜底默认值
+        if (deviceType == null || deviceType.isBlank()) {
+            deviceType = "unknown";
+        }
+        if (deviceUid == null || deviceUid.isBlank()) {
+            deviceUid = "unknown_device_" + System.currentTimeMillis();
+        }
+
+        // 存入当前线程上下文，全局任意地方可直接取
+        DeviceInfoContext.DeviceInfo info = new DeviceInfoContext.DeviceInfo();
+        info.setDeviceType(deviceType);
+        info.setDeviceUid(deviceUid);
+        return info;
     }
 
 

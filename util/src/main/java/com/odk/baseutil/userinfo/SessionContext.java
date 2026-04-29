@@ -32,7 +32,7 @@ public class SessionContext {
      * important 登录 ID 样式： userId:tenantId
      *
      * 创建登录session，这时候会生成token
-     * token格式： key: okd-token:login:token:{token} value: loginId
+     * token格式： key: odk-token:login:token:{token} value: loginId
      *
      * session格式：key: odk-token:login:session:{loginId} value: {@link cn.dev33.satoken.session.SaSession}
      * @param loginId
@@ -42,7 +42,18 @@ public class SessionContext {
     }
 
     /**
+     * 支持绑定设备类型：android ios
+     *
+     * @param loginId
+     * @param deviceType
+     */
+    public static void createLoginSession(String loginId, String deviceType) {
+        StpUtil.login(getLoginId(loginId), deviceType);
+    }
+
+    /**
      * 设置key value键值对到当前的登录session中，如当前用户信息
+     * 这里是账号级别的，即一个用户一个session
      *
      * @param key
      * @param value
@@ -95,6 +106,14 @@ public class SessionContext {
      */
     public static void logOut() {
         StpUtil.logout();
+    }
+
+
+    /**
+     * 登出：清除session
+     */
+    public static void logOut(String loginId, String deviceType) {
+        StpUtil.logout(getLoginId(loginId), deviceType);
     }
 
     /**
