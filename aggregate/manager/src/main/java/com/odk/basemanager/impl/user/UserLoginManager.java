@@ -4,10 +4,13 @@ import com.odk.base.context.TenantIdContext;
 import com.odk.base.enums.user.IdentificationTypeEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.base.util.JacksonUtil;
 import com.odk.basedomain.domain.UserQueryDomain;
 import com.odk.basedomain.domain.criteria.UserQueryCriteria;
+import com.odk.basedomain.model.sys.SysLogDO;
 import com.odk.basedomain.model.user.UserBaseDO;
 import com.odk.basedomain.model.user.UserIdentificationDO;
+import com.odk.basedomain.repository.sys.SysLogRepository;
 import com.odk.basedomain.repository.user.UserBaseRepository;
 import com.odk.basedomain.repository.user.UserIdentificationRepository;
 import com.odk.baseinfra.security.IEncryption;
@@ -17,6 +20,7 @@ import com.odk.baseutil.context.DeviceInfoContext;
 import com.odk.baseutil.convert.UserLoginConvert;
 import com.odk.baseutil.dto.user.UserLoginDTO;
 import com.odk.baseutil.entity.UserEntity;
+import com.odk.baseutil.enums.LogTypeEnum;
 import com.odk.baseutil.enums.UserQueryTypeEnum;
 import com.odk.baseutil.response.UserLoginResponse;
 import com.odk.baseutil.userinfo.SessionContext;
@@ -49,6 +53,8 @@ public class UserLoginManager implements IUserLoginManager {
 
     private UserLoginConvert userLoginConvert;
 
+    private SysLogRepository sysLogRepository;
+
     /**
      * 用户登录
      *
@@ -72,7 +78,7 @@ public class UserLoginManager implements IUserLoginManager {
             verificationCodeManager.compareAndIncr(userLoginDTO.getVerificationCode());
         }
 
-        return setLoginSession(userEntity);
+        return doAfterLogin(userEntity);
     }
 
     @Override
@@ -83,7 +89,7 @@ public class UserLoginManager implements IUserLoginManager {
                 .statusCheck(true)
                 .build();
         UserEntity userEntity = userQueryDomain.queryUser(build);
-        return setLoginSession(userEntity);
+        return doAfterLogin(userEntity);
     }
 
 
@@ -102,13 +108,21 @@ public class UserLoginManager implements IUserLoginManager {
      * @param userEntity
      * @return
      */
-    private UserLoginResponse setLoginSession(UserEntity userEntity) {
+    private UserLoginResponse doAfterLogin(UserEntity userEntity) {
         //这里说明登录校验通过
         UserLoginResponse response = userLoginConvert.toResponse(userEntity);
-        //设置登录session
+        //1.设置登录session
         SessionContext.createLoginSession(userEntity.getUserId(), DeviceInfoContext.get().getDeviceType());
-//        SessionContext.setSessionValue("deviceInfo", DeviceInfoContext.get());
         response.setToken(SessionContext.getToken());
+
+        //2.记录登录日志
+        SysLogDO sysLogDO = new SysLogDO();
+        sysLogDO.setUserId(userEntity.getUserId());
+        sysLogDO.setOperation(LogTypeEnum.LOGIN.name());
+        sysLogDO.setDeviceType(DeviceInfoContext.get().getDeviceType());
+        sysLogDO.setDeviceId(DeviceInfoContext.get().getDeviceId());
+        sysLogRepository.save(sysLogDO);
+
         return response;
     }
 
@@ -142,6 +156,10 @@ public class UserLoginManager implements IUserLoginManager {
         this.userLoginConvert = userLoginConvert;
     }
 
+    @Autowired
+    public void setSysLogRepository(SysLogRepository sysLogRepository) {
+        this.sysLogRepository = sysLogRepository;
+    }
 
     //
 //    @Autowired

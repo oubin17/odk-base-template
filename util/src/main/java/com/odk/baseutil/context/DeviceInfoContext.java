@@ -18,7 +18,7 @@ public class DeviceInfoContext {
         // 设备类型：android / ios
         private String deviceType;
         // 设备唯一ID
-        private String deviceUid;
+        private String deviceId;
     }
 
     // 设置

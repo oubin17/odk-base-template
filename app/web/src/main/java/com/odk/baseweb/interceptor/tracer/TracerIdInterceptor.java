@@ -119,7 +119,7 @@ public class TracerIdInterceptor implements HandlerInterceptor {
         // 存入当前线程上下文，全局任意地方可直接取
         DeviceInfoContext.DeviceInfo info = new DeviceInfoContext.DeviceInfo();
         info.setDeviceType(deviceType);
-        info.setDeviceUid(deviceUid);
+        info.setDeviceId(deviceUid);
         return info;
     }
 
