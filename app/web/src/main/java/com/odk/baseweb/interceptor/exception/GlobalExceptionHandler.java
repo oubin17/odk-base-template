@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
                 errorCode.getErrorType(),
                 errorCode.getErrorCode(),
                 e.getMessage() == null ? e.getErrorCode().getErrorContext() : e.getMessage(),
-                e.getExtendInfo()), HttpStatus.BAD_REQUEST);
+                e.getExtendInfo()), HttpStatus.OK);
 
         // 处理校验异常，可以根据需要返回适当的响应
 //        if (e.getErrorCode() == null) {

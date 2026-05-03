@@ -32,7 +32,7 @@ public class UserRegisterRequest extends BaseRequest {
      * 用户名称
      */
 //    @NotBlank(message = "userName不能为空")
-    @Size(min = 1, max = 50, message = "userName长度必须在1-10之间")
+//    @Size(min = 1, max = 50, message = "userName长度必须在1-10之间")
     private String userName;
 
 
