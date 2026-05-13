@@ -20,7 +20,7 @@ import java.io.Serial;
 @Data
 @Entity
 @Table(name = "t_sys_global_config", indexes = {
-        @Index(name = "idx_config_key", columnList = "config_key,tenant_id", unique = true)
+        @Index(name = "idx_config_key", columnList = "config_key,tenant_id")
 })
 @EntityListeners(AuditingEntityListener.class)
 public class SysGlobalConfigDO extends BaseDO {

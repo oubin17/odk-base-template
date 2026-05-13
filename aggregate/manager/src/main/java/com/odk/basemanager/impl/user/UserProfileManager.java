@@ -32,7 +32,16 @@ public class UserProfileManager implements IUserProfileManager {
     public boolean updateUserProfile(String userId, UserProfileDTO userProfileDTO) {
         userProfileDTO.setUserId(userId);
         UserProfileDO userProfileDO = userProfileRepository.findByUserIdAndTenantId(userId, TenantIdContext.getTenantId());
-        userProfileConvert.merge(userProfileDTO, userProfileDO);
+        if (userProfileDTO.getUserName() != null) {
+            userProfileDO.setUserName(userProfileDTO.getUserName());
+        }
+        if (userProfileDTO.getGender() != null) {
+            userProfileDO.setGender(userProfileDTO.getGender());
+        }
+        if (userProfileDTO.getBirthDay() != null) {
+            userProfileDO.setBirthDay(userProfileDTO.getBirthDay());
+        }
+//        userProfileConvert.merge(userProfileDTO, userProfileDO);
         userProfileRepository.save(userProfileDO);
 
         return true;

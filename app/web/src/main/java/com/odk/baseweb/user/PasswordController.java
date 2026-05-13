@@ -42,7 +42,7 @@ public class PasswordController {
     }
 
     /**
-     * 设置密码
+     * 重置密码
      *
      */
     @PostMapping("/reset")

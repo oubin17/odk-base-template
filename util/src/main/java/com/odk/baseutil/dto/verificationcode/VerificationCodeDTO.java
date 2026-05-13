@@ -17,8 +17,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class VerificationCodeDTO extends DTO {
 
-
-
     /**
      * 验证码场景：登录、注册、找回密码等
      */
@@ -29,7 +27,7 @@ public class VerificationCodeDTO extends DTO {
      * 1-手机号
      * 2-邮箱
      * 登录时
-     * 3-用户 id
+     * 3-用户 id 不需要前端传
      *  {@link VerifyTypeEnum }
      */
     private String verifyType;
@@ -41,6 +39,11 @@ public class VerificationCodeDTO extends DTO {
 
 
     //以下字段需要前端传递
+
+    /**
+     * 手机号或邮箱: 根据 verifyType 判断是手机号还是邮箱
+     */
+    private String mobileOrEmail;
 
     /**
      * 验证码

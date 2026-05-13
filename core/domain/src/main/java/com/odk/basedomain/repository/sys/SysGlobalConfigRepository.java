@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface SysGlobalConfigRepository extends JpaRepository<SysGlobalConfigDO, String> {
 
-    SysGlobalConfigDO findByConfigKeyAndTenantId(String configKey, String tenantId);
+    SysGlobalConfigDO findFirstByConfigKeyAndTenantIdOrderByCreateTimeDesc(String configKey, String tenantId);
 }

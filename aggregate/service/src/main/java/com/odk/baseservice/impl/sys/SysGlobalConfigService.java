@@ -28,7 +28,7 @@ public class SysGlobalConfigService implements SysGlobalConfigApi {
 
     @Override
     public ServiceResponse<SysGlobalConfigDTO> getGlobalConfig(String configKey) {
-        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigRepository.findByConfigKeyAndTenantId(configKey, TenantIdContext.getTenantId());
+        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigRepository.findFirstByConfigKeyAndTenantIdOrderByCreateTimeDesc(configKey, TenantIdContext.getTenantId());
         if (null != sysGlobalConfigDO) {
             return ServiceResponse.valueOfSuccess(sysGlobalConfigConvert.convertToDTO(sysGlobalConfigDO));
         }
@@ -37,7 +37,7 @@ public class SysGlobalConfigService implements SysGlobalConfigApi {
 
     @Override
     public ServiceResponse<Void> updateGlobalConfig(SysGlobalConfigRequest sysGlobalConfigRequest) {
-        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigRepository.findByConfigKeyAndTenantId(sysGlobalConfigRequest.getConfigKey(), TenantIdContext.getTenantId());
+        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigRepository.findFirstByConfigKeyAndTenantIdOrderByCreateTimeDesc(sysGlobalConfigRequest.getConfigKey(), TenantIdContext.getTenantId());
         if (null != sysGlobalConfigDO) {
             sysGlobalConfigDO.setConfigValue(sysGlobalConfigRequest.getConfigValue());
             sysGlobalConfigDO.setConfigDesc(sysGlobalConfigRequest.getConfigDesc());
@@ -49,12 +49,12 @@ public class SysGlobalConfigService implements SysGlobalConfigApi {
 
     @Override
     public ServiceResponse<Void> addGlobalConfig(SysGlobalConfigRequest sysGlobalConfigRequest) {
-        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigRepository.findByConfigKeyAndTenantId(sysGlobalConfigRequest.getConfigKey(), TenantIdContext.getTenantId());
-
-        if (null != sysGlobalConfigDO) {
-            return ServiceResponse.valueOfSuccess();
-        }
-        sysGlobalConfigDO = sysGlobalConfigConvert.convertToDO(sysGlobalConfigRequest);
+//        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigRepository.findFirstByConfigKeyAndTenantIdOrderByCreateTimeDesc(sysGlobalConfigRequest.getConfigKey(), TenantIdContext.getTenantId());
+//
+//        if (null != sysGlobalConfigDO) {
+//            return ServiceResponse.valueOfSuccess();
+//        }
+        SysGlobalConfigDO sysGlobalConfigDO = sysGlobalConfigConvert.convertToDO(sysGlobalConfigRequest);
         sysGlobalConfigDO.setTenantId(TenantIdContext.getTenantId());
         sysGlobalConfigRepository.save(sysGlobalConfigDO);
         return ServiceResponse.valueOfSuccess();

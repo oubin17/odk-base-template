@@ -34,6 +34,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
 
     private DistributedLockService lockService;
 
+
     private static final String VERIFY_CODE_KEY_PREFIX = "sms:";
 
     @Override
@@ -62,7 +63,7 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
                     redisUtil.set(maxVerifyTimesKey, 1, 12, TimeUnit.HOURS);
 
                 }
-                VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity(verifyScene, verificationCodeDTO.getVerifyKey());
+                VerificationCodeEntity verificationCodeEntity = generateVerificationCodeEntity(verifyScene, verificationCodeDTO.getMobileOrEmail());
                 if (redisUtil.setIfAbsent(key, verificationCodeEntity, verifyScene.getExpireTime(), TimeUnit.SECONDS)) {
                     log.info("验证码生成成功：key:{}, value:{}", key, JacksonUtil.toJsonString(entity));
                     verificationCodeEntity.setCode(null);
@@ -144,12 +145,12 @@ public abstract class AbstractVerificationGenerate implements IVerificationGener
     }
 
     /**
-     * 生成验证码对象
+     * 生成验证码对象 手机号、用户 id
      *
      * @return
      */
-    private VerificationCodeEntity generateVerificationCodeEntity(VerifySceneEnum verifyScene, String phoneNumber) {
-        String code = generateVerificationCode(phoneNumber);
+    private VerificationCodeEntity generateVerificationCodeEntity(VerifySceneEnum verifyScene, String mobileOrEmail) {
+        String code = generateVerificationCode(mobileOrEmail);
         VerificationCodeEntity verificationCodeEntity = new VerificationCodeEntity();
         verificationCodeEntity.setCode(code);
         verificationCodeEntity.setVerifyTimes(0);

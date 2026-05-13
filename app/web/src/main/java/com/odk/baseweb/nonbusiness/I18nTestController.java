@@ -33,8 +33,8 @@ public class I18nTestController {
     @GetMapping("/test")
     public ServiceResponse<String> testI18n() {
         // 测试不同的消息码
-        String signMessage = I18nUtil.getMessage("sign.verification.failed");
-        String systemMessage = I18nUtil.getMessage("system.error");
+        String signMessage = I18nUtil.getMessage("user.default.name");
+        String systemMessage = I18nUtil.getMessage("verification.data.isnull");
         String paramMessage = I18nUtil.getMessage("user.password.empty");
         
         // 测试带参数的消息

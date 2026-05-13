@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: oubin on 2026/4/7
  */
 @RestController
-@RequestMapping("/system")
+@RequestMapping("/sys")
 public class SystemController {
 
     /**

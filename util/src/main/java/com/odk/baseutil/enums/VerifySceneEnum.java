@@ -1,5 +1,6 @@
 package com.odk.baseutil.enums;
 
+import com.google.common.collect.ImmutableSet;
 import com.odk.base.enums.IEnum;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -16,13 +17,13 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 public enum VerifySceneEnum implements IEnum {
 
-    COMMON("COMMON", 300, 10, 20, "通用"),
+    COMMON("COMMON", 60, 10, 20, "通用"),
 
-    LOGIN("LOGIN", 300, 10, 10, "登录"),
+    LOGIN("LOGIN", 60, 10, 10, "登录"),
 
-    REGISTER("REGISTER", 300, 10, 10, "注册"),
+    REGISTER("REGISTER", 60 , 10, 10, "注册"),
 
-    PASSWORD_SET("PASSWORD_SET", 300, 10, 10, "设置密码"),
+    PASSWORD_SET("RESET_PASSWORD", 60, 10, 10, "设置密码"),
     ;
 
     private final String code;
@@ -51,6 +52,11 @@ public enum VerifySceneEnum implements IEnum {
         this.maxSendPerDay = maxSendPerDay;
         this.description = description;
     }
+    /**
+     * 不从 token 中获取手机号的场景：注册、登录。
+     */
+    public static final ImmutableSet<VerifySceneEnum> MOBILE_SCENE_LIST = ImmutableSet.of(VerifySceneEnum.REGISTER, VerifySceneEnum.LOGIN);
+
 
     public static VerifySceneEnum getByCode(String code) {
         if (StringUtils.isEmpty(code)) {
